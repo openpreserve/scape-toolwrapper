@@ -47,6 +47,8 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ## Getting started
 
+[![Build Status](http://ci.keep.pt/job/SCAPE%20Toolwrapper/badge/icon)](http://ci.keep.pt/job/SCAPE%20Toolwrapper/)
+
 ### Requirements
 
 1. Unix/linux operating system;
