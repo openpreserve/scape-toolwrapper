@@ -83,7 +83,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
-	$> cd $TOOLWRAPPER_GITHUB_FOLDER/pc-as/toolwrapper/
+	$> cd $TOOLWRAPPER_GITHUB_FOLDER
 	$> mvn package
 
 ### How toolwrapper works
@@ -143,7 +143,7 @@ Files required:
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
-<pre>$> cd $TOOLWRAPPER_GITHUB_FOLDER/pc-as/toolwrapper/
+<pre>$> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./bash-generator/bin/generate.sh -t README_FILES/digital-preservation-migration-image-imagemagick-image2jp2.xml -o output_dir
 $> ./bash-debian-generator/bin/generate.sh -ch README_FILES/digital-preservation-migration-image-imagemagick-image2jp2.changelog -e hsilva@keep.pt
  -i output_dir -o output_dir -t README_FILES/digital-preservation-migration-image-imagemagick-image2jp2.xml
