@@ -47,8 +47,6 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ## Getting started
 
-[![Build Status](http://ci.keep.pt/job/SCAPE%20Toolwrapper/badge/icon)](http://ci.keep.pt/job/SCAPE%20Toolwrapper/)
-
 ### Requirements
 
 1. Unix/linux operating system;
@@ -56,8 +54,8 @@ This example, even if simplified for presentation purpose, demonstrates how one 
     * Debian/ubuntu: *sudo apt-get install openjdk-6-jdk*
 3. Build tools (for Java and Debian packaging)
     * Debian/ubuntu: *sudo apt-get install build-essential dh-make devscripts debhelper lintian maven*
-4. Clone of scape github repository
-    * Unix/linux: *git clone https://github.com/openplanets/scape.git*
+4. Clone of Scape Toolwrapper github repository
+    * Unix/linux: *git clone https://github.com/openplanets/scape-toolwrapper.git*
 
 ### Project directory structure
 
@@ -83,9 +81,9 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ### Compilation process
 
-Execute the following on the command-line ($SCAPE\_GITHUB\_FOLDER denotes the path to the folder where the scape repository was cloned):
+Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
-	$> cd $SCAPE_GITHUB_FOLDER/pc-as/toolwrapper/
+	$> cd $TOOLWRAPPER_GITHUB_FOLDER/pc-as/toolwrapper/
 	$> mvn package
 
 ### How toolwrapper works
@@ -143,9 +141,9 @@ Files required:
 * toolspec (e.g., digital-preservation-migration-image-imagemagick-image2jp2.xml)
 * changelog (e.g., digital-preservation-migration-image-imagemagick-image2jp2.changelog)
 
-Execute the following on the command-line ($SCAPE\_GITHUB\_FOLDER denotes the path to the folder where the scape repository was cloned):
+Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
-<pre>$> cd $SCAPE_GITHUB_FOLDER/pc-as/toolwrapper/
+<pre>$> cd $TOOLWRAPPER_GITHUB_FOLDER/pc-as/toolwrapper/
 $> ./bash-generator/bin/generate.sh -t README_FILES/digital-preservation-migration-image-imagemagick-image2jp2.xml -o output_dir
 $> ./bash-debian-generator/bin/generate.sh -ch README_FILES/digital-preservation-migration-image-imagemagick-image2jp2.changelog -e hsilva@keep.pt
  -i output_dir -o output_dir -t README_FILES/digital-preservation-migration-image-imagemagick-image2jp2.xml
