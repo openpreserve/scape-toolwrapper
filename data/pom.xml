@@ -6,7 +6,7 @@
 	<url>www.scape-project.eu/</url>
 
 	<parent>
-		<groupId>eu.scape_project.tool</groupId>
+		<groupId>eu.scape-project.tool</groupId>
 		<artifactId>toolwrapper</artifactId>
 		<version>1.0.1</version>
 		<relativePath>..</relativePath>
