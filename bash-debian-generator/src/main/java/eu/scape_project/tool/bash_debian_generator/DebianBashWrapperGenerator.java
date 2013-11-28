@@ -62,6 +62,7 @@ import eu.scape_project.tool.data.Installation;
 import eu.scape_project.tool.data.OperatingSystemDependency;
 import eu.scape_project.tool.data.Operation;
 import eu.scape_project.tool.data.Output;
+import eu.scape_project.tool.data.PackageManager;
 import eu.scape_project.tool.data.Parameter;
 import eu.scape_project.tool.data.Tool;
 
@@ -525,12 +526,22 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 		String dependencies = "";
 		if (installation != null) {
 			List<OperatingSystemDependency> dependencyList = installation
-					.getDependency();
+					.getDependencies();
 
 			for (OperatingSystemDependency osd : dependencyList) {
 				if ("Debian".equalsIgnoreCase(osd.getOperatingSystemName()
 						.toString())) {
-					dependencies = ", " + osd.getValue();
+					List<PackageManager> packageManagerList = osd
+							.getPackageManager();
+					for (PackageManager packageManager : packageManagerList) {
+						if ("Dpkg".equalsIgnoreCase(packageManager.getType()
+								.name())) {
+							// FIXME ensure that this is the proper way of
+							// handling the content of the config element
+							dependencies = packageManager.getConfig()
+									.toString();
+						}
+					}
 					break;
 				}
 			}

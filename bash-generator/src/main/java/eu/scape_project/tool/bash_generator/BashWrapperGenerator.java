@@ -23,12 +23,17 @@ package eu.scape_project.tool.bash_generator;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -39,6 +44,12 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
+import eu.scape_project.tool.components.Characterisation;
+import eu.scape_project.tool.components.Component;
+import eu.scape_project.tool.components.Components;
+import eu.scape_project.tool.components.MigrationAction;
+import eu.scape_project.tool.components.QAObjectComparison;
+import eu.scape_project.tool.components.QAPropertyComparison;
 import eu.scape_project.tool.core.ToolWrapperCommandline;
 import eu.scape_project.tool.core.ToolWrapperGenerator;
 import eu.scape_project.tool.core.configuration.Constants;
@@ -49,7 +60,12 @@ import eu.scape_project.tool.data.Output;
 import eu.scape_project.tool.data.Parameter;
 import eu.scape_project.tool.data.Tool;
 
-/** Class that generates, from a toolspec, a bash wrapper and a Taverna workflow */
+/**
+ * Class that generates, from a toolspec, a bash wrapper and a Taverna workflow.
+ * Additionally, if a component spec is provided, extra annotations are added to
+ * the generated Taverna workflow in order to be able to integrate the SCAPE
+ * Component Catalog
+ */
 public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		ToolWrapperGenerator {
 	private static Logger log = Logger.getLogger(BashWrapperGenerator.class);
@@ -57,18 +73,52 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	private Operation operation;
 	private String wrapperName;
 	private Template bashWrapperTemplate;
+	private String generationDate;
+	private Components components;
+	private Component component;
+	private static boolean debug;
+
+	static {
+		String property = System.getenv("TW_DEBUG");
+		debug = property != null;
+	}
 
 	/** Public empty constructor (setting all the instance variables to null) */
 	public BashWrapperGenerator() {
 		super();
 		tool = null;
+		components = null;
+		component = null;
 		operation = null;
 		wrapperName = null;
 		bashWrapperTemplate = null;
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				Constants.FULL_DATE_WITH_TIMEZONE, Locale.getDefault());
+		generationDate = sdf.format(new Date());
+
+		Options options = super.getOptions();
+		Option opt = new Option("c", "components", true,
+				"components spec file location");
+		opt.setRequired(false);
+		options.addOption(opt);
+		if (debug) {
+			log.info("[DEBUG] Instantiated with success!");
+		}
 	}
 
 	public void setOperation(Operation operation) {
 		this.operation = operation;
+	}
+
+	private void setComponent(Component component) {
+		this.component = component;
+	}
+
+	private void setComponents(Components components) {
+		this.components = components;
+		// Component component = this.components.getComponent().get(0);
+		// System.out.println(component.getName() + " > " +
+		// component.getAuthor());
 	}
 
 	public void setWrapperName(String wrapperName) {
@@ -168,7 +218,23 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	private boolean generateWorkflow(VelocityContext context,
 			String outputDirectory) {
 		boolean success = true;
-		Template workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
+		Template workflowTemplate = null;
+		if (component == null) {
+			workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
+		} else {
+			/*
+			 * Known issues 1) Outputting mixed content of
+			 * /tool/installation/dependencies/packageManager/config
+			 */
+			if (component instanceof MigrationAction) {
+				workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
+				context.put("migrationAction", (MigrationAction) component);
+			} else if (component instanceof Characterisation) {
+			} else if (component instanceof QAObjectComparison) {
+			} else if (component instanceof QAPropertyComparison) {
+
+			}
+		}
 		UUID randomUUID = UUID.randomUUID();
 		context.put("uniqID", randomUUID);
 		StringWriter sw = new StringWriter();
@@ -395,7 +461,13 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		context.put("toolName", tool.getName());
 		context.put("toolHomepage", tool.getHomepage());
 		context.put("toolVersion", tool.getVersion());
+		context.put("toolInstallation", tool.getInstallation());
 		context.put("wrapperName", wrapperName);
+		context.put("generationDate", generationDate);
+		context.put("operation", operation);
+		context.put("components", components);
+		context.put("component", component);
+		context.put("esc", new org.apache.velocity.tools.generic.EscapeTool());
 	}
 
 	/**
@@ -409,14 +481,39 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		BashWrapperGenerator bwg = new BashWrapperGenerator();
 		ImmutablePair<CommandLine, Tool> pair = bwg
 				.processToolWrapperGenerationRequest(args);
+		if (debug) {
+			log.info("[DEBUG] Created pair!");
+		}
 		CommandLine cmd = null;
 		Tool tool = null;
+		Components components = null;
 		int exitCode = 0;
 		if (pair != null) {
 			cmd = pair.getLeft();
 			tool = pair.getRight();
 
+			// try to create a component instance if provided the components
+			// spec file location
+			if (cmd.hasOption("c")) {
+				components = eu.scape_project.tool.components.utils.Utils
+						.createComponents(cmd.getOptionValue("c"));
+				bwg.setComponents(components);
+			}
+
 			for (Operation operation : tool.getOperations().getOperation()) {
+
+				// just to make sure it doesn't have an older value
+				bwg.setComponent(null);
+
+				if (components != null) {
+					for (Component component : components.getComponent()) {
+						if (component.getName().equalsIgnoreCase(
+								operation.getName())) {
+							bwg.setComponent(component);
+							break;
+						}
+					}
+				}
 
 				// define wrapper name as operation name
 				bwg.setWrapperName(operation.getName());

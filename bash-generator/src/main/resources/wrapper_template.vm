@@ -119,7 +119,7 @@ execute_command(){
 }
 
 verify_stdin(){
-   tmp_input=`mktemp`
+   tmp_input=$(mktemp)
    if [ $stdin -eq 1 ]; then
       dd of=$tmp_input >/dev/null 2>/dev/null
       input_files1=()
@@ -128,7 +128,7 @@ verify_stdin(){
 }
 
 verify_stdout(){
-   tmp_output=`mktemp`
+   tmp_output=$(mktemp)
    if [ $stdout -eq 1 ]; then
       output_files1=()
       output_files1+=("$tmp_output")

@@ -8,7 +8,40 @@
 				<name>$input.getName()</name>
 				<depth>0</depth>
 				<granularDepth>0</granularDepth>
-				<annotations/>
+				<annotations>
+#if($input.getDescription())
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>$input.getDescription()</text>
+									</annotationBean>
+									<date>$generationDate</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+#end
+#if($input.getDefaultValue())
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+										<text>$input.getDefaultValue()</text>
+									</annotationBean>
+									<date>$generationDate</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+#end
+				</annotations>
 			</port>
 #end
 #foreach( $param in $listOfParams )
@@ -16,7 +49,40 @@
 				<name>$param.getName()</name>
 				<depth>0</depth>
 				<granularDepth>0</granularDepth>
-				<annotations/>
+				<annotations>
+#if($param.getDescription())
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>$param.getDescription()</text>
+									</annotationBean>
+									<date>$generationDate</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+#end
+#if($param.getDefaultValue())
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+										<text>$param.getDefaultValue()</text>
+									</annotationBean>
+									<date>$generationDate</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+#end
+				</annotations>
 			</port>
 #end
 #foreach( $output in $listOfOutputs )
@@ -24,7 +90,24 @@
 				<name>$output.getName()</name>
 				<depth>0</depth>
 				<granularDepth>0</granularDepth>
-				<annotations/>
+				<annotations>
+#if($output.getDescription())
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>$output.getDescription()</text>
+									</annotationBean>
+									<date>$generationDate</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+#end
+				</annotations>
 			</port>
 #end
 		</inputPorts>
@@ -64,7 +147,7 @@
 						<granularDepth>0</granularDepth>
 					</port>
 				</outputPorts>
-				<annotations/>
+				<annotations/>	
 				<activities>
 					<activity>
 						<raven>

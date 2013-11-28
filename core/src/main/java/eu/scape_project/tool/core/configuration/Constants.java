@@ -36,4 +36,6 @@ public final class Constants {
 
 	public static final String DEBIANBASHGENERATOR_DEBS_OUTDIRNAME = "debian";
 	public static final String BASHGENERATOR_INSTALL_OUTDIRNAME = "install";
+
+	public static final String FULL_DATE_WITH_TIMEZONE = "yyyy-MM-dd HH:mm:ss.S z";
 }

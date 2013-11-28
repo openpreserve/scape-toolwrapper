@@ -19,7 +19,7 @@
  #   limitations under the License.
  ################################################################################
  */
-package eu.scape_project.tool.data.utils;
+package eu.scape_project.tool.components.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,38 +35,40 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import eu.scape_project.tool.data.Tool;
+import eu.scape_project.tool.components.Components;
 
 /**
- * Utility class with static methods useful to interact with toolspec info
+ * Utility class with static methods useful to interact with component spec info
  * */
 
 public final class Utils {
 	private static Logger log = Logger.getLogger(Utils.class);
-	private static final String TOOLSPEC_FILENAME_IN_RESOURCES = "/tool-1.1_draft.xsd";
+	private static final String COMPONENTS_SPEC_FILENAME_IN_RESOURCES = "/component-1.1_draft.xsd";
 
 	private Utils() {
 	}
 
 	/**
-	 * Method that creates a {@link Tool} instance from the provided toolspec
-	 * file, validating it against toolspec XML Schema
+	 * Method that creates a {@link Components} instance from the provided
+	 * component spec file, validating it against component spec XML Schema
 	 * 
-	 * @param toolspecFilePath
-	 *            path to the toolspec file
+	 * @param componentSpecFilePath
+	 *            path to the component spec file
 	 */
-	public static Tool createTool(String toolspecFilePath) {
-		Tool tool = null;
+	public static Components createComponents(String componentSpecFilePath) {
+		Components component = null;
 		File schemaFile = null;
 		try {
-			JAXBContext context = JAXBContext.newInstance(Tool.class);
+			JAXBContext context = JAXBContext.newInstance(Components.class);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
 			// copy XML Schema from resources to a temporary location
 			schemaFile = File.createTempFile("schema", null);
-			FileUtils.copyInputStreamToFile(Utils.class
-					.getResourceAsStream(TOOLSPEC_FILENAME_IN_RESOURCES),
-					schemaFile);
+			FileUtils
+					.copyInputStreamToFile(
+							Utils.class
+									.getResourceAsStream(COMPONENTS_SPEC_FILENAME_IN_RESOURCES),
+							schemaFile);
 			Schema schema = SchemaFactory.newInstance(
 					XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(schemaFile);
 
@@ -74,12 +76,11 @@ public final class Utils {
 			unmarshaller.setSchema(schema);
 
 			// unmarshal it
-			tool = (Tool) ((javax.xml.bind.JAXBElement<Tool>) unmarshaller
-					.unmarshal(new File(toolspecFilePath))).getValue();
-
+			component = (Components) unmarshaller.unmarshal(new File(
+					componentSpecFilePath));
 		} catch (JAXBException e) {
 			log.error(
-					"The toolspec provided doesn't validate against its schema!",
+					"The component spec provided doesn't validate against its schema!",
 					e);
 		} catch (SAXException e) {
 			log.error("The XML Schema is not valid!", e);
@@ -87,11 +88,13 @@ public final class Utils {
 			log.error(
 					"An error occured while copying the XML Schema from the resources to a temporary location!",
 					e);
+		} catch (Throwable e) {
+			log.error("An error occured!", e);
 		} finally {
 			if (schemaFile != null) {
 				schemaFile.deleteOnExit();
 			}
 		}
-		return tool;
+		return component;
 	}
 }

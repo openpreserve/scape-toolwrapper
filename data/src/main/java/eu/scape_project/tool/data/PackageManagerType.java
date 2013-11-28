@@ -14,46 +14,33 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for OperatingSystemName.
+ * <p>Java class for PackageManagerType.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="OperatingSystemName">
+ * &lt;simpleType name="PackageManagerType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="Debian"/>
- *     &lt;enumeration value="Ubuntu"/>
- *     &lt;enumeration value="Redhat"/>
- *     &lt;enumeration value="CentOS"/>
- *     &lt;enumeration value="Windows"/>
- *     &lt;enumeration value="MacOS"/>
+ *     &lt;enumeration value="Dpkg"/>
+ *     &lt;enumeration value="RPM"/>
  *     &lt;enumeration value="Other"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
  * 
  */
-@XmlType(name = "OperatingSystemName")
+@XmlType(name = "PackageManagerType")
 @XmlEnum
-public enum OperatingSystemName {
+public enum PackageManagerType {
 
-    @XmlEnumValue("Debian")
-    DEBIAN("Debian"),
-    @XmlEnumValue("Ubuntu")
-    UBUNTU("Ubuntu"),
-    @XmlEnumValue("Redhat")
-    REDHAT("Redhat"),
-    @XmlEnumValue("CentOS")
-    CENT_OS("CentOS"),
-    @XmlEnumValue("Windows")
-    WINDOWS("Windows"),
-    @XmlEnumValue("MacOS")
-    MAC_OS("MacOS"),
+    @XmlEnumValue("Dpkg")
+    DPKG("Dpkg"),
+    RPM("RPM"),
     @XmlEnumValue("Other")
     OTHER("Other");
     private final String value;
 
-    OperatingSystemName(String v) {
+    PackageManagerType(String v) {
         value = v;
     }
 
@@ -61,8 +48,8 @@ public enum OperatingSystemName {
         return value;
     }
 
-    public static OperatingSystemName fromValue(String v) {
-        for (OperatingSystemName c: OperatingSystemName.values()) {
+    public static PackageManagerType fromValue(String v) {
+        for (PackageManagerType c: PackageManagerType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
