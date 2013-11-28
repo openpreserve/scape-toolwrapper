@@ -116,9 +116,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 
 	private void setComponents(Components components) {
 		this.components = components;
-		// Component component = this.components.getComponent().get(0);
-		// System.out.println(component.getName() + " > " +
-		// component.getAuthor());
 	}
 
 	public void setWrapperName(String wrapperName) {
@@ -158,7 +155,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			VelocityContext wrapperContext = new VelocityContext();
 
 			// add bash related information to the template context
-			addGeneralInformationToContext(wrapperContext);
+			addGeneralElementsToContext(wrapperContext);
 			addUsageInformationToContext(wrapperContext);
 			addCommandInformationToContext(wrapperContext);
 
@@ -223,16 +220,26 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
 		} else {
 			/*
-			 * Known issues 1) Outputting mixed content of
+			 * Known issues ****************** 1) Outputting mixed content of
 			 * /tool/installation/dependencies/packageManager/config
+			 * 
+			 * Stuff to check out later *********************** 1)
+			 * requiresInstallation semantic annotations
 			 */
 			if (component instanceof MigrationAction) {
 				workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
 				context.put("migrationAction", (MigrationAction) component);
 			} else if (component instanceof Characterisation) {
+				workflowTemplate = loadVelocityTemplateFromResources("characterisation_workflow_template.vm");
+				context.put("characterisation", (Characterisation) component);
 			} else if (component instanceof QAObjectComparison) {
+				workflowTemplate = loadVelocityTemplateFromResources("qaObjectComparison_workflow_template.vm");
+				context.put("qaObjectComparison",
+						(QAObjectComparison) component);
 			} else if (component instanceof QAPropertyComparison) {
-
+				workflowTemplate = loadVelocityTemplateFromResources("qaPropertyComparison_workflow_template.vm");
+				context.put("qaPropertyComparison",
+						(QAPropertyComparison) component);
 			}
 		}
 		UUID randomUUID = UUID.randomUUID();
@@ -457,7 +464,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		return "\"" + in + "\"";
 	}
 
-	private void addGeneralInformationToContext(VelocityContext context) {
+	private void addGeneralElementsToContext(VelocityContext context) {
 		context.put("toolName", tool.getName());
 		context.put("toolHomepage", tool.getHomepage());
 		context.put("toolVersion", tool.getVersion());

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://scape-project.eu/component" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xsi:schemaLocation="http://scape-project.eu/component data/src/main/resources/component-1.1_draft.xsd"
+	schemaVersion="1.1">
+	<component xsi:type="Characterisation" 
+		profile="http://purl.org/DP/components#Characterisation"
+		profileVersion="1.0"
+		name="digital-preservation-characterisation-video-ffprobe-video2xml"
+		author="Hélder Silva">
+		<license name="Apache-2.0" type="FLOSS"
+			uri="http://opensource.org/licenses/Apache-2.0" />
+		<acceptedMimetype>avi</acceptedMimetype>
+		<acceptedMimetype>mov</acceptedMimetype>
+		<outputMeasure name="image_width_of_video" uri="http://purl.org/DP/quality/measures#390"/>
+		<outputMeasure name="the_height_of_the_video_track" uri="http://purl.org/DP/quality/measures#391"/>
+	</component>
+</components>

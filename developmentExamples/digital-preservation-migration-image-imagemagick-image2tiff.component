@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://scape-project.eu/component" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xsi:schemaLocation="http://scape-project.eu/component data/src/main/resources/component-1.1_draft.xsd"
+	schemaVersion="1.1">
+	<component xsi:type="MigrationAction" 
+		profile="http://purl.org/DP/components#MigrationAction"
+		profileVersion="1.0"
+		name="digital-preservation-migration-image-imagemagick-image2tiff"
+		author="Hélder Silva">
+		<license name="Apache-2.0" type="FLOSS"
+			uri="http://opensource.org/licenses/Apache-2.0" />
+		<migrationPath>
+			<fromMimetype>image/bmp</fromMimetype>
+			<toMimetype>image/tiff</toMimetype>
+		</migrationPath>
+		<migrationPath>
+			<fromMimetype>image/gif</fromMimetype>
+			<toMimetype>image/tiff</toMimetype>
+		</migrationPath>
+		<migrationPath>
+			<fromMimetype>image/vnd.microsoft.icon</fromMimetype>
+			<toMimetype>image/tiff</toMimetype>
+		</migrationPath>
+		<migrationPath>
+			<fromMimetype>image/jpeg</fromMimetype>
+			<toMimetype>image/tiff</toMimetype>
+		</migrationPath>
+		<migrationPath>
+			<fromMimetype>image/png</fromMimetype>
+			<toMimetype>image/tiff</toMimetype>
+		</migrationPath>
+		<migrationPath>
+			<fromMimetype>image/jp2</fromMimetype>
+			<toMimetype>image/tiff</toMimetype>
+		</migrationPath>
+	</component>
+</components>
