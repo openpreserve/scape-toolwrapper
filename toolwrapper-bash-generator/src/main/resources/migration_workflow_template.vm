@@ -672,7 +672,6 @@ String $output.getName() = target.getAbsolutePath();</script>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain>
-#if($component)
 			<annotation_chain encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 					<annotationAssertions>
@@ -687,8 +686,6 @@ String $output.getName() = target.getAbsolutePath();</script>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain>
-#end
-#if($migrationAction)			
 			<annotation_chain_2_2 encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   					<annotationAssertions>
@@ -715,8 +712,6 @@ String $output.getName() = target.getAbsolutePath();</script>
   					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain_2_2>
-#end			
-						
 			<annotation_chain encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 					<annotationAssertions>
@@ -732,8 +727,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain>
 
-#if($component)
-	#foreach( $migrationPath in $migrationObject.getMigrationPaths().getMigrationPath())			
+#foreach( $migrationPath in $migrationObject.getMigrationPaths().getMigrationPath())			
 			<annotation_chain encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 					<annotationAssertions>
@@ -756,7 +750,6 @@ String $output.getName() = target.getAbsolutePath();</script>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain>
-	#end
 #end
 		</annotations>
 	</dataflow>

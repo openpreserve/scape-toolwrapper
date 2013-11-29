@@ -227,9 +227,15 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			 * requiresInstallation semantic annotations
 			 */
 			if (component instanceof MigrationAction) {
+				if (!canMigrationActionWorkflowWithComponentsBeGenerated()) {
+					return false;
+				}
 				workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
 				context.put("migrationAction", (MigrationAction) component);
 			} else if (component instanceof Characterisation) {
+				if (!canCharacterisationWorkflowWithComponentsBeGenerated()) {
+					return false;
+				}
 				workflowTemplate = loadVelocityTemplateFromResources("characterisation_workflow_template.vm");
 				context.put("characterisation", (Characterisation) component);
 			} else if (component instanceof QAObjectComparison) {
@@ -240,6 +246,9 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				context.put("qaObjectComparison",
 						(QAObjectComparison) component);
 			} else if (component instanceof QAPropertyComparison) {
+				if (!canQAPropertyComparisonWorkflowWithComponentsBeGenerated()) {
+					return false;
+				}
 				workflowTemplate = loadVelocityTemplateFromResources("qaPropertyComparison_workflow_template.vm");
 				context.put("qaPropertyComparison",
 						(QAPropertyComparison) component);
@@ -254,6 +263,14 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				operation.getName()
 						+ Constants.BASHGENERATOR_WORKFLOW_EXTENSION, sw, false);
 		return success;
+	}
+
+	private boolean canMigrationActionWorkflowWithComponentsBeGenerated() {
+		return true;
+	}
+
+	private boolean canCharacterisationWorkflowWithComponentsBeGenerated() {
+		return true;
 	}
 
 	private boolean canQAObjectComparisonWorkflowWithComponentsBeGenerated() {
@@ -271,6 +288,10 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			log.error("[ERROR] As can only exist 2 input ports, the number of accepted mimetypes also needs to be 2, which relate precisely with those 2 input ports!");
 		}
 		return res;
+	}
+
+	private boolean canQAPropertyComparisonWorkflowWithComponentsBeGenerated() {
+		return true;
 	}
 
 	private void addCommandInformationToContext(VelocityContext wrapperContext) {

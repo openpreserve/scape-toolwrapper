@@ -3,6 +3,7 @@
 	<dataflow id="$uniqID" role="top">
 		<name>Workflow_$wrapperName$toolVersion</name>
 		<inputPorts>
+#set($it = 1)
 #foreach( $input in $listOfInputs )
 			<port>
 				<name>$input.getName()</name>
@@ -47,7 +48,8 @@
 								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
 									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
 										<mimeType>text/rdf+n3</mimeType>
-										<content>&lt;&gt; &lt;http://purl.org/DP/components#portType&gt; &lt;http://purl.org/DP/components#SourcePathPort&gt; . </content>
+										<content>&lt;&gt; &lt;http://purl.org/DP/components#portType&gt; &lt;http://purl.org/DP/components#SourcePath${it}Port&gt; . </content>
+#set($it=$it + 1)
 									</annotationBean>
 									<date>$generationDate</date>
 									<creators/>
@@ -97,27 +99,12 @@
 						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 					</annotation_chain>
 #end
-					<annotation_chain_2_2 encoding="xstream">
-						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
-							<annotationAssertions>
-								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
-										<mimeType>text/rdf+n3</mimeType>
-										<content>&lt;&gt; &lt;http://purl.org/DP/components#portType&gt; &lt;http://purl.org/DP/components#ParameterPort&gt; . </content>
-									</annotationBean>
-									<date>$generationDate</date>
-									<creators/>
-									<curationEventList/>
-								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-							</annotationAssertions>
-						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-					</annotation_chain_2_2>
 				</annotations>
 			</port>
 #end
 		</inputPorts>
 		<outputPorts>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
 			<port>
 				<name>$measure.getName()</name>
 				<annotations>
@@ -543,10 +530,14 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
 
 
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
 		<processor>
-            <name>doMagicBash_$measure.getName()</name>
+            <name>computeUsingBash_$measure.getName()</name>
             <inputPorts>
+				<port>
+                  <name>STDOUT_INNER</name>
+                  <depth>0</depth>
+               </port>
 #foreach( $output in $listOfOutputs )
                <port>
                   <name>$output.getName()</name>
@@ -571,6 +562,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                   </raven>
                   <class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class>
                   <inputMap>
+					<map from="STDOUT_INNER" to="STDOUT_INNER"/>
 #foreach( $output in $listOfOutputs )
                      <map from="$output.getName()" to="$output.getName()"/>
 #end
@@ -589,7 +581,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <useCaseDescription>
                            <usecaseid/>
                            <description/>
-                           <command>echo "%%#foreach( $output in $listOfOutputs )$output.getName()%% #end"</command>
+                           <command>echo "%%STDOUT_INNER%% #foreach( $output in $listOfOutputs )%%$output.getName()%% #end"</command>
                            <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
                            <executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
                            <tags>
@@ -602,6 +594,20 @@ String $output.getName() = target.getAbsolutePath();</script>
                            <queue__deny/>
                            <static__inputs/>
                            <inputs>
+                           	<entry>
+                                 <string>STDOUT_INNER</string>            
+                                 <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                                    <tag>STDOUT_INNER</tag>                  
+                                    <file>false</file>                       
+                                    <tempFile>false</tempFile>               
+                                    <binary>false</binary>                   
+                                    <charsetName>UTF-8</charsetName>         
+                                    <forceCopy>false</forceCopy>             
+                                    <list>false</list>                       
+                                    <concatenate>false</concatenate>         
+                                    <mime/>                                  
+                                 </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                              </entry>
 #foreach( $output in $listOfOutputs )
                            	<entry>
                                  <string>$output.getName()</string>
@@ -701,6 +707,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                <iteration>
                   <strategy>
                      <cross>
+                     	<port name="STDOUT_INNER" depth="0"/>
 #foreach( $output in $listOfOutputs )
                         <port name="$output.getName()" depth="0"/>
 #end
@@ -711,7 +718,7 @@ String $output.getName() = target.getAbsolutePath();</script>
          </processor>
 #end
 		<processor>
-            <name>doMagic</name>
+            <name>compute</name>
             <inputPorts>
                <port>
                   <name>STDOUT</name>
@@ -725,7 +732,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
             </inputPorts>
             <outputPorts>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
                <port>
                   <name>$measure.getName()</name>
                   <depth>0</depth>
@@ -749,7 +756,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
                   </inputMap>
                   <outputMap>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
                      <map from="$measure.getName()" to="$measure.getName()"/>
 #end
                   </outputMap>
@@ -780,7 +787,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
                         </inputs>
                         <outputs>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
                            <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                               <name>$measure.getName()</name>
                               <depth>0</depth>
@@ -878,8 +885,8 @@ String $output.getName() = target.getAbsolutePath();</script>
          </processor>			
 		</processors>
 		<conditions>
-#foreach( $measure in $characterisation.getOutputMeasure())
-			<condition control="commandline_tool_invocation" target="doMagicBash_$measure.getName()"/>
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
+			<condition control="commandline_tool_invocation" target="computeUsingBash_$measure.getName()"/>
 #end
 		</conditions>
       
@@ -919,7 +926,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 			</datalink>
 			<datalink>
             <sink type="processor">
-               <processor>doMagic</processor>
+               <processor>compute</processor>
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
@@ -927,10 +934,10 @@ String $output.getName() = target.getAbsolutePath();</script>
                <port>$output.getName()</port>
             </source>
          </datalink>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
          <datalink>
             <sink type="processor">
-               <processor>doMagicBash_$measure.getName()</processor>     
+               <processor>computeUsingBash_$measure.getName()</processor>     
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
@@ -940,20 +947,20 @@ String $output.getName() = target.getAbsolutePath();</script>
          </datalink>
 #end
 #end
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $qaObjectComparison.getOutputMeasure())
 			<datalink>
             <sink type="dataflow">
                <port>$measure.getName()</port>
             </sink>
             <source type="processor">
-               <processor>doMagic</processor>
+               <processor>compute</processor>
                <port>$measure.getName()</port>
             </source>
          </datalink>
 #end
 		<datalink>
             <sink type="processor">
-               <processor>doMagic</processor>
+               <processor>compute</processor>
                <port>STDOUT</port>
             </sink>
             <source type="processor">
@@ -968,7 +975,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 					<annotationAssertions>
 						<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
 							<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
-								<text>SCAPE Migration Component</text>
+								<text>SCAPE QA Object Component</text>
 							</annotationBean>
 							<date>$generationDate</date>
 							<creators/>
@@ -977,7 +984,6 @@ String $output.getName() = target.getAbsolutePath();</script>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain>
-#if($component)
 			<annotation_chain encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 					<annotationAssertions>
@@ -991,9 +997,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 						</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-			</annotation_chain>
-#end
-#if($migrationAction)			
+			</annotation_chain>			
 			<annotation_chain_2_2 encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   					<annotationAssertions>
@@ -1001,16 +1005,15 @@ String $output.getName() = target.getAbsolutePath();</script>
       						<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
 								<mimeType>text/rdf+n3</mimeType>
 								<content>&lt;&gt;    &lt;http://purl.org/DP/components#fits&gt;
-              &lt;http://purl.org/DP/components#MigrationAction&gt; .
-#foreach( $migrationPath in $migrationAction.getMigrationPath())
-&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
-              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
-                &lt;http://purl.org/DP/components#sourceMimetype&gt;
-                        "$migrationPath.getFromMimetype()" ;
-                &lt;http://purl.org/DP/components#targetMimetype&gt;
-                        "$migrationPath.getToMimetype()"
-              ] .
+              &lt;http://purl.org/DP/components#QAObjectComparison&gt; .
+              &lt;&gt; &lt;http://purl.org/DP/components#handlesMimetypes&gt;
+    			[ a &lt;http://purl.org/DP/components#AcceptedMimetypes&gt;
+#set($it = 1) 
+#foreach( $mimetype in $qaObjectComparison.getAcceptedMimetype())
+					; &lt;http://purl.org/DP/components#handlesMimetype${it}&gt; "$mimetype.getValue()"
+#set($it=$it + 1)
 #end
+				] .
 								</content>
 							</annotationBean>
 							<date>$generationDate</date>
@@ -1019,8 +1022,7 @@ String $output.getName() = target.getAbsolutePath();</script>
     					</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-			</annotation_chain_2_2>
-#end			
+			</annotation_chain_2_2>			
 						
 			<annotation_chain encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
@@ -1036,33 +1038,6 @@ String $output.getName() = target.getAbsolutePath();</script>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 			</annotation_chain>
-
-#if($component)
-	#foreach( $migrationPath in $migrationObject.getMigrationPaths().getMigrationPath())			
-			<annotation_chain encoding="xstream">
-				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
-					<annotationAssertions>
-						<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-							<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
-								<mimeType>text/rdf+n3</mimeType>
-								<content>[]    &lt;http://scape-project.eu/pc/vocab/components#migrates&gt;
-              [ a       &lt;http://scape-project.eu/pc/vocab/components#MigrationPath&gt; ;
-                &lt;http://scape-project.eu/pc/vocab/profiles#fromMimetype&gt;
-                        "$migrationPath.getFromMimetype()" ;
-                &lt;http://scape-project.eu/pc/vocab/profiles#toMimetype&gt;
-                        "$migrationPath.getToMimetype()"
-              ] .
-		</content>
-							</annotationBean>
-							<date>$generationDate</date>
-							<creators/>
-							<curationEventList/>
-						</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
-					</annotationAssertions>
-				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-			</annotation_chain>
-	#end
-#end
 		</annotations>
 	</dataflow>
 </workflow>

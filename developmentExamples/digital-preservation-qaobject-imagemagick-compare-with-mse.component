@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://scape-project.eu/component" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xsi:schemaLocation="http://scape-project.eu/component toolwrapper-data/src/main/resources/component-1.1_draft.xsd"
+	schemaVersion="1.1">
+	<component xsi:type="QAObjectComparison" 
+		profile="http://purl.org/DP/components#QAObjectComparison"
+		profileVersion="1.1"
+		name="digital-preservation-qaobject-imagemagick-compare-with-mse"
+		author="Hélder Silva">
+		<license name="Apache-2.0" type="FLOSS"
+			uri="http://opensource.org/licenses/Apache-2.0" />
+		<acceptedMimetype>image/*</acceptedMimetype>
+		<acceptedMimetype>image/*</acceptedMimetype>
+		<outputMeasure name="image_distance_mean_error_squared_MSE" uri="http://purl.org/DP/quality/measures#6"/>
+	</component>
+</components>

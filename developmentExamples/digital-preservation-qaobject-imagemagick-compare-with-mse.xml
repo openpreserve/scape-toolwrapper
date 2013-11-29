@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://scape-project.eu/tool toolwrapper-data/src/main/resources/tool-1.1_draft.xsd"
 	xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink"
 	schemaVersion="1.1" name="ImageMagick" version="2.0.0"
-	homepage="http://www.imagemagick.org/script/convert.php">
+	homepage="http://www.imagemagick.org/script/compare.php">
 	<installation>
 		<dependencies operatingSystemName="Debian">
 			<packageManager type="Other" otherType="Maven">
@@ -49,22 +49,22 @@
 
 	<operations>
 		<operation
-			name="digital-preservation-migration-image-imagemagick-image2tiff">
-			<description>Converts any ImageMagick supported image format to TIFF</description>
-			<command>/usr/bin/convert ${params} ${input} tiff:${output}</command>
+			name="digital-preservation-qaobject-imagemagick-compare-with-mse">
+			<description>Compares 2 images using MSE method</description>
+			<command>/usr/bin/compare -metric MSE ${input1} ${input2} ${difference}</command>
 			<inputs>
-				<input name="input" required="true">
-					<description>Reference to input file</description>
+				<input name="input1" required="true">
+					<description>Reference to the first image file</description>
 				</input>
-				<parameter name="params" required="false">
-					<description>Additional input conversion parameters</description>
+				<input name="input2" required="true">
+					<description>Reference to the second image file</description>
+				</input>
+				<parameter name="difference" required="true">
+					<description>Image that will contain the difference between the two images</description>
 				</parameter>
 			</inputs>
 			<outputs>
-				<output name="output" required="true">
-					<description>Reference to output file</description>
-					<extension>tiff</extension>
-				</output>
+				<stdout />
 			</outputs>
 		</operation>
 	</operations>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://scape-project.eu/tool data/src/main/resources/tool-1.1_draft.xsd"
+	xsi:schemaLocation="http://scape-project.eu/tool toolwrapper-data/src/main/resources/tool-1.1_draft.xsd"
 	xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink"
 	schemaVersion="1.1" name="FFmpeg" version="1.0.1" homepage="http://ffmpeg.org/">
 	
