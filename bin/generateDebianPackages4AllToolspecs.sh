@@ -49,11 +49,11 @@ do
 	TOOLSPEC_SCRIPT_PATH=`echo $TOOLSPEC_PATH | sed 's#\.[a-zA-Z]\+#.sh#'`
 	CHANGELOG_PATH=`echo $TOOLSPEC_PATH | sed 's#\.[a-zA-Z]\+#.changelog#'`
 	TEMP_FOLDER=$(mktemp -d)
-	$TOOLWRAPPER_BASE_DIR/bash-generator/bin/generate.sh -t $TOOLSPEC_PATH -o $TEMP_FOLDER
+	$TOOLWRAPPER_BASE_DIR/toolwrapper-bash-generator/bin/generate.sh -t $TOOLSPEC_PATH -o $TEMP_FOLDER
 	if [ -e $TOOLSPEC_SCRIPT_PATH ]; then
 		cp $TOOLSPEC_SCRIPT_PATH "$TEMP_FOLDER/install/"
 	fi
-	$TOOLWRAPPER_BASE_DIR/bash-debian-generator/bin/generate.sh -t $TOOLSPEC_PATH -i $TEMP_FOLDER -o $TEMP_FOLDER -e $MAINTAINER_EMAIL -ch $CHANGELOG_PATH
+	$TOOLWRAPPER_BASE_DIR/toolwrapper-bash-debian-generator/bin/generate.sh -t $TOOLSPEC_PATH -i $TEMP_FOLDER -o $TEMP_FOLDER -e $MAINTAINER_EMAIL -ch $CHANGELOG_PATH
 	if [ $? -eq 0 ]; then
 		for i in $(find $TEMP_FOLDER -name *.deb);
 		do

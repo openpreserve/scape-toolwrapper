@@ -15,12 +15,11 @@
 	</properties>
 
 	<modules>
-		<module>bash-generator</module>
-		<module>bash-debian-generator</module>
-		<module>core</module>
-		<!--<module>workflow-uploader</module>-->
-		<module>data</module>
-		<!-- <module>rest-generator</module> -->
+		<module>toolwrapper-bash-generator</module>
+		<module>toolwrapper-bash-debian-generator</module>
+		<module>toolwrapper-core</module>
+		<!--<module>toolwrapper-workflow-uploader</module>-->
+		<module>toolwrapper-data</module>
 	</modules>
 
 	<build>
@@ -82,7 +81,7 @@
 			</dependency>
 			<dependency>
 				<groupId>eu.scape-project.tool</groupId>
-				<artifactId>data</artifactId>
+				<artifactId>toolwrapper-data</artifactId>
 				<version>1.0.1</version>
 			</dependency>
 			<dependency>
@@ -92,7 +91,7 @@
 			</dependency>
 			<dependency>
 				<groupId>eu.scape-project.tool</groupId>
-				<artifactId>core</artifactId>
+				<artifactId>toolwrapper-core</artifactId>
 				<version>1.0.1</version>
 			</dependency>
 			<dependency>
