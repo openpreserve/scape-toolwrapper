@@ -243,6 +243,7 @@
 						</inputMap>
 						<outputMap>
 							<map from="STDOUT" to="STDOUT"/>
+							<map from="STDERR" to="STDERR"/>
 						</outputMap>
 						<configBean encoding="xstream">
 							<net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
@@ -422,7 +423,7 @@
 			
 #foreach( $output in $listOfOutputs )
 			<processor>
-            <name>create$output.getName()</name>
+            <name>create_$output.getName()</name>
             <inputPorts/>
             <outputPorts>
                <port>
@@ -547,6 +548,14 @@ String $output.getName() = target.getAbsolutePath();</script>
 		<processor>
             <name>computeUsingBash_$measure.getName()</name>
             <inputPorts>
+				<port>
+                  <name>STDOUT_IN</name>
+                  <depth>0</depth>
+				</port>
+				<port>
+                  <name>STDERR_IN</name>
+                  <depth>0</depth>
+				</port>
 #foreach( $output in $listOfOutputs )
                <port>
                   <name>$output.getName()</name>
@@ -571,6 +580,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                   </raven>
                   <class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class>
                   <inputMap>
+						<map from="STDOUT_IN" to="STDOUT_IN"/>
+						<map from="STDERR_IN" to="STDERR_IN"/>
 #foreach( $output in $listOfOutputs )
                      <map from="$output.getName()" to="$output.getName()"/>
 #end
@@ -589,10 +600,12 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <useCaseDescription>
                            <usecaseid/>
                            <description/>
-                           <command>echo "#foreach( $output in $listOfOutputs )%%$output.getName()%% #end"</command>
+                           <command>echo "#foreach( $output in $listOfOutputs )%%$output.getName()%% #end %%STDERR_IN%% %%STDOUT_IN%%"</command>
                            <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
                            <executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
                            <tags>
+								<string>STDERR_IN</string>
+								<string>STDOUT_IN</string>
 #foreach( $output in $listOfOutputs )
                               <string>$output.getName()</string>
 #end
@@ -602,6 +615,34 @@ String $output.getName() = target.getAbsolutePath();</script>
                            <queue__deny/>
                            <static__inputs/>
                            <inputs>
+								<entry>
+                                 <string>STDOUT_IN</string>
+                                 <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                                    <tag>STDOUT_IN</tag>
+                                    <file>false</file>
+                                    <tempFile>false</tempFile>
+                                    <binary>false</binary>
+                                    <charsetName>UTF-8</charsetName>
+                                    <forceCopy>false</forceCopy>
+                                    <list>false</list>
+                                    <concatenate>false</concatenate>
+                                    <mime/>
+                                 </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                              </entry>
+                              <entry>
+                                 <string>STDERR_IN</string>
+                                 <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                                    <tag>$output.getName()</tag>
+                                    <file>false</file>
+                                    <tempFile>false</tempFile>
+                                    <binary>false</binary>
+                                    <charsetName>UTF-8</charsetName>
+                                    <forceCopy>false</forceCopy>
+                                    <list>false</list>
+                                    <concatenate>false</concatenate>
+                                    <mime/>
+                                 </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                              </entry>
 #foreach( $output in $listOfOutputs )
                            	<entry>
                                  <string>$output.getName()</string>
@@ -701,6 +742,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                <iteration>
                   <strategy>
                      <cross>
+						<port name="STDOUT_IN" depth="0"/>
+						<port name="STDERR_IN" depth="0"/>
 #foreach( $output in $listOfOutputs )
                         <port name="$output.getName()" depth="0"/>
 #end
@@ -714,7 +757,11 @@ String $output.getName() = target.getAbsolutePath();</script>
             <name>compute</name>
             <inputPorts>
                <port>
-                  <name>STDOUT</name>
+                  <name>STDOUT_IN</name>
+                  <depth>0</depth>
+               </port>
+               <port>
+                  <name>STDERR_IN</name>
                   <depth>0</depth>
                </port>
 #foreach( $output in $listOfOutputs )
@@ -743,7 +790,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                   </raven>
                   <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>
                   <inputMap>
-                     <map from="STDOUT" to="STDOUT"/>
+                     <map from="STDOUT_IN" to="STDOUT_IN"/>
+                     <map from="STDERR_IN" to="STDERR_IN"/>
 #foreach( $output in $listOfOutputs )
                      <map from="$output.getName()" to="$output.getName()"/>
 #end
@@ -769,7 +817,17 @@ String $output.getName() = target.getAbsolutePath();</script>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
 #end
                            <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
-                              <name>STDOUT</name>
+                              <name>STDOUT_IN</name>
+                              <depth>0</depth>
+                              <mimeTypes>
+                                 <string>text/plain</string>
+                              </mimeTypes>
+                              <handledReferenceSchemes/>
+                              <translatedElementType>java.lang.String</translatedElementType>
+                              <allowsLiteralValues>true</allowsLiteralValues>
+                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+                              <name>STDERR_IN</name>
                               <depth>0</depth>
                               <mimeTypes>
                                  <string>text/plain</string>
@@ -867,7 +925,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                <iteration>
                   <strategy>
                      <cross>
-                        <port name="STDOUT" depth="0"/>
+                        <port name="STDOUT_IN" depth="0"/>
+                        <port name="STDERR_IN" depth="0"/>
 #foreach( $output in $listOfOutputs )
                         <port name="$output.getName()" depth="0"/>
 #end
@@ -913,7 +972,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 					<processor>commandline_tool_invocation</processor>
 				</sink>
 				<source type="processor">
-					<processor>create$output.getName()</processor>
+					<processor>create_$output.getName()</processor>
 					<port>$output.getName()</port>
 				</source>
 			</datalink>
@@ -923,7 +982,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
-               <processor>create$output.getName()</processor>
+               <processor>create_$output.getName()</processor>
                <port>$output.getName()</port>
             </source>
          </datalink>
@@ -934,8 +993,28 @@ String $output.getName() = target.getAbsolutePath();</script>
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
-               <processor>create$output.getName()</processor>      
+               <processor>create_$output.getName()</processor>      
                <port>$output.getName()</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingBash_$measure.getName()</processor>     
+               <port>STDERR_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>      
+               <port>STDERR</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingBash_$measure.getName()</processor>     
+               <port>STDOUT_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>      
+               <port>STDOUT</port>
             </source>
          </datalink>
 #end
@@ -954,11 +1033,21 @@ String $output.getName() = target.getAbsolutePath();</script>
 		<datalink>
             <sink type="processor">
                <processor>compute</processor>
-               <port>STDOUT</port>
+               <port>STDOUT_IN</port>
             </sink>
             <source type="processor">
                <processor>commandline_tool_invocation</processor>
                <port>STDOUT</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>compute</processor>
+               <port>STDERR_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>
+               <port>STDERR</port>
             </source>
          </datalink>
 		</datalinks>

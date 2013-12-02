@@ -619,7 +619,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
 #foreach( $output in $listOfOutputs )
 			<datalink>
-				<sink type="merge">
+				<sink type="processor">
 					<port>$output.getName()_inner</port>
 					<processor>commandline_tool_invocation</processor>
 				</sink>

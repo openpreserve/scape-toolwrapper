@@ -291,7 +291,14 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	}
 
 	private boolean canQAPropertyComparisonWorkflowWithComponentsBeGenerated() {
-		return true;
+		boolean res = true;
+		// qaPropertyComparison can at most have 2 inputs (that will be
+		// annotated as SourcePath1Port and SourcePath2Port)
+		if (operation.getInputs().getInput().size() > 2) {
+			res = false;
+			log.error("[ERROR] Cannot generate a workflow with components for more than 2 input ports!");
+		}
+		return res;
 	}
 
 	private void addCommandInformationToContext(VelocityContext wrapperContext) {

@@ -230,6 +230,7 @@
 						</inputMap>
 						<outputMap>
 							<map from="STDOUT" to="STDOUT"/>
+							<map from="STDERR" to="STDERR"/>
 						</outputMap>
 						<configBean encoding="xstream">
 							<net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
@@ -533,25 +534,8 @@ String $output.getName() = target.getAbsolutePath();</script>
 #foreach( $measure in $qaObjectComparison.getOutputMeasure())
 		<processor>
             <name>computeUsingBash_$measure.getName()</name>
-            <inputPorts>
-				<port>
-                  <name>STDOUT_INNER</name>
-                  <depth>0</depth>
-               </port>
-#foreach( $output in $listOfOutputs )
-               <port>
-                  <name>$output.getName()</name>
-                  <depth>0</depth>
-               </port>
-#end
-            </inputPorts>
-            <outputPorts>
-               <port>
-                  <name>STDOUT</name>
-                  <depth>0</depth>
-                  <granularDepth>0</granularDepth>
-               </port>
-            </outputPorts>
+            <inputPorts/>
+            <outputPorts/>
             <annotations/>
             <activities>
                <activity>
@@ -561,15 +545,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                      <version>1.4</version>
                   </raven>
                   <class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class>
-                  <inputMap>
-					<map from="STDOUT_INNER" to="STDOUT_INNER"/>
-#foreach( $output in $listOfOutputs )
-                     <map from="$output.getName()" to="$output.getName()"/>
-#end
-                  </inputMap>
-                  <outputMap>
-                     <map from="STDOUT" to="STDOUT"/>
-                  </outputMap>
+                  <inputMap/>
+                  <outputMap/>
                   <configBean encoding="xstream">
                      <net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
                         <mechanismType>789663B8-DA91-428A-9F7D-B3F3DA185FD4</mechanismType>
@@ -581,13 +558,12 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <useCaseDescription>
                            <usecaseid/>
                            <description/>
-                           <command>echo "%%STDOUT_INNER%% #foreach( $output in $listOfOutputs )%%$output.getName()%% #end"</command>
+                           <command>echo "%%STDOUT_IN%% "%%STDERR_IN%% #foreach( $output in $listOfOutputs )%%$output.getName()%% #end"</command>
                            <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
                            <executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
                            <tags>
-#foreach( $output in $listOfOutputs )
-                              <string>$output.getName()</string>
-#end
+                              <string>STDOUT_IN</string>
+                              <string>STDERR_IN</string>
                            </tags>
                            <REs/>
                            <queue__preferred/>
@@ -595,9 +571,9 @@ String $output.getName() = target.getAbsolutePath();</script>
                            <static__inputs/>
                            <inputs>
                            	<entry>
-                                 <string>STDOUT_INNER</string>            
+                                 <string>STDOUT_IN</string>            
                                  <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-                                    <tag>STDOUT_INNER</tag>                  
+                                    <tag>STDOUT_IN</tag>                  
                                     <file>false</file>                       
                                     <tempFile>false</tempFile>               
                                     <binary>false</binary>                   
@@ -608,22 +584,20 @@ String $output.getName() = target.getAbsolutePath();</script>
                                     <mime/>                                  
                                  </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
                               </entry>
-#foreach( $output in $listOfOutputs )
-                           	<entry>
-                                 <string>$output.getName()</string>
+                              <entry>
+                                 <string>STDERR_IN</string>            
                                  <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-                                    <tag>$output.getName()</tag>
-                                    <file>false</file>
-                                    <tempFile>false</tempFile>
-                                    <binary>false</binary>
-                                    <charsetName>UTF-8</charsetName>
-                                    <forceCopy>false</forceCopy>
-                                    <list>false</list>
-                                    <concatenate>false</concatenate>
-                                    <mime/>
+                                    <tag>STDERR_IN</tag>                  
+                                    <file>false</file>                       
+                                    <tempFile>false</tempFile>               
+                                    <binary>false</binary>                   
+                                    <charsetName>UTF-8</charsetName>         
+                                    <forceCopy>false</forceCopy>             
+                                    <list>false</list>                       
+                                    <concatenate>false</concatenate>         
+                                    <mime/>                                  
                                  </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
                               </entry>
-#end
                            </inputs>
                            <outputs/>
                            <includeStdIn>false</includeStdIn>
@@ -707,7 +681,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                <iteration>
                   <strategy>
                      <cross>
-                     	<port name="STDOUT_INNER" depth="0"/>
+                     	<port name="STDOUT_IN" depth="0"/>
+                     	<port name="STDERR_IN" depth="0"/>
 #foreach( $output in $listOfOutputs )
                         <port name="$output.getName()" depth="0"/>
 #end
@@ -721,7 +696,11 @@ String $output.getName() = target.getAbsolutePath();</script>
             <name>compute</name>
             <inputPorts>
                <port>
-                  <name>STDOUT</name>
+                  <name>STDOUT_IN</name>
+                  <depth>0</depth>
+               </port>
+               <port>
+                  <name>STDERR_IN</name>
                   <depth>0</depth>
                </port>
 #foreach( $output in $listOfOutputs )
@@ -750,7 +729,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                   </raven>
                   <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>
                   <inputMap>
-                     <map from="STDOUT" to="STDOUT"/>
+                     <map from="STDOUT_IN" to="STDOUT_IN"/>
+                     <map from="STDERR_IN" to="STDERR_IN"/>
 #foreach( $output in $listOfOutputs )
                      <map from="$output.getName()" to="$output.getName()"/>
 #end
@@ -776,7 +756,17 @@ String $output.getName() = target.getAbsolutePath();</script>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
 #end
                            <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
-                              <name>STDOUT</name>
+                              <name>STDOUT_IN</name>
+                              <depth>0</depth>
+                              <mimeTypes>
+                                 <string>text/plain</string>
+                              </mimeTypes>
+                              <handledReferenceSchemes/>
+                              <translatedElementType>java.lang.String</translatedElementType>
+                              <allowsLiteralValues>true</allowsLiteralValues>
+                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+                              <name>STDERR_IN</name>
                               <depth>0</depth>
                               <mimeTypes>
                                  <string>text/plain</string>
@@ -874,7 +864,8 @@ String $output.getName() = target.getAbsolutePath();</script>
                <iteration>
                   <strategy>
                      <cross>
-                        <port name="STDOUT" depth="0"/>
+                        <port name="STDOUT_IN" depth="0"/>
+                        <port name="STDERR_IN" depth="0"/>
 #foreach( $output in $listOfOutputs )
                         <port name="$output.getName()" depth="0"/>
 #end
@@ -961,11 +952,21 @@ String $output.getName() = target.getAbsolutePath();</script>
 		<datalink>
             <sink type="processor">
                <processor>compute</processor>
-               <port>STDOUT</port>
+               <port>STDOUT_IN</port>
             </sink>
             <source type="processor">
                <processor>commandline_tool_invocation</processor>
                <port>STDOUT</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>compute</processor>
+               <port>STDERR_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>
+               <port>STDERR</port>
             </source>
          </datalink>
 		</datalinks>
