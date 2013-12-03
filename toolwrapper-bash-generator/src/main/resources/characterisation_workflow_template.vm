@@ -9,7 +9,7 @@
 				<depth>0</depth>
 				<granularDepth>0</granularDepth>
 				<annotations>
-#if($input.getDescription())
+#if( $input.getDescription() )
 					<annotation_chain encoding="xstream">
 						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 							<annotationAssertions>
@@ -25,7 +25,7 @@
 						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 					</annotation_chain>
 #end
-#if($input.getDefaultValue())
+#if( $input.getDefaultValue() )
 					<annotation_chain encoding="xstream">
 						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 							<annotationAssertions>
@@ -65,7 +65,7 @@
 				<depth>0</depth>
 				<granularDepth>0</granularDepth>
 				<annotations>
-#if($param.getDescription())
+#if( $param.getDescription() )
 					<annotation_chain encoding="xstream">
 						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 							<annotationAssertions>
@@ -81,7 +81,7 @@
 						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
 					</annotation_chain>
 #end
-#if($param.getDefaultValue())
+#if( $param.getDefaultValue() )
 					<annotation_chain encoding="xstream">
 						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
 							<annotationAssertions>
@@ -117,7 +117,7 @@
 #end
 		</inputPorts>
 		<outputPorts>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
 			<port>
 				<name>$measure.getName()</name>
 				<annotations>
@@ -176,7 +176,7 @@
 					</port>
 				</outputPorts>				
 				
-#if($toolInstallation)				
+#if( $toolInstallation )				
 				<annotations>
 					<annotation_chain_2_2 encoding="xstream">
 						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
@@ -185,7 +185,7 @@
       								<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
         								<mimeType>text/rdf+n3</mimeType>
         								<content>
-#foreach( $operatingSystem in $toolInstallation.getDependencies())
+#foreach( $operatingSystem in $toolInstallation.getDependencies() )
 		&lt;&gt; &lt;http://purl.org/DP/components#requiresInstallation&gt; [ 
 			a &lt;http://purl.org/DP/components#Installation&gt; ;
 			&lt;http://purl.org/DP/components#hasEnvironment&gt; &lt;http://purl.org/DP/components#$operatingSystem.getOperatingSystemName().value()&gt; ;
@@ -196,14 +196,14 @@
             	&lt;http://purl.org/DP/components#requiresSource&gt; "$packageManager.getSource()"
         	] ;
 #end
-#foreach($dependency in $operatingSystem.getDependency())        	
+#foreach( $dependency in $operatingSystem.getDependency() )        	
     		&lt;http://purl.org/DP/components#dependsOn&gt; [ 
     			a &lt;http://purl.org/DP/components#Dependency&gt; ;
             	&lt;http://www.w3.org/2004/02/skos/core#prefLabel&gt; "$dependency.getName()" ;
-#if($dependency.getVersion())
+#if( $dependency.getVersion() )
             	&lt;http://purl.org/DP/components#dependencyVersion&gt; "$dependency.getVersion()" ;
 #end
-#if($dependency.getLicense().getUri())
+#if( $dependency.getLicense().getUri() )
             	&lt;http://creativecommons.org/ns#license&gt; &lt;$dependency.getLicense().getUri()&gt;
 #end
         	]
@@ -459,7 +459,7 @@
                         <classLoaderSharing>workflow</classLoaderSharing>
                         <localDependencies/>                     
                         <artifactDependencies/>
-#if($output.getExtension())
+#if( $output.getExtension() )
                         <script>File target = File.createTempFile(Long.toString(System.nanoTime()), ".$output.getExtension()");
 #else
 						<script>File target = File.createTempFile(Long.toString(System.nanoTime()), "");
@@ -544,7 +544,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
 
 
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
 		<processor>
             <name>computeUsingBash_$measure.getName()</name>
             <inputPorts>
@@ -772,7 +772,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
             </inputPorts>
             <outputPorts>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
                <port>
                   <name>$measure.getName()</name>
                   <depth>0</depth>
@@ -797,7 +797,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
                   </inputMap>
                   <outputMap>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
                      <map from="$measure.getName()" to="$measure.getName()"/>
 #end
                   </outputMap>
@@ -838,7 +838,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
                         </inputs>
                         <outputs>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
                            <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                               <name>$measure.getName()</name>
                               <depth>0</depth>
@@ -937,7 +937,7 @@ String $output.getName() = target.getAbsolutePath();</script>
          </processor>			
 		</processors>
 		<conditions>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
 			<condition control="commandline_tool_invocation" target="computeUsingBash_$measure.getName()"/>
 #end
 		</conditions>
@@ -986,7 +986,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                <port>$output.getName()</port>
             </source>
          </datalink>
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
          <datalink>
             <sink type="processor">
                <processor>computeUsingBash_$measure.getName()</processor>     
@@ -1019,7 +1019,7 @@ String $output.getName() = target.getAbsolutePath();</script>
          </datalink>
 #end
 #end
-#foreach( $measure in $characterisation.getOutputMeasure())
+#foreach( $measure in $characterisation.getOutputMeasure() )
 			<datalink>
             <sink type="dataflow">
                <port>$measure.getName()</port>
