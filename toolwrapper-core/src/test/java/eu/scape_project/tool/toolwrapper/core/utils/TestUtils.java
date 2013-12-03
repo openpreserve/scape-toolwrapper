@@ -9,8 +9,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import eu.scape_project.tool.toolwrapper.core.utils.Utils;
-
 public class TestUtils {
 	private File temporaryDirectory = null, temporaryDirectory2 = null,
 			temporaryDirectory3 = null;
@@ -56,9 +54,8 @@ public class TestUtils {
 			temporaryDirectory3 = File.createTempFile(tempDirFileName, "");
 			Assert.assertTrue(temporaryDirectory3.delete()
 					&& temporaryDirectory3.mkdir());
-			Assert.assertTrue(Utils.writeTemplateContent(
-					temporaryDirectory3.getAbsolutePath(), null, testFileName,
-					w, false));
+			Assert.assertTrue(Utils.writeTemplateContent(temporaryDirectory3,
+					null, testFileName, w, false));
 			File f = new File(temporaryDirectory3, testFileName);
 			Assert.assertTrue(f.exists() && f.length() > 0);
 		} catch (IOException e) {

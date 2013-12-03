@@ -55,11 +55,8 @@ import eu.scape_project.tool.toolwrapper.data.components_spec.MigrationAction;
 import eu.scape_project.tool.toolwrapper.data.components_spec.QAObjectComparison;
 import eu.scape_project.tool.toolwrapper.data.components_spec.QAPropertyComparison;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Input;
-import eu.scape_project.tool.toolwrapper.data.tool_spec.Installation;
-import eu.scape_project.tool.toolwrapper.data.tool_spec.OperatingSystemDependency;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Operation;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Output;
-import eu.scape_project.tool.toolwrapper.data.tool_spec.PackageManager;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Parameter;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 
@@ -79,12 +76,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	private String generationDate;
 	private Components components;
 	private Component component;
-	private static boolean debug;
-
-	static {
-		String property = System.getenv("TW_DEBUG");
-		debug = property != null;
-	}
 
 	/** Public empty constructor (setting all the instance variables to null) */
 	public BashWrapperGenerator() {
@@ -104,9 +95,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				"components spec file location");
 		opt.setRequired(false);
 		options.addOption(opt);
-		if (debug) {
-			log.info("[DEBUG] Instantiated with success!");
-		}
 	}
 
 	public void setOperation(Operation operation) {
@@ -144,7 +132,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	 * */
 	@Override
 	public boolean generateWrapper(Tool tool, Operation operation,
-			String outputDirectory) {
+			File outputDirectory) {
 		this.tool = tool;
 		this.operation = operation;
 		boolean res = true;
@@ -173,22 +161,22 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		return res;
 	}
 
-	private boolean verifyNeededDirectories(String outputDirectory) {
+	private boolean verifyNeededDirectories(File outputDirectory) {
 		boolean res = true;
-		File directory = new File(outputDirectory);
-		if (!directory.exists() && !directory.mkdir()) {
-			log.error("The directory \"" + directory
+		// File directory = new File(outputDirectory);
+		if (!outputDirectory.exists() && !outputDirectory.mkdir()) {
+			log.error("The directory \"" + outputDirectory.getAbsolutePath()
 					+ "\" cannot be created...");
 			res = false;
 		} else {
 			res = res
-					&& verifyAndCreateNeededDirectory(new File(directory,
+					&& verifyAndCreateNeededDirectory(new File(outputDirectory,
 							Constants.BASHGENERATOR_WRAPPER_OUTDIRNAME));
 			res = res
-					&& verifyAndCreateNeededDirectory(new File(directory,
+					&& verifyAndCreateNeededDirectory(new File(outputDirectory,
 							Constants.BASHGENERATOR_WORKFLOW_OUTDIRNAME));
 			res = res
-					&& verifyAndCreateNeededDirectory(new File(directory,
+					&& verifyAndCreateNeededDirectory(new File(outputDirectory,
 							Constants.BASHGENERATOR_INSTALL_OUTDIRNAME));
 		}
 		return res;
@@ -206,7 +194,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	}
 
 	private boolean generateBashWrapper(VelocityContext context,
-			String outputDirectory) {
+			File outputDirectory) {
 		// merge the template context and the template itself
 		StringWriter bashWrapperSW = new StringWriter();
 		bashWrapperTemplate.merge(context, bashWrapperSW);
@@ -216,7 +204,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	}
 
 	private boolean generateWorkflow(VelocityContext context,
-			String outputDirectory) {
+			File outputDirectory) {
 		boolean success = true;
 		Template workflowTemplate = null;
 		if (component == null) {
@@ -525,27 +513,17 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		context.put("esc", new org.apache.velocity.tools.generic.EscapeTool());
 	}
 
-	private void printToolInstallationInfo(Tool tool) {
-		log.info("---------------------------------------------------------------------------------------");
-		Installation installation = tool.getInstallation();
-		List<OperatingSystemDependency> dependencies = installation
-				.getDependencies();
-		for (OperatingSystemDependency operatingSystem : dependencies) {
-			log.info("***");
-			log.info("Operating system name: "
-					+ operatingSystem.getOperatingSystemName().value());
-			log.info("Operating system version: "
-					+ operatingSystem.getOperatingSystemVersion());
-			List<PackageManager> packageManager = operatingSystem
-					.getPackageManager();
-			for (PackageManager pk : packageManager) {
-				log.info("###");
-				log.info("\tPackage manager type: " + pk.getType().value());
-				log.info("\tPackage manager source: " + pk.getSource());
-				log.info("\tPackage manager config: " + pk.getConfig().trim());
-			}
+	private void copySpecsToInstallDir(File outputDir, File toolSpec,
+			File componentSpec) {
+		Utils.copyFile(toolSpec, new File(outputDir.getAbsoluteFile()
+				+ File.separator + Constants.BASHGENERATOR_INSTALL_OUTDIRNAME,
+				toolSpec.getName()), false);
+		if (componentSpec != null) {
+			Utils.copyFile(componentSpec,
+					new File(outputDir.getAbsoluteFile() + File.separator
+							+ Constants.BASHGENERATOR_INSTALL_OUTDIRNAME,
+							componentSpec.getName()), false);
 		}
-		log.info("---------------------------------------------------------------------------------------");
 	}
 
 	/**
@@ -559,55 +537,66 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		BashWrapperGenerator bwg = new BashWrapperGenerator();
 		ImmutablePair<CommandLine, Tool> pair = bwg
 				.processToolWrapperGenerationRequest(args);
-		if (debug) {
-			log.info("[DEBUG] Created pair!");
-		}
 		CommandLine cmd = null;
 		Tool tool = null;
 		Components components = null;
 		int exitCode = 0;
+
 		if (pair != null) {
 			cmd = pair.getLeft();
 			tool = pair.getRight();
 
-			bwg.printToolInstallationInfo(tool);
+			File toolFile = cmd.hasOption("t") ? new File(
+					cmd.getOptionValue("t")) : null;
+			File componentsFile = cmd.hasOption("c") ? new File(
+					cmd.getOptionValue("c")) : null;
+			File outputdirFile = cmd.hasOption("o") ? new File(
+					cmd.getOptionValue("o")) : null;
 
 			// try to create a component instance if provided the components
 			// spec file location
-			if (cmd.hasOption("c")) {
+			if (componentsFile != null) {
 				components = eu.scape_project.tool.toolwrapper.data.components_spec.utils.Utils
-						.createComponents(cmd.getOptionValue("c"));
+						.createComponents(componentsFile.getAbsolutePath());
 				bwg.setComponents(components);
 			}
 
-			for (Operation operation : tool.getOperations().getOperation()) {
+			if (componentsFile == null || components != null) {
+				bwg.copySpecsToInstallDir(outputdirFile, toolFile,
+						componentsFile);
+				for (Operation operation : tool.getOperations().getOperation()) {
 
-				// just to make sure it doesn't have an older value
-				bwg.setComponent(null);
+					// just to make sure it doesn't have an older value
+					bwg.setComponent(null);
 
-				if (components != null) {
-					for (Component component : components.getComponent()) {
-						if (component.getName().equalsIgnoreCase(
-								operation.getName())) {
-							bwg.setComponent(component);
-							break;
+					if (components != null) {
+						for (Component component : components.getComponent()) {
+							if (component.getName().equalsIgnoreCase(
+									operation.getName())) {
+								bwg.setComponent(component);
+								break;
+							}
 						}
 					}
-				}
 
-				// define wrapper name as operation name
-				bwg.setWrapperName(operation.getName());
+					// define wrapper name as operation name
+					bwg.setWrapperName(operation.getName());
 
-				// generate the wrapper and Taverna workflow
-				boolean generationOK = bwg.generateWrapper(tool, operation,
-						cmd.getOptionValue("o"));
-				if (generationOK) {
-					log.info("Ouputs for operation \"" + operation.getName()
-							+ "\"" + " generated with success!");
-				} else {
-					log.error("[ERROR] Error generating outputs for operation \""
-							+ operation.getName() + "\"");
+					// generate the wrapper and Taverna workflow
+					boolean generationOK = bwg.generateWrapper(tool, operation,
+							outputdirFile);
+					if (generationOK) {
+						log.info("Ouputs for operation \""
+								+ operation.getName() + "\""
+								+ " generated with success!");
+					} else {
+						log.error("[ERROR] Error generating outputs for operation \""
+								+ operation.getName() + "\"");
+					}
 				}
+			} else {
+				log.error("[ERROR] Error loading components file!");
+				exitCode = 2;
 			}
 		} else {
 

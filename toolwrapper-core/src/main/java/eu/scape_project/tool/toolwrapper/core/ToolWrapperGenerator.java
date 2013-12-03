@@ -21,6 +21,8 @@
  */
 package eu.scape_project.tool.toolwrapper.core;
 
+import java.io.File;
+
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Operation;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 
@@ -39,6 +41,5 @@ public interface ToolWrapperGenerator {
 	 * @param outputDirectory
 	 *            directory where to place the created artifact(s)
 	 */
-	boolean generateWrapper(Tool tool, Operation operation,
-			String outputDirectory);
+	boolean generateWrapper(Tool tool, Operation operation, File outputDirectory);
 }

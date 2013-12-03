@@ -130,7 +130,7 @@ public final class Utils {
 	 *            if the file being created should be executable
 	 * @return true if the file was successfully written, false otherwise
 	 * */
-	public static boolean writeTemplateContent(String outputDirectory,
+	public static boolean writeTemplateContent(File outputDirectory,
 			String childDirectory, String filename, StringWriter w,
 			boolean makeItExecutable) {
 		boolean res = true;
@@ -138,7 +138,7 @@ public final class Utils {
 		if (childDirectory != null) {
 			directory = new File(outputDirectory, childDirectory);
 		} else {
-			directory = new File(outputDirectory);
+			directory = outputDirectory;
 		}
 		File file = new File(directory, filename);
 		FileOutputStream fos = null;

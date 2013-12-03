@@ -86,7 +86,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	private String inputDir;
 	private String changelog;
 	private String description;
-	private String outputDirectory;
+	private File outputDirectory;
 	private boolean aggregate;
 	// /tmp/TEMP_DIR
 	private File tempDebianBaseDir;
@@ -188,7 +188,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	 * */
 	@Override
 	public boolean generateWrapper(Tool tool, Operation operation,
-			String outputDirectory) {
+			File outputDirectory) {
 		this.tool = tool;
 		this.operation = operation;
 		this.aggregate = (operation == null);
@@ -244,16 +244,15 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 		Velocity.init(p);
 	}
 
-	private boolean verifyNeededDirectories(String outputDirectory) {
+	private boolean verifyNeededDirectories(File outputDirectory) {
 		boolean res = true;
-		File directory = new File(outputDirectory);
-		if (!directory.exists() && !directory.mkdir()) {
-			log.error("The directory \"" + directory
+		if (!outputDirectory.exists() && !outputDirectory.mkdir()) {
+			log.error("The directory \"" + outputDirectory.getAbsolutePath()
 					+ "\" cannot be created...");
 			res = false;
 		} else {
 			// create a directory where the Debian package will end up
-			File childDirectory = new File(directory,
+			File childDirectory = new File(outputDirectory,
 					Constants.DEBIANBASHGENERATOR_DEBS_OUTDIRNAME);
 			boolean operationResult = (childDirectory.exists() || childDirectory
 					.mkdir());
@@ -329,10 +328,10 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				} else {
 					uip.append("[" + value + "]");
 				}
-				String desc = value + " > " + input.getDescription()
+				String description = value + " > " + input.getDescription()
 						+ (i == 0 ? " OR Read input from the STDIN" : "");
-				uipd.append((uipd.length() != 0 ? "\n\t" : "") + desc);
-				uipdman.append(desc + "\n\n");
+				uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
+				uipdman.append(description + "\n\n");
 				i++;
 			}
 			wrapperContext.put("usageInputParameter", uip.toString());
@@ -359,9 +358,9 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 			} else {
 				uip.append("[" + value + "]");
 			}
-			String desc = value + " > " + param.getDescription();
-			uipd.append((uipd.length() != 0 ? "\n\t" : "") + desc);
-			uipdman.append(desc + "\n\n");
+			String description = value + " > " + param.getDescription();
+			uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
+			uipdman.append(description + "\n\n");
 		}
 		wrapperContext.put("usageParamParameter", uip.toString());
 		wrapperContext.put("usageParamParameterDescription", uipd.toString());
@@ -393,10 +392,10 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				} else {
 					uip.append("[" + value + "]");
 				}
-				String desc = value + " > " + output.getDescription()
+				String description = value + " > " + output.getDescription()
 						+ (i == 0 ? " OR Write output to the STDOUT" : "");
-				uipd.append((uipd.length() != 0 ? "\n\t" : "") + desc);
-				uipdman.append(desc + "\n\n");
+				uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
+				uipdman.append(description + "\n\n");
 				i++;
 			}
 			wrapperContext.put("usageOutputParameter", uip.toString());
@@ -525,10 +524,10 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 		Installation installation = tool.getInstallation();
 		String dependencies = "";
 		if (installation != null) {
-			List<OperatingSystemDependency> dependencyList = installation
-					.getDependencies();
+			List<OperatingSystemDependency> operatingSystemList = installation
+					.getOperatingSystem();
 
-			for (OperatingSystemDependency osd : dependencyList) {
+			for (OperatingSystemDependency osd : operatingSystemList) {
 				if ("Debian".equalsIgnoreCase(osd.getOperatingSystemName()
 						.toString())) {
 					List<PackageManager> packageManagerList = osd
@@ -571,7 +570,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 					context.put("toolDescription", op.getDescription());
 					debianTemplateEntry.getValue().merge(context, sw);
 					Utils.writeTemplateContent(
-							tempDebianInnerDir.getAbsolutePath(),
+							tempDebianInnerDir,
 							null,
 							debianTemplateEntry
 									.getKey()
@@ -584,7 +583,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 			} else {
 				debianTemplateEntry.getValue().merge(context, sw);
 				Utils.writeTemplateContent(
-						tempDebianInnerDir.getAbsolutePath(),
+						tempDebianInnerDir,
 						null,
 						debianTemplateEntry.getKey().replaceFirst("MAN",
 								wrapperName), sw, false);
@@ -724,13 +723,12 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	}
 
 	private static int createOneDebianPackage(DebianBashWrapperGenerator dbwg,
-			CommandLine cmd, Tool tool) {
+			CommandLine cmd, Tool tool, File outputdir) {
 		int exitCode = 0;
 		dbwg.setWrapperName(cmd.getOptionValue("d"));
 		dbwg.setDescription(cmd.getOptionValue(CMD_OPTIONS_DESCRIPTION_SHORT));
 
-		boolean generationOK = dbwg.generateWrapper(tool, null,
-				cmd.getOptionValue("o"));
+		boolean generationOK = dbwg.generateWrapper(tool, null, outputdir);
 		if (!generationOK) {
 			log.error("Error generating Debian package");
 			exitCode = 3;
@@ -739,13 +737,14 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	}
 
 	private static int createSeveralDebianPackages(
-			DebianBashWrapperGenerator dbwg, CommandLine cmd, Tool tool) {
+			DebianBashWrapperGenerator dbwg, CommandLine cmd, Tool tool,
+			File outputdir) {
 		int exitCode = 0;
 		for (Operation operation : tool.getOperations().getOperation()) {
 			dbwg.setWrapperName(operation.getName());
 
 			boolean generationOK = dbwg.generateWrapper(tool, operation,
-					cmd.getOptionValue("o"));
+					outputdir);
 			if (!generationOK) {
 				log.error("Error generating Debian package for operation \""
 						+ operation.getName() + "\"");
@@ -774,6 +773,9 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 			cmd = pair.getLeft();
 			tool = pair.getRight();
 
+			File outputdirFile = cmd.hasOption("o") ? new File(
+					cmd.getOptionValue("o")) : null;
+
 			dbwg.setInputDir(cmd.getOptionValue("i"));
 			dbwg.setMaintainerEmail(cmd.getOptionValue("e"));
 			dbwg.setChangelog(cmd.getOptionValue("ch"));
@@ -790,11 +792,11 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 						&& cmd.hasOption(CMD_OPTIONS_DESCRIPTION_SHORT)) {
 
 					// only one Debian package will be generated
-					createOneDebianPackage(dbwg, cmd, tool);
+					createOneDebianPackage(dbwg, cmd, tool, outputdirFile);
 				} else {
 
 					// generate a Debian package for each operation
-					createSeveralDebianPackages(dbwg, cmd, tool);
+					createSeveralDebianPackages(dbwg, cmd, tool, outputdirFile);
 				}
 			}
 		} else {

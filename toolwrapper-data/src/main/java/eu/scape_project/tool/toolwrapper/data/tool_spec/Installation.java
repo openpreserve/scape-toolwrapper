@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="dependencies" type="{http://scape-project.eu/tool}OperatingSystemDependency" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="operatingSystem" type="{http://scape-project.eu/tool}OperatingSystemDependency" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="license" type="{http://scape-project.eu/tool}License"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -41,28 +41,28 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Installation", propOrder = {
-    "dependencies",
+    "operatingSystem",
     "license"
 })
 public class Installation {
 
-    protected List<OperatingSystemDependency> dependencies;
+    protected List<OperatingSystemDependency> operatingSystem;
     @XmlElement(required = true)
     protected License license;
 
     /**
-     * Gets the value of the dependencies property.
+     * Gets the value of the operatingSystem property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the dependencies property.
+     * This is why there is not a <CODE>set</CODE> method for the operatingSystem property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getDependencies().add(newItem);
+     *    getOperatingSystem().add(newItem);
      * </pre>
      * 
      * 
@@ -72,11 +72,11 @@ public class Installation {
      * 
      * 
      */
-    public List<OperatingSystemDependency> getDependencies() {
-        if (dependencies == null) {
-            dependencies = new ArrayList<OperatingSystemDependency>();
+    public List<OperatingSystemDependency> getOperatingSystem() {
+        if (operatingSystem == null) {
+            operatingSystem = new ArrayList<OperatingSystemDependency>();
         }
-        return this.dependencies;
+        return this.operatingSystem;
     }
 
     /**

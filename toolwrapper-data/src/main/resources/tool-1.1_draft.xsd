@@ -30,7 +30,7 @@
 				license.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="dependencies" type="OperatingSystemDependency" maxOccurs="unbounded"
+			<xs:element name="operatingSystem" type="OperatingSystemDependency" maxOccurs="unbounded"
 				minOccurs="0"/>
 			<xs:element name="license" type="License" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
@@ -146,8 +146,6 @@
 			<xs:documentation>Declares an operating system dependency.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<!--<xs:element name="packageManagerConfig" type="PackageManagerConfig" minOccurs="1"
-				maxOccurs="unbounded"/>-->
 			<xs:element name="packageManager" type="PackageManager" minOccurs="1"
 				maxOccurs="unbounded"/>
 			<xs:element name="dependency" type="Dependency" minOccurs="0" maxOccurs="unbounded"/>
@@ -176,19 +174,11 @@
 
 	<xs:complexType name="PackageManager">
 		<xs:sequence>
-			<!-- <xs:element name="config" type="ExtensionComplexType"/> -->
 			<xs:element name="config" type="xs:string" minOccurs="0"/>
 			<xs:element name="source" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="type" type="PackageManagerType" use="required"/>
 		<xs:attribute name="otherType" type="xs:string" use="optional"/>
-	</xs:complexType>
-
-	<!-- extensionComplexType -->
-	<xs:complexType name="ExtensionComplexType" mixed="true">
-		<xs:sequence>
-			<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
 	</xs:complexType>
 
 	<xs:simpleType name="PackageManagerType">

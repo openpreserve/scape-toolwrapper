@@ -1,3 +1,11 @@
+toolwrapper (2.0.0) unstable; urgency=low
+  * Ability to generate SCAPE Components (Taverna workflow with
+    semantic annotations)
+  * The toolSpec and componentSpec (if provided) are now availble
+    inside the Debian Package (look at /usr/share/OP_NAME/)
+
+ -- SCAPE project <hsilva@keep.pt>  Mon, 04 Dec 2013 13:00:00 +0000
+
 toolwrapper (1.0.1) unstable; urgency=low
 
   * The temporary folder used to build the Debian package wasn't 
