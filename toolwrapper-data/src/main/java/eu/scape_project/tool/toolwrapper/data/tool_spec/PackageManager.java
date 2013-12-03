@@ -11,7 +11,6 @@ package eu.scape_project.tool.toolwrapper.data.tool_spec;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -25,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="config" type="{http://scape-project.eu/tool}ExtensionComplexType"/>
+ *         &lt;element name="config" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="source" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="type" use="required" type="{http://scape-project.eu/tool}PackageManagerType" />
@@ -44,8 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class PackageManager {
 
-    @XmlElement(required = true)
-    protected ExtensionComplexType config;
+    protected String config;
     protected String source;
     @XmlAttribute(required = true)
     protected PackageManagerType type;
@@ -57,10 +55,10 @@ public class PackageManager {
      * 
      * @return
      *     possible object is
-     *     {@link ExtensionComplexType }
+     *     {@link String }
      *     
      */
-    public ExtensionComplexType getConfig() {
+    public String getConfig() {
         return config;
     }
 
@@ -69,10 +67,10 @@ public class PackageManager {
      * 
      * @param value
      *     allowed object is
-     *     {@link ExtensionComplexType }
+     *     {@link String }
      *     
      */
-    public void setConfig(ExtensionComplexType value) {
+    public void setConfig(String value) {
         this.config = value;
     }
 

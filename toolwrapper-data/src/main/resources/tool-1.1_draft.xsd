@@ -176,7 +176,8 @@
 
 	<xs:complexType name="PackageManager">
 		<xs:sequence>
-			<xs:element name="config" type="ExtensionComplexType"/>
+			<!-- <xs:element name="config" type="ExtensionComplexType"/> -->
+			<xs:element name="config" type="xs:string" minOccurs="0"/>
 			<xs:element name="source" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="type" type="PackageManagerType" use="required"/>
@@ -198,6 +199,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Dpkg"/>
 			<xs:enumeration value="RPM"/>
+			<xs:enumeration value="Maven"/>
 			<xs:enumeration value="Other"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -256,9 +258,18 @@
 			<xs:extension base="InOutAttrs">
 				<xs:sequence>
 					<xs:element name="defaultValue" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="possibleValue" type="ParameterPossibleValue" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="ParameterPossibleValue">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="description" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
 	</xs:complexType>
 
 	<xs:complexType name="Stdin">

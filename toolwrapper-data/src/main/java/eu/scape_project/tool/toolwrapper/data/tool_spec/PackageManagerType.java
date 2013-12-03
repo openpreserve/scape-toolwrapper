@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="Dpkg"/>
  *     &lt;enumeration value="RPM"/>
+ *     &lt;enumeration value="Maven"/>
  *     &lt;enumeration value="Other"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
@@ -36,6 +37,8 @@ public enum PackageManagerType {
     @XmlEnumValue("Dpkg")
     DPKG("Dpkg"),
     RPM("RPM"),
+    @XmlEnumValue("Maven")
+    MAVEN("Maven"),
     @XmlEnumValue("Other")
     OTHER("Other");
     private final String value;

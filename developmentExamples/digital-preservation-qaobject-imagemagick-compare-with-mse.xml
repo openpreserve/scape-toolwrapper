@@ -6,21 +6,18 @@
 	homepage="http://www.imagemagick.org/script/compare.php">
 	<installation>
 		<dependencies operatingSystemName="Debian">
-			<packageManager type="Other" otherType="Maven">
+			<packageManager type="Maven">
 				<config>
-					text is valid here
-					<anyXmlIsAlsoValidHere>                  
-						<dependency>
-							<groupId>pt.gov.dgarq.roda</groupId>     
-							<artifactId>roda-common-utils</artifactId>
-							<version>1.0.0</version>                 
-						</dependency>
-						<dependency>
-							<groupId>pt.gov.dgarq.roda</groupId>     
-							<artifactId>roda-common-data</artifactId>
-							<version>1.0.0</version>                 
-						</dependency>
-					</anyXmlIsAlsoValidHere>                 
+						&lt;dependency&gt;
+							&lt;groupId&gt;pt.gov.dgarq.roda&lt;/groupId&gt;     
+							&lt;artifactId&gt;roda-common-utils&lt;/artifactId&gt;
+							&lt;version&gt;1.0.0&lt;/version&gt;                 
+						&lt;/dependency&gt;
+						&lt;dependency&gt;
+							&lt;groupId&gt;pt.gov.dgarq.roda&lt;/groupId&gt;     
+							&lt;artifactId&gt;roda-common-data&lt;/artifactId&gt;
+							&lt;version&gt;1.0.0&lt;/version&gt;                 
+						&lt;/dependency&gt;
 				</config>
 				<source>http://artifactory.keep.pt/keep</source>
 			</packageManager>

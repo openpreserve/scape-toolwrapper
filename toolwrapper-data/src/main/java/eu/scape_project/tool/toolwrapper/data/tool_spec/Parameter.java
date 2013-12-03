@@ -8,6 +8,8 @@
 
 package eu.scape_project.tool.toolwrapper.data.tool_spec;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
@@ -24,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{http://scape-project.eu/tool}InOutAttrs">
  *       &lt;sequence>
  *         &lt;element name="defaultValue" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="possibleValue" type="{http://scape-project.eu/tool}ParameterPossibleValue" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -34,13 +37,15 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Parameter", propOrder = {
-    "defaultValue"
+    "defaultValue",
+    "possibleValue"
 })
 public class Parameter
     extends InOutAttrs
 {
 
     protected String defaultValue;
+    protected List<ParameterPossibleValue> possibleValue;
 
     /**
      * Gets the value of the defaultValue property.
@@ -64,6 +69,35 @@ public class Parameter
      */
     public void setDefaultValue(String value) {
         this.defaultValue = value;
+    }
+
+    /**
+     * Gets the value of the possibleValue property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the possibleValue property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPossibleValue().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ParameterPossibleValue }
+     * 
+     * 
+     */
+    public List<ParameterPossibleValue> getPossibleValue() {
+        if (possibleValue == null) {
+            possibleValue = new ArrayList<ParameterPossibleValue>();
+        }
+        return this.possibleValue;
     }
 
 }

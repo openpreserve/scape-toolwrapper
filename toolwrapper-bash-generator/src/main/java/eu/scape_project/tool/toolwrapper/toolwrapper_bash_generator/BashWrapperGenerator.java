@@ -55,8 +55,11 @@ import eu.scape_project.tool.toolwrapper.data.components_spec.MigrationAction;
 import eu.scape_project.tool.toolwrapper.data.components_spec.QAObjectComparison;
 import eu.scape_project.tool.toolwrapper.data.components_spec.QAPropertyComparison;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Input;
+import eu.scape_project.tool.toolwrapper.data.tool_spec.Installation;
+import eu.scape_project.tool.toolwrapper.data.tool_spec.OperatingSystemDependency;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Operation;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Output;
+import eu.scape_project.tool.toolwrapper.data.tool_spec.PackageManager;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Parameter;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 
@@ -220,9 +223,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
 		} else {
 			/*
-			 * Known issues ****************** 1) Outputting mixed content of
-			 * /tool/installation/dependencies/packageManager/config
-			 * 
 			 * Stuff to check out later *********************** 1)
 			 * requiresInstallation semantic annotations
 			 */
@@ -525,6 +525,29 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		context.put("esc", new org.apache.velocity.tools.generic.EscapeTool());
 	}
 
+	private void printToolInstallationInfo(Tool tool) {
+		log.info("---------------------------------------------------------------------------------------");
+		Installation installation = tool.getInstallation();
+		List<OperatingSystemDependency> dependencies = installation
+				.getDependencies();
+		for (OperatingSystemDependency operatingSystem : dependencies) {
+			log.info("***");
+			log.info("Operating system name: "
+					+ operatingSystem.getOperatingSystemName().value());
+			log.info("Operating system version: "
+					+ operatingSystem.getOperatingSystemVersion());
+			List<PackageManager> packageManager = operatingSystem
+					.getPackageManager();
+			for (PackageManager pk : packageManager) {
+				log.info("###");
+				log.info("\tPackage manager type: " + pk.getType().value());
+				log.info("\tPackage manager source: " + pk.getSource());
+				log.info("\tPackage manager config: " + pk.getConfig().trim());
+			}
+		}
+		log.info("---------------------------------------------------------------------------------------");
+	}
+
 	/**
 	 * Main method that parses the parameters, and for each operation generates
 	 * a bash wrapper and a Taverna workflow
@@ -546,6 +569,8 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		if (pair != null) {
 			cmd = pair.getLeft();
 			tool = pair.getRight();
+
+			bwg.printToolInstallationInfo(tool);
 
 			// try to create a component instance if provided the components
 			// spec file location

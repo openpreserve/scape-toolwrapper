@@ -74,8 +74,9 @@ public final class Utils {
 			unmarshaller.setSchema(schema);
 
 			// unmarshal it
-			tool = (Tool) ((javax.xml.bind.JAXBElement<Tool>) unmarshaller
-					.unmarshal(new File(toolspecFilePath))).getValue();
+			// tool = (Tool) ((javax.xml.bind.JAXBElement<Tool>) unmarshaller
+			// .unmarshal(new File(toolspecFilePath))).getValue();
+			tool = (Tool) unmarshaller.unmarshal(new File(toolspecFilePath));
 
 		} catch (JAXBException e) {
 			log.error(
