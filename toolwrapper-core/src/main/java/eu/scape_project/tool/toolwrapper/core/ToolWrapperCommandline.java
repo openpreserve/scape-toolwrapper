@@ -21,9 +21,12 @@
  */
 package eu.scape_project.tool.toolwrapper.core;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,9 +35,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import eu.scape_project.tool.toolwrapper.core.configuration.Constants;
+import eu.scape_project.tool.toolwrapper.core.exceptions.ErrorParsingCmdArgsException;
+import eu.scape_project.tool.toolwrapper.core.exceptions.SpecParsingException;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.utils.Utils;
 
@@ -47,7 +52,6 @@ import eu.scape_project.tool.toolwrapper.data.tool_spec.utils.Utils;
  * */
 public abstract class ToolWrapperCommandline {
 	private Options options;
-	private static Logger log = Logger.getLogger(ToolWrapperCommandline.class);
 
 	/** Public empty constructor */
 	public ToolWrapperCommandline() {
@@ -86,14 +90,16 @@ public abstract class ToolWrapperCommandline {
 	 * @param args
 	 *            command line arguments array
 	 * @return a {@link CommandLine} object that reflects those same parameters
+	 * @throws ErrorParsingCmdArgsException
 	 */
-	private CommandLine parseArguments(String[] args) {
+	private CommandLine parseArguments(String[] args)
+			throws ErrorParsingCmdArgsException {
 		CommandLineParser parser = new PosixParser();
 		CommandLine commandLine = null;
 		try {
 			commandLine = parser.parse(options, args);
 		} catch (org.apache.commons.cli.ParseException e) {
-			log.error(e.getMessage() + "\n");
+			throw new ErrorParsingCmdArgsException(e);
 		}
 		return commandLine;
 	}
@@ -108,15 +114,29 @@ public abstract class ToolWrapperCommandline {
 	 *         {@link CommandLine} object and the associated {@link Tool} object
 	 */
 	public ImmutablePair<CommandLine, Tool> processToolWrapperGenerationRequest(
-			String[] args) {
+			String[] args) throws SpecParsingException,
+			ErrorParsingCmdArgsException {
 		ImmutablePair<CommandLine, Tool> pair = null;
 		Tool tool = null;
 		CommandLine cmd = parseArguments(args);
-		if (cmd != null && cmd.hasOption("t") && cmd.hasOption("o")) {
-			tool = Utils.createTool(cmd.getOptionValue("t"));
-			if (tool != null) {
+		try {
+			if (cmd != null && cmd.hasOption("t") && cmd.hasOption("o")) {
+				tool = Utils.createTool(cmd.getOptionValue("t"));
 				pair = ImmutablePair.of(cmd, tool);
+			} else {
+				throw new SpecParsingException(
+						"Unable to process the toolspec provided! Please check it and also if all mandatory parameters were provided properly!");
 			}
+		} catch (JAXBException e) {
+			throw new SpecParsingException(
+					"Unable to process the toolspec provided! Please check it and also if all mandatory parameters were provided properly!",
+					e);
+		} catch (SAXException e) {
+			throw new SpecParsingException("The XML Schema is not valid!", e);
+		} catch (IOException e) {
+			throw new SpecParsingException(
+					"An error occured while copying the XML Schema from the resources to a temporary location!",
+					e);
 		}
 		return pair;
 	}

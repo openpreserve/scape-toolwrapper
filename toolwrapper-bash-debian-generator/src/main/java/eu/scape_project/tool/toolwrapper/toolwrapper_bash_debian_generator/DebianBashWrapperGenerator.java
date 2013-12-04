@@ -55,6 +55,8 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import eu.scape_project.tool.toolwrapper.core.ToolWrapperCommandline;
 import eu.scape_project.tool.toolwrapper.core.ToolWrapperGenerator;
 import eu.scape_project.tool.toolwrapper.core.configuration.Constants;
+import eu.scape_project.tool.toolwrapper.core.exceptions.ErrorParsingCmdArgsException;
+import eu.scape_project.tool.toolwrapper.core.exceptions.SpecParsingException;
 import eu.scape_project.tool.toolwrapper.core.utils.Utils;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Input;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Installation;
@@ -522,35 +524,37 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 		context.put("maintainerEmail", maintainerEmail);
 
 		Installation installation = tool.getInstallation();
-		String dependencies = "";
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
 		if (installation != null) {
 			List<OperatingSystemDependency> operatingSystemList = installation
 					.getOperatingSystem();
 
 			for (OperatingSystemDependency osd : operatingSystemList) {
-				if ("Debian".equalsIgnoreCase(osd.getOperatingSystemName()
-						.toString())) {
+				if ("Ubuntu".equalsIgnoreCase(osd.getOperatingSystemName()
+						.toString())
+						|| "Debian".equalsIgnoreCase(osd
+								.getOperatingSystemName().toString())) {
 					List<PackageManager> packageManagerList = osd
 							.getPackageManager();
 					for (PackageManager packageManager : packageManagerList) {
 						if ("Dpkg".equalsIgnoreCase(packageManager.getType()
 								.name())) {
-							// FIXME ensure that this is the proper way of
-							// handling the content of the config element
-							dependencies = packageManager.getConfig()
-									.toString();
+							sb.append((i == 0 ? "" : ",")
+									+ packageManager.getConfig().toString());
+							i++;
 						}
 					}
 					break;
 				}
 			}
 		}
-		context.put("toolDependencies", dependencies);
+		context.put("toolDependencies", sb.toString());
 
-		if (!aggregate) {
-			context.put("toolDescription", operation.getDescription());
-		} else {
+		if (aggregate) {
 			context.put("toolDescription", description);
+		} else {
+			context.put("toolDescription", operation.getDescription());
 		}
 		context.put("toolHomepage", tool.getHomepage());
 		context.put("toolVersion", tool.getVersion());
@@ -764,44 +768,51 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	 */
 	public static void main(String[] args) {
 		DebianBashWrapperGenerator dbwg = new DebianBashWrapperGenerator();
-		ImmutablePair<CommandLine, Tool> pair = dbwg
-				.processToolWrapperGenerationRequest(args);
-		CommandLine cmd = null;
-		Tool tool = null;
 		int exitCode = 0;
-		if (pair != null) {
-			cmd = pair.getLeft();
-			tool = pair.getRight();
+		try {
+			ImmutablePair<CommandLine, Tool> pair = dbwg
+					.processToolWrapperGenerationRequest(args);
+			CommandLine cmd = null;
+			Tool tool = null;
 
-			File outputdirFile = cmd.hasOption("o") ? new File(
-					cmd.getOptionValue("o")) : null;
+			if (pair != null) {
+				cmd = pair.getLeft();
+				tool = pair.getRight();
 
-			dbwg.setInputDir(cmd.getOptionValue("i"));
-			dbwg.setMaintainerEmail(cmd.getOptionValue("e"));
-			dbwg.setChangelog(cmd.getOptionValue("ch"));
+				File outputdirFile = cmd.hasOption("o") ? new File(
+						cmd.getOptionValue("o")) : null;
 
-			if (areNonRequiredArgumentsThatCanBeCombinedInvalid(cmd)) {
-				log.error("Missing required option: "
-						+ (cmd.hasOption("a") ? (cmd.hasOption("d") ? CMD_OPTIONS_DESCRIPTION_SHORT
-								: "d")
-								: "a") + "\n");
-				dbwg.printUsage();
-				exitCode = 2;
-			} else {
-				if (cmd.hasOption("a") && cmd.hasOption("d")
-						&& cmd.hasOption(CMD_OPTIONS_DESCRIPTION_SHORT)) {
+				dbwg.setInputDir(cmd.getOptionValue("i"));
+				dbwg.setMaintainerEmail(cmd.getOptionValue("e"));
+				dbwg.setChangelog(cmd.getOptionValue("ch"));
 
-					// only one Debian package will be generated
-					createOneDebianPackage(dbwg, cmd, tool, outputdirFile);
+				if (areNonRequiredArgumentsThatCanBeCombinedInvalid(cmd)) {
+					log.error("Missing required option: "
+							+ (cmd.hasOption("a") ? (cmd.hasOption("d") ? CMD_OPTIONS_DESCRIPTION_SHORT
+									: "d")
+									: "a") + "\n");
+					dbwg.printUsage();
+					exitCode = 3;
 				} else {
+					if (cmd.hasOption("a") && cmd.hasOption("d")
+							&& cmd.hasOption(CMD_OPTIONS_DESCRIPTION_SHORT)) {
 
-					// generate a Debian package for each operation
-					createSeveralDebianPackages(dbwg, cmd, tool, outputdirFile);
+						// only one Debian package will be generated
+						createOneDebianPackage(dbwg, cmd, tool, outputdirFile);
+					} else {
+
+						// generate a Debian package for each operation
+						createSeveralDebianPackages(dbwg, cmd, tool,
+								outputdirFile);
+					}
 				}
 			}
-		} else {
-			// TODO do better error handling
-			// error processing cmd arguments or creating tool instance
+		} catch (ErrorParsingCmdArgsException e) {
+			log.error("[ERROR] " + e.getMessage(), e);
+			dbwg.printUsage();
+			exitCode = 2;
+		} catch (SpecParsingException e) {
+			log.error("[ERROR] " + e.getMessage(), e);
 			dbwg.printUsage();
 			exitCode = 1;
 		}

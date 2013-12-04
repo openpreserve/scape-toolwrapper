@@ -47,6 +47,8 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import eu.scape_project.tool.toolwrapper.core.ToolWrapperCommandline;
 import eu.scape_project.tool.toolwrapper.core.ToolWrapperGenerator;
 import eu.scape_project.tool.toolwrapper.core.configuration.Constants;
+import eu.scape_project.tool.toolwrapper.core.exceptions.ErrorParsingCmdArgsException;
+import eu.scape_project.tool.toolwrapper.core.exceptions.SpecParsingException;
 import eu.scape_project.tool.toolwrapper.core.utils.Utils;
 import eu.scape_project.tool.toolwrapper.data.components_spec.Characterisation;
 import eu.scape_project.tool.toolwrapper.data.components_spec.Component;
@@ -535,73 +537,79 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	 */
 	public static void main(String[] args) {
 		BashWrapperGenerator bwg = new BashWrapperGenerator();
-		ImmutablePair<CommandLine, Tool> pair = bwg
-				.processToolWrapperGenerationRequest(args);
-		CommandLine cmd = null;
-		Tool tool = null;
-		Components components = null;
 		int exitCode = 0;
+		try {
+			ImmutablePair<CommandLine, Tool> pair = bwg
+					.processToolWrapperGenerationRequest(args);
+			CommandLine cmd = null;
+			Tool tool = null;
+			Components components = null;
 
-		if (pair != null) {
-			cmd = pair.getLeft();
-			tool = pair.getRight();
+			if (pair != null) {
+				cmd = pair.getLeft();
+				tool = pair.getRight();
 
-			File toolFile = cmd.hasOption("t") ? new File(
-					cmd.getOptionValue("t")) : null;
-			File componentsFile = cmd.hasOption("c") ? new File(
-					cmd.getOptionValue("c")) : null;
-			File outputdirFile = cmd.hasOption("o") ? new File(
-					cmd.getOptionValue("o")) : null;
+				File toolFile = cmd.hasOption("t") ? new File(
+						cmd.getOptionValue("t")) : null;
+				File componentsFile = cmd.hasOption("c") ? new File(
+						cmd.getOptionValue("c")) : null;
+				File outputdirFile = cmd.hasOption("o") ? new File(
+						cmd.getOptionValue("o")) : null;
 
-			// try to create a component instance if provided the components
-			// spec file location
-			if (componentsFile != null) {
-				components = eu.scape_project.tool.toolwrapper.data.components_spec.utils.Utils
-						.createComponents(componentsFile.getAbsolutePath());
-				bwg.setComponents(components);
-			}
+				// try to create a component instance if provided the components
+				// spec file location
+				if (componentsFile != null) {
+					components = eu.scape_project.tool.toolwrapper.data.components_spec.utils.Utils
+							.createComponents(componentsFile.getAbsolutePath());
+					bwg.setComponents(components);
+				}
 
-			if (componentsFile == null || components != null) {
-				bwg.copySpecsToInstallDir(outputdirFile, toolFile,
-						componentsFile);
-				for (Operation operation : tool.getOperations().getOperation()) {
+				if (componentsFile == null || components != null) {
+					bwg.copySpecsToInstallDir(outputdirFile, toolFile,
+							componentsFile);
+					for (Operation operation : tool.getOperations()
+							.getOperation()) {
 
-					// just to make sure it doesn't have an older value
-					bwg.setComponent(null);
+						// just to make sure it doesn't have an older value
+						bwg.setComponent(null);
 
-					if (components != null) {
-						for (Component component : components.getComponent()) {
-							if (component.getName().equalsIgnoreCase(
-									operation.getName())) {
-								bwg.setComponent(component);
-								break;
+						if (components != null) {
+							for (Component component : components
+									.getComponent()) {
+								if (component.getName().equalsIgnoreCase(
+										operation.getName())) {
+									bwg.setComponent(component);
+									break;
+								}
 							}
 						}
-					}
 
-					// define wrapper name as operation name
-					bwg.setWrapperName(operation.getName());
+						// define wrapper name as operation name
+						bwg.setWrapperName(operation.getName());
 
-					// generate the wrapper and Taverna workflow
-					boolean generationOK = bwg.generateWrapper(tool, operation,
-							outputdirFile);
-					if (generationOK) {
-						log.info("Ouputs for operation \""
-								+ operation.getName() + "\""
-								+ " generated with success!");
-					} else {
-						log.error("[ERROR] Error generating outputs for operation \""
-								+ operation.getName() + "\"");
+						// generate the wrapper and Taverna workflow
+						boolean generationOK = bwg.generateWrapper(tool,
+								operation, outputdirFile);
+						if (generationOK) {
+							log.info("Ouputs for operation \""
+									+ operation.getName() + "\""
+									+ " generated with success!");
+						} else {
+							log.error("[ERROR] Error generating outputs for operation \""
+									+ operation.getName() + "\"");
+						}
 					}
+				} else {
+					log.error("[ERROR] Error loading components file!");
+					exitCode = 3;
 				}
-			} else {
-				log.error("[ERROR] Error loading components file!");
-				exitCode = 2;
 			}
-		} else {
-
-			// TODO do better error handling
-			// error processing cmd arguments or creating tool instance
+		} catch (ErrorParsingCmdArgsException e) {
+			log.error("[ERROR] " + e.getMessage(), e);
+			bwg.printUsage();
+			exitCode = 2;
+		} catch (SpecParsingException e) {
+			log.error("[ERROR] " + e.getMessage(), e);
 			bwg.printUsage();
 			exitCode = 1;
 		}

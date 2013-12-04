@@ -32,7 +32,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
@@ -42,7 +41,6 @@ import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
  * */
 
 public final class Utils {
-	private static Logger log = Logger.getLogger(Utils.class);
 	private static final String TOOLSPEC_FILENAME_IN_RESOURCES = "/tool-1.1_draft.xsd";
 
 	private Utils() {
@@ -54,45 +52,31 @@ public final class Utils {
 	 * 
 	 * @param toolspecFilePath
 	 *            path to the toolspec file
+	 * @throws JAXBException
+	 * @throws IOException
+	 * @throws SAXException
 	 */
-	public static Tool createTool(String toolspecFilePath) {
-		Tool tool = null;
+	public static Tool createTool(String toolspecFilePath)
+			throws JAXBException, IOException, SAXException {
 		File schemaFile = null;
-		try {
-			JAXBContext context = JAXBContext.newInstance(Tool.class);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
+		// try {
+		JAXBContext context = JAXBContext.newInstance(Tool.class);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
 
-			// copy XML Schema from resources to a temporary location
-			schemaFile = File.createTempFile("schema", null);
-			FileUtils.copyInputStreamToFile(Utils.class
-					.getResourceAsStream(TOOLSPEC_FILENAME_IN_RESOURCES),
-					schemaFile);
-			Schema schema = SchemaFactory.newInstance(
-					XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(schemaFile);
+		// copy XML Schema from resources to a temporary location
+		schemaFile = File.createTempFile("schema", null);
+		FileUtils
+				.copyInputStreamToFile(Utils.class
+						.getResourceAsStream(TOOLSPEC_FILENAME_IN_RESOURCES),
+						schemaFile);
+		Schema schema = SchemaFactory.newInstance(
+				XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(schemaFile);
 
-			// validate provided toolspec against XML Schema
-			unmarshaller.setSchema(schema);
+		// validate provided toolspec against XML Schema
+		unmarshaller.setSchema(schema);
 
-			// unmarshal it
-			// tool = (Tool) ((javax.xml.bind.JAXBElement<Tool>) unmarshaller
-			// .unmarshal(new File(toolspecFilePath))).getValue();
-			tool = (Tool) unmarshaller.unmarshal(new File(toolspecFilePath));
+		// unmarshal it
+		return (Tool) unmarshaller.unmarshal(new File(toolspecFilePath));
 
-		} catch (JAXBException e) {
-			log.error(
-					"The toolspec provided doesn't validate against its schema!",
-					e);
-		} catch (SAXException e) {
-			log.error("The XML Schema is not valid!", e);
-		} catch (IOException e) {
-			log.error(
-					"An error occured while copying the XML Schema from the resources to a temporary location!",
-					e);
-		} finally {
-			if (schemaFile != null) {
-				schemaFile.deleteOnExit();
-			}
-		}
-		return tool;
 	}
 }
