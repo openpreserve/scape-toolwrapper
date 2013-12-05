@@ -5,7 +5,7 @@
 	schemaVersion="1.1" name="ImageMagick" version="2.0.0"
 	homepage="http://www.imagemagick.org/script/compare.php">
 	<installation>
-		<dependencies operatingSystemName="Debian">
+		<operatingSystem operatingSystemName="Debian">
 			<packageManager type="Maven">
 				<config>
 						&lt;dependency&gt;
@@ -29,8 +29,8 @@
 				<license name="Apache-2.0" type="FLOSS"
 					uri="http://opensource.org/licenses/Apache-2.0" />
 			</dependency>
-		</dependencies>
-		<dependencies operatingSystemName="Ubuntu">
+		</operatingSystem>
+		<operatingSystem operatingSystemName="Ubuntu">
 			<packageManager type="Dpkg">
 				<config>imagemagick</config>
 				<source>deb http://scape.keep.pt/apt stable main</source>
@@ -39,7 +39,7 @@
 				<license name="Apache-2.0" type="FLOSS"
 					uri="http://opensource.org/licenses/Apache-2.0" />
 			</dependency>
-		</dependencies>
+		</operatingSystem>
 		<license name="Apache-2.0" type="FLOSS"
 			uri="http://opensource.org/licenses/Apache-2.0" />
 	</installation>

@@ -5,7 +5,7 @@
 	schemaVersion="1.1" name="FFmpeg" version="1.0.1" homepage="http://ffmpeg.org/">
 	
 	<installation>
-		<dependencies operatingSystemName="Debian">
+		<operatingSystem operatingSystemName="Debian">
 			<packageManager type="Dpkg">
 				<config>ffmpeg (>= 0.10.0)</config>
 				<source>deb http://ppa.launchpad.net/jon-severinsson/ffmpeg/ubuntu precise main 
@@ -14,7 +14,7 @@ deb-src http://ppa.launchpad.net/jon-severinsson/ffmpeg/ubuntu precise main </so
 			<dependency name="ffmpeg" version=">= 0.10.0">
 				<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS"></license>
 			</dependency>
-		</dependencies>
+		</operatingSystem>
 		<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS" />
 	</installation>
 
