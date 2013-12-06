@@ -555,6 +555,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 
 
 #foreach( $measure in $characterisation.getOutputMeasure() )
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
 		<processor>
             <name>computeUsingBash_$measure.getName()</name>
             <inputPorts>
@@ -610,7 +611,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <useCaseDescription>
                            <usecaseid/>
                            <description/>
-                           <command>echo "#foreach( $output in $listOfOutputs )%%$output.getName()%% #end %%STDERR_IN%% %%STDOUT_IN%%"</command>
+                           <command>$measure.getValue()</command>
                            <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
                            <executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
                            <tags>
@@ -763,8 +764,12 @@ String $output.getName() = target.getAbsolutePath();</script>
             </iterationStrategyStack>
          </processor>
 #end
+#end
+
+#foreach( $measure in $characterisation.getOutputMeasure() )
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
 		<processor>
-            <name>compute</name>
+            <name>computeUsingJava_$measure.getName()</name>
             <inputPorts>
                <port>
                   <name>STDOUT_IN</name>
@@ -782,13 +787,11 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
             </inputPorts>
             <outputPorts>
-#foreach( $measure in $characterisation.getOutputMeasure() )
                <port>
                   <name>$measure.getName()</name>
                   <depth>0</depth>
                   <granularDepth>0</granularDepth>
                </port>
-#end
             </outputPorts>
             <annotations/>
             <activities>
@@ -807,9 +810,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
                   </inputMap>
                   <outputMap>
-#foreach( $measure in $characterisation.getOutputMeasure() )
                      <map from="$measure.getName()" to="$measure.getName()"/>
-#end
                   </outputMap>
                   <configBean encoding="xstream">
                      <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
@@ -848,19 +849,17 @@ String $output.getName() = target.getAbsolutePath();</script>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
                         </inputs>
                         <outputs>
-#foreach( $measure in $characterisation.getOutputMeasure() )
                            <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                               <name>$measure.getName()</name>
                               <depth>0</depth>
                               <mimeTypes/>
                               <granularDepth>0</granularDepth>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
-#end
                         </outputs>
                         <classLoaderSharing>workflow</classLoaderSharing>
                         <localDependencies/>
                         <artifactDependencies/>
-                        <script/>
+                        <script>$measure.getValue()</script>
                         <dependencies/>
                      </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
                   </configBean>
@@ -944,11 +943,18 @@ String $output.getName() = target.getAbsolutePath();</script>
                   </strategy>
                </iteration>
             </iterationStrategyStack>
-         </processor>			
+         </processor>
+#end
+#end
 		</processors>
 		<conditions>
 #foreach( $measure in $characterisation.getOutputMeasure() )
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
 			<condition control="commandline_tool_invocation" target="computeUsingBash_$measure.getName()"/>
+#end
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
+			<condition control="commandline_tool_invocation" target="computeUsingJava_$measure.getName()"/>
+#end
 #end
 		</conditions>
       
@@ -986,17 +992,8 @@ String $output.getName() = target.getAbsolutePath();</script>
 					<port>$output.getName()</port>
 				</source>
 			</datalink>
-			<datalink>
-            <sink type="processor">
-               <processor>compute</processor>
-               <port>$output.getName()</port>
-            </sink>
-            <source type="processor">
-               <processor>create_$output.getName()</processor>
-               <port>$output.getName()</port>
-            </source>
-         </datalink>
 #foreach( $measure in $characterisation.getOutputMeasure() )
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
          <datalink>
             <sink type="processor">
                <processor>computeUsingBash_$measure.getName()</processor>     
@@ -1008,58 +1005,78 @@ String $output.getName() = target.getAbsolutePath();</script>
             </source>
          </datalink>
          <datalink>
-            <sink type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>     
-               <port>STDERR_IN</port>
-            </sink>
-            <source type="processor">
-               <processor>commandline_tool_invocation</processor>      
-               <port>STDERR</port>
-            </source>
-         </datalink>
-         <datalink>
-            <sink type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>     
-               <port>STDOUT_IN</port>
-            </sink>
-            <source type="processor">
-               <processor>commandline_tool_invocation</processor>      
-               <port>STDOUT</port>
-            </source>
-         </datalink>
-#end
-#end
-#foreach( $measure in $characterisation.getOutputMeasure() )
-			<datalink>
             <sink type="dataflow">
                <port>$measure.getName()</port>
             </sink>
             <source type="processor">
-               <processor>compute</processor>
-               <port>$measure.getName()</port>
-            </source>
-         </datalink>
-#end
-		<datalink>
-            <sink type="processor">
-               <processor>compute</processor>
-               <port>STDOUT_IN</port>
-            </sink>
-            <source type="processor">
-               <processor>commandline_tool_invocation</processor>
+               <processor>computeUsingBash_$measure.getName()</processor>      
                <port>STDOUT</port>
             </source>
          </datalink>
          <datalink>
             <sink type="processor">
-               <processor>compute</processor>
+               <processor>computeUsingBash_$measure.getName()</processor>     
                <port>STDERR_IN</port>
             </sink>
             <source type="processor">
-               <processor>commandline_tool_invocation</processor>
+               <processor>commandline_tool_invocation</processor>      
                <port>STDERR</port>
             </source>
          </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingBash_$measure.getName()</processor>     
+               <port>STDOUT_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>      
+               <port>STDOUT</port>
+            </source>
+         </datalink>
+#end
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>     
+               <port>$output.getName()</port>
+            </sink>
+            <source type="processor">
+               <processor>create_$output.getName()</processor>      
+               <port>$output.getName()</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="dataflow">
+               <port>$measure.getName()</port>
+            </sink>
+            <source type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>      
+               <port>$measure.getName()</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>     
+               <port>STDERR_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>      
+               <port>STDERR</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>     
+               <port>STDOUT_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>      
+               <port>STDOUT</port>
+            </source>
+         </datalink>
+#end
+#end
+#end
 		</datalinks>
 		<annotations>
 			<annotation_chain encoding="xstream">

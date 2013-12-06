@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -24,21 +25,26 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  * <pre>
  * &lt;complexType name="Measure">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *   &lt;simpleContent>
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}NMTOKEN" />
  *       &lt;attribute name="uri" use="required" type="{http://www.w3.org/2001/XMLSchema}anyURI" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
+ *       &lt;attribute name="typeOfProcessingInstruction" type="{http://scape-project.eu/component}TypeOfProcessingInstruction" />
+ *     &lt;/extension>
+ *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Measure")
+@XmlType(name = "Measure", propOrder = {
+    "value"
+})
 public class Measure {
 
+    @XmlValue
+    protected String value;
     @XmlAttribute(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NMTOKEN")
@@ -46,6 +52,32 @@ public class Measure {
     @XmlAttribute(required = true)
     @XmlSchemaType(name = "anyURI")
     protected String uri;
+    @XmlAttribute
+    protected TypeOfProcessingInstruction typeOfProcessingInstruction;
+
+    /**
+     * Gets the value of the value property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the value property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
 
     /**
      * Gets the value of the name property.
@@ -93,6 +125,30 @@ public class Measure {
      */
     public void setUri(String value) {
         this.uri = value;
+    }
+
+    /**
+     * Gets the value of the typeOfProcessingInstruction property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link TypeOfProcessingInstruction }
+     *     
+     */
+    public TypeOfProcessingInstruction getTypeOfProcessingInstruction() {
+        return typeOfProcessingInstruction;
+    }
+
+    /**
+     * Sets the value of the typeOfProcessingInstruction property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link TypeOfProcessingInstruction }
+     *     
+     */
+    public void setTypeOfProcessingInstruction(TypeOfProcessingInstruction value) {
+        this.typeOfProcessingInstruction = value;
     }
 
 }
