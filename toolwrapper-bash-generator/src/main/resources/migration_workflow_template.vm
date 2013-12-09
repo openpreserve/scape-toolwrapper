@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0">
 	<dataflow id="$uniqID" role="top">
-		<name>Workflow_$wrapperName$toolVersion</name>
+		<name>Workflow_${wrapperName}_${toolVersion}</name>
 		<inputPorts>
 #foreach( $input in $listOfInputs )
 			<port>
@@ -234,7 +234,7 @@
 						<depth>0</depth>
 						<granularDepth>0</granularDepth>
 					</port>
-				</outputPorts>				
+				</outputPorts>
 				
 #if($toolInstallation)				
 				<annotations>
@@ -278,7 +278,7 @@
     							</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   							</annotationAssertions>
 						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-					</annotation_chain_2_2>						
+					</annotation_chain_2_2>
 				</annotations>
 #end
 				
@@ -483,13 +483,13 @@
 			
 #foreach( $output in $listOfOutputs )
 			<processor>
-            <name>create$output.getName()</name>
+            <name>create_$output.getName()</name>
             <inputPorts/>
             <outputPorts>
                <port>
                   <name>$output.getName()</name>
                   <depth>0</depth>
-                  <granularDepth>0</granularDepth>      
+                  <granularDepth>0</granularDepth>
                </port>
             </outputPorts>
             <annotations/>
@@ -497,36 +497,36 @@
                <activity>
                   <raven>
                      <group>net.sf.taverna.t2.activities</group>
-                     <artifact>beanshell-activity</artifact>  
-                     <version>1.4</version>                
+                     <artifact>beanshell-activity</artifact>
+                     <version>1.4</version>
                   </raven>
-                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>                                                                                                                     
+                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>
                   <inputMap/>
                   <outputMap>
-                     <map from="$output.getName()" to="$output.getName()"/>      
+                     <map from="$output.getName()" to="$output.getName()"/>
                   </outputMap>
-                  <configBean encoding="xstream">             
-                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">                                                                                                     
+                  <configBean encoding="xstream">
+                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
                         <inputs/>
                         <outputs>
-                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>                                                                                       
-                              <name>$output.getName()</name>                      
-                              <depth>0</depth>                         
-                              <mimeTypes/>                             
-                              <granularDepth>0</granularDepth>      
-                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>                                                                                      
+                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+                              <name>$output.getName()</name>
+                              <depth>0</depth>
+                              <mimeTypes/>
+                              <granularDepth>0</granularDepth>
+                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                         </outputs>
                         <classLoaderSharing>workflow</classLoaderSharing>
-                        <localDependencies/>                     
+                        <localDependencies/>
                         <artifactDependencies/>
 #if($output.getExtension())
                         <script>File target = File.createTempFile(Long.toString(System.nanoTime()), ".$output.getExtension()");
 #else
 						<script>File target = File.createTempFile(Long.toString(System.nanoTime()), "");
 #end                                                                                                 
-String $output.getName() = target.getAbsolutePath();</script>               
+String $output.getName() = target.getAbsolutePath();</script>
                         <dependencies/>
-                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>                                                                                                             
+                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
                   </configBean>
                   <annotations/>
                </activity>
@@ -634,7 +634,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 					<processor>commandline_tool_invocation</processor>
 				</sink>
 				<source type="processor">
-					<processor>create$output.getName()</processor>
+					<processor>create_$output.getName()</processor>
 					<port>$output.getName()</port>
 				</source>
 			</datalink>
@@ -643,7 +643,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 					<port>$output.getName()</port>
 				</sink>
 				<source type="processor">
-					<processor>create$output.getName()</processor>
+					<processor>create_$output.getName()</processor>
 					<port>$output.getName()</port>
 				</source>
 			</datalink>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0">
 	<dataflow id="$uniqID" role="top">
-		<name>Workflow_$wrapperName$toolVersion</name>
+		<name>Workflow_${wrapperName}_${toolVersion}</name>
 		<inputPorts>
 #set($it = 1)
 #foreach( $input in $listOfInputs )
@@ -186,7 +186,7 @@
 						<depth>0</depth>
 						<granularDepth>0</granularDepth>
 					</port>
-				</outputPorts>				
+				</outputPorts>
 				
 #if( $toolInstallation )				
 				<annotations>
@@ -230,10 +230,9 @@
     							</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   							</annotationAssertions>
 						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-					</annotation_chain_2_2>						
+					</annotation_chain_2_2>
 				</annotations>
 #end
-				
 				<activities>
 					<activity>
 						<raven>
@@ -435,13 +434,13 @@
 			
 #foreach( $output in $listOfOutputs )
 			<processor>
-            <name>create$output.getName()</name>
+            <name>create_$output.getName()</name>
             <inputPorts/>
             <outputPorts>
                <port>
                   <name>$output.getName()</name>
                   <depth>0</depth>
-                  <granularDepth>0</granularDepth>      
+                  <granularDepth>0</granularDepth>
                </port>
             </outputPorts>
             <annotations/>
@@ -449,36 +448,36 @@
                <activity>
                   <raven>
                      <group>net.sf.taverna.t2.activities</group>
-                     <artifact>beanshell-activity</artifact>  
-                     <version>1.4</version>                
+                     <artifact>beanshell-activity</artifact>
+                     <version>1.4</version>
                   </raven>
-                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>                                                                                                                     
+                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>
                   <inputMap/>
                   <outputMap>
-                     <map from="$output.getName()" to="$output.getName()"/>      
+                     <map from="$output.getName()" to="$output.getName()"/>
                   </outputMap>
-                  <configBean encoding="xstream">             
-                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">                                                                                                     
+                  <configBean encoding="xstream">
+                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
                         <inputs/>
                         <outputs>
-                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>                                                                                       
-                              <name>$output.getName()</name>                      
-                              <depth>0</depth>                         
-                              <mimeTypes/>                             
-                              <granularDepth>0</granularDepth>      
-                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>                                                                                      
+                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+                              <name>$output.getName()</name>
+                              <depth>0</depth>
+                              <mimeTypes/>
+                              <granularDepth>0</granularDepth>
+                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                         </outputs>
                         <classLoaderSharing>workflow</classLoaderSharing>
-                        <localDependencies/>                     
+                        <localDependencies/>
                         <artifactDependencies/>
 #if( $output.getExtension() )
                         <script>File target = File.createTempFile(Long.toString(System.nanoTime()), ".$output.getExtension()");
 #else
 						<script>File target = File.createTempFile(Long.toString(System.nanoTime()), "");
 #end                                                                                                 
-String $output.getName() = target.getAbsolutePath();</script>               
+String $output.getName() = target.getAbsolutePath();</script>
                         <dependencies/>
-                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>                                                                                                             
+                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
                   </configBean>
                   <annotations/>
                </activity>
@@ -555,12 +554,33 @@ String $output.getName() = target.getAbsolutePath();</script>
          </processor>
 #end
 
-
 #foreach( $measure in $qaObjectComparison.getOutputMeasure() )
+#if(! $measure.getTypeOfProcessingInstruction() || $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
 		<processor>
             <name>computeUsingBash_$measure.getName()</name>
-            <inputPorts/>
-            <outputPorts/>
+            <inputPorts>
+				<port>
+                  <name>STDOUT_IN</name>
+                  <depth>0</depth>
+				</port>
+				<port>
+                  <name>STDERR_IN</name>
+                  <depth>0</depth>
+				</port>
+#foreach( $output in $listOfOutputs )
+               <port>
+                  <name>$output.getName()</name>
+                  <depth>0</depth>
+               </port>
+#end
+            </inputPorts>
+            <outputPorts>
+               <port>
+                  <name>STDOUT</name>
+                  <depth>0</depth>
+                  <granularDepth>0</granularDepth>
+               </port>
+            </outputPorts>
             <annotations/>
             <activities>
                <activity>
@@ -570,8 +590,13 @@ String $output.getName() = target.getAbsolutePath();</script>
                      <version>1.4</version>
                   </raven>
                   <class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class>
-                  <inputMap/>
-                  <outputMap/>
+                  <inputMap>
+					<map from="STDOUT_IN" to="STDOUT_IN"/>
+					<map from="STDERR_IN" to="STDERR_IN"/>
+				  </inputMap>
+                  <outputMap>
+                     <map from="STDOUT" to="STDOUT"/>
+                  </outputMap>
                   <configBean encoding="xstream">
                      <net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
                         <mechanismType>789663B8-DA91-428A-9F7D-B3F3DA185FD4</mechanismType>
@@ -583,12 +608,19 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <useCaseDescription>
                            <usecaseid/>
                            <description/>
-                           <command>echo "%%STDOUT_IN%% "%%STDERR_IN%% #foreach( $output in $listOfOutputs )%%$output.getName()%% #end"</command>
+#if( $measure.getTypeOfProcessingInstruction() )
+                           <command>$esc.xml($measure.getValue())</command>
+#else
+							<command>echo "Must open Taverna Workbench and complete the workflow!"</command>
+#end
                            <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
                            <executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
                            <tags>
                               <string>STDOUT_IN</string>
                               <string>STDERR_IN</string>
+#foreach( $output in $listOfOutputs )
+                              <string>$output.getName()</string>
+#end
                            </tags>
                            <REs/>
                            <queue__preferred/>
@@ -596,33 +628,49 @@ String $output.getName() = target.getAbsolutePath();</script>
                            <static__inputs/>
                            <inputs>
                            	<entry>
-                                 <string>STDOUT_IN</string>            
+                                 <string>STDOUT_IN</string>
                                  <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-                                    <tag>STDOUT_IN</tag>                  
-                                    <file>false</file>                       
-                                    <tempFile>false</tempFile>               
-                                    <binary>false</binary>                   
-                                    <charsetName>UTF-8</charsetName>         
-                                    <forceCopy>false</forceCopy>             
-                                    <list>false</list>                       
-                                    <concatenate>false</concatenate>         
-                                    <mime/>                                  
+                                    <tag>STDOUT_IN</tag>
+                                    <file>false</file>
+                                    <tempFile>false</tempFile>
+                                    <binary>false</binary>
+                                    <charsetName>UTF-8</charsetName>
+                                    <forceCopy>false</forceCopy>
+                                    <list>false</list>
+                                    <concatenate>false</concatenate>
+                                    <mime/>
                                  </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
                               </entry>
                               <entry>
-                                 <string>STDERR_IN</string>            
+                                 <string>STDERR_IN</string>
                                  <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-                                    <tag>STDERR_IN</tag>                  
-                                    <file>false</file>                       
-                                    <tempFile>false</tempFile>               
-                                    <binary>false</binary>                   
-                                    <charsetName>UTF-8</charsetName>         
-                                    <forceCopy>false</forceCopy>             
-                                    <list>false</list>                       
-                                    <concatenate>false</concatenate>         
-                                    <mime/>                                  
+                                    <tag>STDERR_IN</tag>
+                                    <file>false</file>
+                                    <tempFile>false</tempFile>
+                                    <binary>false</binary>
+                                    <charsetName>UTF-8</charsetName>
+                                    <forceCopy>false</forceCopy>
+                                    <list>false</list>
+                                    <concatenate>false</concatenate>
+                                    <mime/>
                                  </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
                               </entry>
+#foreach( $output in $listOfOutputs )
+                           	<entry>
+                                 <string>$output.getName()</string>
+                                 <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                                    <tag>$output.getName()</tag>
+                                    <file>false</file>
+                                    <tempFile>false</tempFile>
+                                    <binary>false</binary>
+                                    <charsetName>UTF-8</charsetName>
+                                    <forceCopy>false</forceCopy>
+                                    <list>false</list>
+                                    <concatenate>false</concatenate>
+                                    <mime/>
+                                 </de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+                              </entry>
+#end
                            </inputs>
                            <outputs/>
                            <includeStdIn>false</includeStdIn>
@@ -717,8 +765,12 @@ String $output.getName() = target.getAbsolutePath();</script>
             </iterationStrategyStack>
          </processor>
 #end
+#end
+
+#foreach( $measure in $qaObjectComparison.getOutputMeasure() )
+#if( ! $measure.getTypeOfProcessingInstruction() || $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
 		<processor>
-            <name>compute</name>
+            <name>computeUsingJava_$measure.getName()</name>
             <inputPorts>
                <port>
                   <name>STDOUT_IN</name>
@@ -736,13 +788,11 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
             </inputPorts>
             <outputPorts>
-#foreach( $measure in $qaObjectComparison.getOutputMeasure() )
                <port>
                   <name>$measure.getName()</name>
                   <depth>0</depth>
                   <granularDepth>0</granularDepth>
                </port>
-#end
             </outputPorts>
             <annotations/>
             <activities>
@@ -761,9 +811,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
                   </inputMap>
                   <outputMap>
-#foreach( $measure in $qaObjectComparison.getOutputMeasure() )
                      <map from="$measure.getName()" to="$measure.getName()"/>
-#end
                   </outputMap>
                   <configBean encoding="xstream">
                      <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
@@ -802,19 +850,21 @@ String $output.getName() = target.getAbsolutePath();</script>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
                         </inputs>
                         <outputs>
-#foreach( $measure in $qaObjectComparison.getOutputMeasure() )
                            <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                               <name>$measure.getName()</name>
                               <depth>0</depth>
                               <mimeTypes/>
                               <granularDepth>0</granularDepth>
                            </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
-#end
                         </outputs>
                         <classLoaderSharing>workflow</classLoaderSharing>
                         <localDependencies/>
                         <artifactDependencies/>
-                        <script/>
+#if( $measure.getTypeOfProcessingInstruction() )
+                        <script>$esc.xml($measure.getValue())</script>
+#else
+						<script>System.out.println("Must open Taverna Workbench and complete the workflow!");</script>
+#end
                         <dependencies/>
                      </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
                   </configBean>
@@ -898,11 +948,18 @@ String $output.getName() = target.getAbsolutePath();</script>
                   </strategy>
                </iteration>
             </iterationStrategyStack>
-         </processor>			
+         </processor>
+#end
+#end
 		</processors>
 		<conditions>
 #foreach( $measure in $qaObjectComparison.getOutputMeasure() )
+#if( ! $measure.getTypeOfProcessingInstruction() || $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
 			<condition control="commandline_tool_invocation" target="computeUsingBash_$measure.getName()"/>
+#end
+#if( ! $measure.getTypeOfProcessingInstruction() ||  $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
+			<condition control="commandline_tool_invocation" target="computeUsingJava_$measure.getName()"/>
+#end
 #end
 		</conditions>
       
@@ -931,62 +988,43 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
 #foreach( $output in $listOfOutputs )
 			<datalink>
-				<sink type="merge">
+				<sink type="processor">
 					<port>$output.getName()_inner</port>
 					<processor>commandline_tool_invocation</processor>
 				</sink>
 				<source type="processor">
-					<processor>create$output.getName()</processor>
+					<processor>create_$output.getName()</processor>
 					<port>$output.getName()</port>
 				</source>
 			</datalink>
-			<datalink>
-            <sink type="processor">
-               <processor>compute</processor>
-               <port>$output.getName()</port>
-            </sink>
-            <source type="processor">
-               <processor>create$output.getName()</processor>
-               <port>$output.getName()</port>
-            </source>
-         </datalink>
+#end
+
 #foreach( $measure in $qaObjectComparison.getOutputMeasure() )
+#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
+#foreach( $output in $listOfOutputs )
          <datalink>
             <sink type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>     
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
-               <processor>create$output.getName()</processor>      
+               <processor>create_$output.getName()</processor>
                <port>$output.getName()</port>
             </source>
          </datalink>
 #end
-#end
-#foreach( $measure in $qaObjectComparison.getOutputMeasure() )
-			<datalink>
+         <datalink>
             <sink type="dataflow">
                <port>$measure.getName()</port>
             </sink>
             <source type="processor">
-               <processor>compute</processor>
-               <port>$measure.getName()</port>
-            </source>
-         </datalink>
-#end
-		<datalink>
-            <sink type="processor">
-               <processor>compute</processor>
-               <port>STDOUT_IN</port>
-            </sink>
-            <source type="processor">
-               <processor>commandline_tool_invocation</processor>
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>STDOUT</port>
             </source>
          </datalink>
          <datalink>
             <sink type="processor">
-               <processor>compute</processor>
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>STDERR_IN</port>
             </sink>
             <source type="processor">
@@ -994,6 +1032,145 @@ String $output.getName() = target.getAbsolutePath();</script>
                <port>STDERR</port>
             </source>
          </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingBash_$measure.getName()</processor>
+               <port>STDOUT_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>
+               <port>STDOUT</port>
+            </source>
+         </datalink>
+#end
+
+#if( $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA") )
+#foreach( $output in $listOfOutputs )
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>
+               <port>$output.getName()</port>
+            </sink>
+            <source type="processor">
+               <processor>create_$output.getName()</processor>
+               <port>$output.getName()</port>
+            </source>
+         </datalink>
+#end
+         <datalink>
+            <sink type="dataflow">
+               <port>$measure.getName()</port>
+            </sink>
+            <source type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>
+               <port>$measure.getName()</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>
+               <port>STDERR_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>
+               <port>STDERR</port>
+            </source>
+         </datalink>
+         <datalink>
+            <sink type="processor">
+               <processor>computeUsingJava_$measure.getName()</processor>
+               <port>STDOUT_IN</port>
+            </sink>
+            <source type="processor">
+               <processor>commandline_tool_invocation</processor>
+               <port>STDOUT</port>
+            </source>
+         </datalink>
+#end
+
+#if( ! $measure.getTypeOfProcessingInstruction() )
+#foreach( $output in $listOfOutputs )
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>$output.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>create_$output.getName()</processor>
+				<port>$output.getName()</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>$output.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>create_$output.getName()</processor>
+				<port>$output.getName()</port>
+			</source>
+		</datalink>
+#end
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>STDOUT_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDOUT</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>STDERR_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDERR</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>STDOUT_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDOUT</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>STDERR_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDERR</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="merge">
+				<port>$measure.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>STDOUT</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="merge">
+				<port>$measure.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>$measure.getName()</port>
+			</source>
+		</datalink>
+#end
+#end
 		</datalinks>
 		<annotations>
 			<annotation_chain encoding="xstream">
@@ -1023,7 +1200,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 						</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
 					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-			</annotation_chain>			
+			</annotation_chain>
 			<annotation_chain_2_2 encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
   					<annotationAssertions>
@@ -1048,7 +1225,7 @@ String $output.getName() = target.getAbsolutePath();</script>
     					</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   					</annotationAssertions>
 				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-			</annotation_chain_2_2>			
+			</annotation_chain_2_2>
 						
 			<annotation_chain encoding="xstream">
 				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">

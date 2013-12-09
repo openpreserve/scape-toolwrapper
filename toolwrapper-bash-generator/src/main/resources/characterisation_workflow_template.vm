@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0">
 	<dataflow id="$uniqID" role="top">
-		<name>Workflow_$wrapperName$toolVersion</name>
+		<name>Workflow_${wrapperName}_${toolVersion}</name>
 		<inputPorts>
 #foreach( $input in $listOfInputs )
 			<port>
@@ -104,7 +104,7 @@
 									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
 										<mimeType>text/rdf+n3</mimeType>
 										<content>&lt;&gt; &lt;http://purl.org/DP/components#portType&gt; &lt;http://purl.org/DP/components#ParameterPort&gt; . 
-#foreach( $possibleValue in $param.getPossibleValue())
+#foreach( $possibleValue in $param.getPossibleValue() )
 			&lt;&gt;    &lt;http://purl.org/DP/components#acceptsPredefinedParameter&gt;
               [ a       &lt;http://purl.org/DP/components#PredefinedParameter&gt; ;
                 &lt;http://purl.org/DP/components#parameterDescription&gt;
@@ -184,7 +184,7 @@
 						<depth>0</depth>
 						<granularDepth>0</granularDepth>
 					</port>
-				</outputPorts>				
+				</outputPorts>
 				
 #if( $toolInstallation )				
 				<annotations>
@@ -228,7 +228,7 @@
     							</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
   							</annotationAssertions>
 						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
-					</annotation_chain_2_2>						
+					</annotation_chain_2_2>
 				</annotations>
 #end
 				
@@ -439,7 +439,7 @@
                <port>
                   <name>$output.getName()</name>
                   <depth>0</depth>
-                  <granularDepth>0</granularDepth>      
+                  <granularDepth>0</granularDepth>
                </port>
             </outputPorts>
             <annotations/>
@@ -447,36 +447,36 @@
                <activity>
                   <raven>
                      <group>net.sf.taverna.t2.activities</group>
-                     <artifact>beanshell-activity</artifact>  
-                     <version>1.4</version>                
+                     <artifact>beanshell-activity</artifact>
+                     <version>1.4</version>
                   </raven>
-                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>                                                                                                                     
+                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>
                   <inputMap/>
                   <outputMap>
-                     <map from="$output.getName()" to="$output.getName()"/>      
+                     <map from="$output.getName()" to="$output.getName()"/>
                   </outputMap>
-                  <configBean encoding="xstream">             
-                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">                                                                                                     
+                  <configBean encoding="xstream">
+                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
                         <inputs/>
                         <outputs>
-                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>                                                                                       
-                              <name>$output.getName()</name>                      
-                              <depth>0</depth>                         
-                              <mimeTypes/>                             
-                              <granularDepth>0</granularDepth>      
-                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>                                                                                      
+                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+                              <name>$output.getName()</name>
+                              <depth>0</depth>
+                              <mimeTypes/>
+                              <granularDepth>0</granularDepth>
+                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
                         </outputs>
                         <classLoaderSharing>workflow</classLoaderSharing>
-                        <localDependencies/>                     
+                        <localDependencies/>
                         <artifactDependencies/>
 #if( $output.getExtension() )
                         <script>File target = File.createTempFile(Long.toString(System.nanoTime()), ".$output.getExtension()");
 #else
 						<script>File target = File.createTempFile(Long.toString(System.nanoTime()), "");
 #end                                                                                                 
-String $output.getName() = target.getAbsolutePath();</script>               
+String $output.getName() = target.getAbsolutePath();</script>
                         <dependencies/>
-                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>                                                                                                             
+                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
                   </configBean>
                   <annotations/>
                </activity>
@@ -555,7 +555,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 
 
 #foreach( $measure in $characterisation.getOutputMeasure() )
-#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
+#if(! $measure.getTypeOfProcessingInstruction() || $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
 		<processor>
             <name>computeUsingBash_$measure.getName()</name>
             <inputPorts>
@@ -611,7 +611,11 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <useCaseDescription>
                            <usecaseid/>
                            <description/>
-                           <command>$measure.getValue()</command>
+#if( $measure.getTypeOfProcessingInstruction() )
+                           <command>$esc.xml($measure.getValue())</command>
+#else
+							<command>echo "Must open Taverna Workbench and complete the workflow!"</command>
+#end
                            <preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
                            <executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
                            <tags>
@@ -643,7 +647,7 @@ String $output.getName() = target.getAbsolutePath();</script>
                               <entry>
                                  <string>STDERR_IN</string>
                                  <de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
-                                    <tag>$output.getName()</tag>
+                                    <tag>STDERR_IN</tag>
                                     <file>false</file>
                                     <tempFile>false</tempFile>
                                     <binary>false</binary>
@@ -767,7 +771,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #end
 
 #foreach( $measure in $characterisation.getOutputMeasure() )
-#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
+#if( ! $measure.getTypeOfProcessingInstruction() || $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
 		<processor>
             <name>computeUsingJava_$measure.getName()</name>
             <inputPorts>
@@ -859,7 +863,11 @@ String $output.getName() = target.getAbsolutePath();</script>
                         <classLoaderSharing>workflow</classLoaderSharing>
                         <localDependencies/>
                         <artifactDependencies/>
-                        <script>$measure.getValue()</script>
+#if( $measure.getTypeOfProcessingInstruction() )
+                        <script>$esc.xml($measure.getValue())</script>
+#else
+						<script>Syste.out.println("Must open Taverna Workbench and complete the workflow!");</script>
+#end
                         <dependencies/>
                      </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
                   </configBean>
@@ -949,10 +957,10 @@ String $output.getName() = target.getAbsolutePath();</script>
 		</processors>
 		<conditions>
 #foreach( $measure in $characterisation.getOutputMeasure() )
-#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
+#if( ! $measure.getTypeOfProcessingInstruction() || $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
 			<condition control="commandline_tool_invocation" target="computeUsingBash_$measure.getName()"/>
 #end
-#if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
+#if( ! $measure.getTypeOfProcessingInstruction() ||  $measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
 			<condition control="commandline_tool_invocation" target="computeUsingJava_$measure.getName()"/>
 #end
 #end
@@ -992,89 +1000,175 @@ String $output.getName() = target.getAbsolutePath();</script>
 					<port>$output.getName()</port>
 				</source>
 			</datalink>
+#end
 #foreach( $measure in $characterisation.getOutputMeasure() )
 #if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("BASH"))
+#foreach( $output in $listOfOutputs )
          <datalink>
             <sink type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>     
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
-               <processor>create_$output.getName()</processor>      
+               <processor>create_$output.getName()</processor>
                <port>$output.getName()</port>
             </source>
          </datalink>
+#end
          <datalink>
             <sink type="dataflow">
                <port>$measure.getName()</port>
             </sink>
             <source type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>      
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>STDOUT</port>
             </source>
          </datalink>
          <datalink>
             <sink type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>     
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>STDERR_IN</port>
             </sink>
             <source type="processor">
-               <processor>commandline_tool_invocation</processor>      
+               <processor>commandline_tool_invocation</processor>
                <port>STDERR</port>
             </source>
          </datalink>
          <datalink>
             <sink type="processor">
-               <processor>computeUsingBash_$measure.getName()</processor>     
+               <processor>computeUsingBash_$measure.getName()</processor>
                <port>STDOUT_IN</port>
             </sink>
             <source type="processor">
-               <processor>commandline_tool_invocation</processor>      
+               <processor>commandline_tool_invocation</processor>
                <port>STDOUT</port>
             </source>
          </datalink>
 #end
 #if($measure.getTypeOfProcessingInstruction() && $measure.getTypeOfProcessingInstruction().value().equals("JAVA"))
+#foreach( $output in $listOfOutputs )
          <datalink>
             <sink type="processor">
-               <processor>computeUsingJava_$measure.getName()</processor>     
+               <processor>computeUsingJava_$measure.getName()</processor>
                <port>$output.getName()</port>
             </sink>
             <source type="processor">
-               <processor>create_$output.getName()</processor>      
+               <processor>create_$output.getName()</processor>
                <port>$output.getName()</port>
             </source>
          </datalink>
+#end
          <datalink>
             <sink type="dataflow">
                <port>$measure.getName()</port>
             </sink>
             <source type="processor">
-               <processor>computeUsingJava_$measure.getName()</processor>      
+               <processor>computeUsingJava_$measure.getName()</processor>
                <port>$measure.getName()</port>
             </source>
          </datalink>
          <datalink>
             <sink type="processor">
-               <processor>computeUsingJava_$measure.getName()</processor>     
+               <processor>computeUsingJava_$measure.getName()</processor>
                <port>STDERR_IN</port>
             </sink>
             <source type="processor">
-               <processor>commandline_tool_invocation</processor>      
+               <processor>commandline_tool_invocation</processor>
                <port>STDERR</port>
             </source>
          </datalink>
          <datalink>
             <sink type="processor">
-               <processor>computeUsingJava_$measure.getName()</processor>     
+               <processor>computeUsingJava_$measure.getName()</processor>
                <port>STDOUT_IN</port>
             </sink>
             <source type="processor">
-               <processor>commandline_tool_invocation</processor>      
+               <processor>commandline_tool_invocation</processor>
                <port>STDOUT</port>
             </source>
          </datalink>
 #end
+#if( ! $measure.getTypeOfProcessingInstruction() )
+#foreach( $output in $listOfOutputs )
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>$output.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>create_$output.getName()</processor>
+				<port>$output.getName()</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>$output.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>create_$output.getName()</processor>
+				<port>$output.getName()</port>
+			</source>
+		</datalink>
+#end
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>STDOUT_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDOUT</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>STDERR_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDERR</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>STDOUT_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDOUT</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>STDERR_IN</port>
+			</sink>
+			<source type="processor">
+				<processor>commandline_tool_invocation</processor>
+				<port>STDERR</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="merge">
+				<port>$measure.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>computeUsingBash_$measure.getName()</processor>
+				<port>STDOUT</port>
+			</source>
+		</datalink>
+		<datalink>
+			<sink type="merge">
+				<port>$measure.getName()</port>
+			</sink>
+			<source type="processor">
+				<processor>computeUsingJava_$measure.getName()</processor>
+				<port>$measure.getName()</port>
+			</source>
+		</datalink>
 #end
 #end
 		</datalinks>

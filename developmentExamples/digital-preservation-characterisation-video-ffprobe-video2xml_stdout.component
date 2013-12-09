@@ -6,7 +6,7 @@
 	<component xsi:type="Characterisation" 
 		profile="http://purl.org/DP/components#Characterisation"
 		profileVersion="1.0"
-		name="digital-preservation-characterisation-video-ffprobe-video2xml"
+		name="digital-preservation-characterisation-video-ffprobe-video2xml_stdout"
 		author="Hélder Silva">
 		<license name="Apache-2.0" type="FLOSS"
 			uri="http://opensource.org/licenses/Apache-2.0" />
