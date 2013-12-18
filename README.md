@@ -19,31 +19,32 @@ Tools, and tools invocations, are described using a machine-readable language (X
 
 This example, even if simplified for presentation purpose, demonstrates how one could describe a image file format conversion using ImageMagick.
 
-<pre style='color:#000000;background:#ffffff;'><span style='color:#004a43; '>&lt;?</span><span style='color:#800000; font-weight:bold; '>xml</span><span style='color:#004a43; '> </span><span style='color:#074726; '>version</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#7d0045; '>1.0</span><span style='color:#0000e6; '>"</span><span style='color:#004a43; '> </span><span style='color:#074726; '>encoding</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>utf-8</span><span style='color:#0000e6; '>"</span><span style='color:#004a43; '> </span><span style='color:#004a43; '>?></span>
-<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>tool</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ImageMagick</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>version</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>1.0.2</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>homepage</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://www.imagemagick.org/script/convert.php</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
-  <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>installation</span><span style='color:#a65700; '>></span>
-    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>dependency</span> <span style='color:#274796; '>operatingSystemName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Debian</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>imagemagick<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>dependency</span><span style='color:#a65700; '>></span>
-    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>license</span> <span style='color:#274796; '>type</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Apache Licence 2.0</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>Apache License, Version 2.0<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>license</span><span style='color:#a65700; '>></span>
-  <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>installation</span><span style='color:#a65700; '>></span>
-  <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>operations</span><span style='color:#a65700; '>></span>
-    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>operation</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>digital-preservation-migration-image-imagemagick-image2jp2</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
-      <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>description</span><span style='color:#a65700; '>></span>Converts any ImageMagick supported image format to JPEG2000<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>description</span><span style='color:#a65700; '>></span>
-      <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>command</span><span style='color:#a65700; '>></span>/usr/bin/convert ${input} jp2:${output}<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>command</span><span style='color:#a65700; '>></span>
-      <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>inputs</span><span style='color:#a65700; '>></span>
-        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>input</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>input</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>required</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>true</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>     
-          <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>description</span><span style='color:#a65700; '>></span>Reference to input file<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>description</span><span style='color:#a65700; '>></span>
-        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>input</span><span style='color:#a65700; '>></span>
-      <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>inputs</span><span style='color:#a65700; '>></span>
-      <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>outputs</span><span style='color:#a65700; '>></span>
-        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>output</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>output</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>required</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>true</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>   
-          <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>description</span><span style='color:#a65700; '>></span>Reference to output file<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>description</span><span style='color:#a65700; '>></span>
-          <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>extension</span><span style='color:#a65700; '>></span>jp2<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>extension</span><span style='color:#a65700; '>></span>
-        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>output</span><span style='color:#a65700; '>></span>
-      <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>outputs</span><span style='color:#a65700; '>></span>
-    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>operation</span><span style='color:#a65700; '>></span>
-  <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>operations</span><span style='color:#a65700; '>></span>
-<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>tool</span><span style='color:#a65700; '>></span>
-</pre>
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<tool name="ImageMagick" version="1.0.2" homepage="http://www.imagemagick.org/script/convert.php">
+  <installation>
+    <dependency operatingSystemName="Debian">imagemagick</dependency>
+    <license type="Apache Licence 2.0">Apache License, Version 2.0</license>
+  </installation>
+  <operations>
+    <operation name="digital-preservation-migration-image-imagemagick-image2jp2">
+      <description>Converts any ImageMagick supported image format to JPEG2000</description>
+      <command>/usr/bin/convert ${input} jp2:${output}</command>
+      <inputs>
+        <input name="input" required="true">     
+          <description>Reference to input file</description>
+        </input>
+      </inputs>
+      <outputs>
+        <output name="output" required="true">   
+          <description>Reference to output file</description>
+          <extension>jp2</extension>
+        </output>
+      </outputs>
+    </operation>
+  </operations>
+</tool>
+```
 
 ## Getting started
 
@@ -59,19 +60,19 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ### Project directory structure
 
-* _**bash-debian-generator**_ component that generates, from a set of bash wrappers, one or more Debian packages
+* _**toolwrapper-bash-debian-generator**_ component that generates, from a set of bash wrappers, one or more Debian packages
     * **bin** folder with script that eases the component execution
     * **pom.xml**
     * **src** java source code and other resources (templates for debian package generation)
-* _**bash-generator**_ component that generates a set of bash wrappers and the correspondent Taverna workflows
+* _**toolwrapper-bash-generator**_ component that generates a set of bash wrappers and the correspondent Taverna workflows
     * **bin** folder with script that eases the component execution
     * **pom.xml**
     * **src** java source code and other resources (templates for bash wrapper and Taverna workflow)
 * **CHANGELOG.txt**
-* **core** component with common core functionalities
+* **toolwrapper-core** component with common core functionalities
     * **pom.xml**
     * **src** java source code and other resources (log4j.xml)
-* **data**
+* **toolwrapper-data**
     * **pom.xml**
     * **src** java source code and other resources (toolspec XML Schema)
 * **LICENSE**
