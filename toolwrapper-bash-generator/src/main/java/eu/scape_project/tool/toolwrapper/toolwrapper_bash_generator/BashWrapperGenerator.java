@@ -208,9 +208,11 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			File outputDirectory) {
 		boolean success = true;
 		Template workflowTemplate = null;
+		// normal workflow
 		if (component == null) {
 			workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
 		} else {
+			// component workflow, i.e. with semantic annotations
 			workflowTemplate = loadComponentTemplate(context);
 			if (workflowTemplate == null) {
 				return false;
@@ -230,15 +232,9 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	private Template loadComponentTemplate(VelocityContext context) {
 		Template workflowTemplate = null;
 		if (component instanceof MigrationAction) {
-			if (!canMigrationActionWorkflowWithComponentsBeGenerated()) {
-				return null;
-			}
 			workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
 			context.put("migrationAction", (MigrationAction) component);
 		} else if (component instanceof Characterisation) {
-			if (!canCharacterisationWorkflowWithComponentsBeGenerated()) {
-				return null;
-			}
 			workflowTemplate = loadVelocityTemplateFromResources("characterisation_workflow_template.vm");
 			context.put("characterisation", (Characterisation) component);
 		} else if (component instanceof QAObjectComparison) {
@@ -254,14 +250,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			return null;
 		}
 		return workflowTemplate;
-	}
-
-	private boolean canMigrationActionWorkflowWithComponentsBeGenerated() {
-		return true;
-	}
-
-	private boolean canCharacterisationWorkflowWithComponentsBeGenerated() {
-		return true;
 	}
 
 	private boolean canQAObjectComparisonWorkflowWithComponentsBeGenerated() {
@@ -383,10 +371,12 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				} else {
 					uip.append("[" + value + "]");
 				}
-				String description = value + " > " + input.getDescription()
+				String inputDescription = value + " > "
+						+ input.getDescription()
 						+ (i == 0 ? " OR Read input from the STDIN" : "");
-				uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
-				uipdman.append(description + "\n\n");
+				uipd.append((uipd.length() != 0 ? "\n\t" : "")
+						+ inputDescription);
+				uipdman.append(inputDescription + "\n\n");
 				i++;
 			}
 			wrapperContext.put("usageInputParameter", uip.toString());
@@ -413,9 +403,9 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			} else {
 				uip.append("[" + value + "]");
 			}
-			String description = value + " > " + param.getDescription();
-			uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
-			uipdman.append(description + "\n\n");
+			String paramDescription = value + " > " + param.getDescription();
+			uipd.append((uipd.length() != 0 ? "\n\t" : "") + paramDescription);
+			uipdman.append(paramDescription + "\n\n");
 		}
 		wrapperContext.put("usageParamParameter", uip.toString());
 		wrapperContext.put("usageParamParameterDescription", uipd.toString());
@@ -447,10 +437,12 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				} else {
 					uip.append("[" + value + "]");
 				}
-				String description = value + " > " + output.getDescription()
+				String outputDescription = value + " > "
+						+ output.getDescription()
 						+ (i == 0 ? " OR Write output to the STDOUT" : "");
-				uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
-				uipdman.append(description + "\n\n");
+				uipd.append((uipd.length() != 0 ? "\n\t" : "")
+						+ outputDescription);
+				uipdman.append(outputDescription + "\n\n");
 				i++;
 			}
 			wrapperContext.put("usageOutputParameter", uip.toString());
@@ -595,7 +587,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				}
 			}
 		} catch (ErrorParsingCmdArgsException e) {
-			log.error("[ERROR] " + e.getMessage(), e);
+			log.error("[ERROR] " + e.getMessage());
 			bwg.printUsage();
 			exitCode = 2;
 		} catch (SpecParsingException e) {

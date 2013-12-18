@@ -815,7 +815,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				}
 			}
 		} catch (ErrorParsingCmdArgsException e) {
-			log.error("[ERROR] " + e.getMessage(), e);
+			log.error("[ERROR] " + e.getMessage());
 			dbwg.printUsage();
 			exitCode = 2;
 		} catch (SpecParsingException e) {

@@ -245,7 +245,7 @@
       								<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
         								<mimeType>text/rdf+n3</mimeType>
         								<content>
-#foreach( $operatingSystem in $toolInstallation.getDependencies())
+#foreach( $operatingSystem in $toolInstallation.getOperatingSystem())
 		&lt;&gt; &lt;http://purl.org/DP/components#requiresInstallation&gt; [ 
 			a &lt;http://purl.org/DP/components#Installation&gt; ;
 			&lt;http://purl.org/DP/components#hasEnvironment&gt; &lt;http://purl.org/DP/components#$operatingSystem.getOperatingSystemName().value()&gt; ;
