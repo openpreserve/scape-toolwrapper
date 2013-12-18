@@ -165,7 +165,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 
 	private boolean verifyNeededDirectories(File outputDirectory) {
 		boolean res = true;
-		// File directory = new File(outputDirectory);
 		if (!outputDirectory.exists() && !outputDirectory.mkdir()) {
 			log.error("The directory \"" + outputDirectory.getAbsolutePath()
 					+ "\" cannot be created...");
@@ -212,32 +211,9 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		if (component == null) {
 			workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
 		} else {
-			if (component instanceof MigrationAction) {
-				if (!canMigrationActionWorkflowWithComponentsBeGenerated()) {
-					return false;
-				}
-				workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
-				context.put("migrationAction", (MigrationAction) component);
-			} else if (component instanceof Characterisation) {
-				if (!canCharacterisationWorkflowWithComponentsBeGenerated()) {
-					return false;
-				}
-				workflowTemplate = loadVelocityTemplateFromResources("characterisation_workflow_template.vm");
-				context.put("characterisation", (Characterisation) component);
-			} else if (component instanceof QAObjectComparison) {
-				if (!canQAObjectComparisonWorkflowWithComponentsBeGenerated()) {
-					return false;
-				}
-				workflowTemplate = loadVelocityTemplateFromResources("qaObjectComparison_workflow_template.vm");
-				context.put("qaObjectComparison",
-						(QAObjectComparison) component);
-			} else if (component instanceof QAPropertyComparison) {
-				if (!canQAPropertyComparisonWorkflowWithComponentsBeGenerated()) {
-					return false;
-				}
-				workflowTemplate = loadVelocityTemplateFromResources("qaPropertyComparison_workflow_template.vm");
-				context.put("qaPropertyComparison",
-						(QAPropertyComparison) component);
+			workflowTemplate = loadComponentTemplate(context);
+			if (workflowTemplate == null) {
+				return false;
 			}
 		}
 		UUID randomUUID = UUID.randomUUID();
@@ -249,6 +225,35 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 				operation.getName()
 						+ Constants.BASHGENERATOR_WORKFLOW_EXTENSION, sw, false);
 		return success;
+	}
+
+	private Template loadComponentTemplate(VelocityContext context) {
+		Template workflowTemplate = null;
+		if (component instanceof MigrationAction) {
+			if (!canMigrationActionWorkflowWithComponentsBeGenerated()) {
+				return null;
+			}
+			workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
+			context.put("migrationAction", (MigrationAction) component);
+		} else if (component instanceof Characterisation) {
+			if (!canCharacterisationWorkflowWithComponentsBeGenerated()) {
+				return null;
+			}
+			workflowTemplate = loadVelocityTemplateFromResources("characterisation_workflow_template.vm");
+			context.put("characterisation", (Characterisation) component);
+		} else if (component instanceof QAObjectComparison) {
+			if (!canQAObjectComparisonWorkflowWithComponentsBeGenerated()) {
+				return null;
+			}
+			workflowTemplate = loadVelocityTemplateFromResources("qaObjectComparison_workflow_template.vm");
+			context.put("qaObjectComparison", (QAObjectComparison) component);
+		} else if (component instanceof QAPropertyComparison) {
+			// as generating QAPropertyComparison component doesn't make sense
+			// for the Toolwrapper,
+			// just return null
+			return null;
+		}
+		return workflowTemplate;
 	}
 
 	private boolean canMigrationActionWorkflowWithComponentsBeGenerated() {
@@ -272,17 +277,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		if (qaObjectComparison.getAcceptedMimetype().size() != 2) {
 			res = false;
 			log.error("[ERROR] As can only exist 2 input ports, the number of accepted mimetypes also needs to be 2, which relate precisely with those 2 input ports!");
-		}
-		return res;
-	}
-
-	private boolean canQAPropertyComparisonWorkflowWithComponentsBeGenerated() {
-		boolean res = true;
-		// qaPropertyComparison can at most have 2 inputs (that will be
-		// annotated as SourcePath1Port and SourcePath2Port)
-		if (operation.getInputs().getInput().size() > 2) {
-			res = false;
-			log.error("[ERROR] Cannot generate a workflow with components for more than 2 input ports!");
 		}
 		return res;
 	}

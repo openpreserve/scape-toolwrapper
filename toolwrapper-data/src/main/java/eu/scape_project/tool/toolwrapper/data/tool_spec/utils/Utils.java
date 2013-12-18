@@ -59,7 +59,7 @@ public final class Utils {
 	public static Tool createTool(String toolspecFilePath)
 			throws JAXBException, IOException, SAXException {
 		File schemaFile = null;
-		// try {
+
 		JAXBContext context = JAXBContext.newInstance(Tool.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 

@@ -330,10 +330,12 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				} else {
 					uip.append("[" + value + "]");
 				}
-				String description = value + " > " + input.getDescription()
+				String inputDescription = value + " > "
+						+ input.getDescription()
 						+ (i == 0 ? " OR Read input from the STDIN" : "");
-				uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
-				uipdman.append(description + "\n\n");
+				uipd.append((uipd.length() != 0 ? "\n\t" : "")
+						+ inputDescription);
+				uipdman.append(inputDescription + "\n\n");
 				i++;
 			}
 			wrapperContext.put("usageInputParameter", uip.toString());
@@ -360,9 +362,9 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 			} else {
 				uip.append("[" + value + "]");
 			}
-			String description = value + " > " + param.getDescription();
-			uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
-			uipdman.append(description + "\n\n");
+			String paramDescription = value + " > " + param.getDescription();
+			uipd.append((uipd.length() != 0 ? "\n\t" : "") + paramDescription);
+			uipdman.append(paramDescription + "\n\n");
 		}
 		wrapperContext.put("usageParamParameter", uip.toString());
 		wrapperContext.put("usageParamParameterDescription", uipd.toString());
@@ -394,10 +396,12 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				} else {
 					uip.append("[" + value + "]");
 				}
-				String description = value + " > " + output.getDescription()
+				String outputDescription = value + " > "
+						+ output.getDescription()
 						+ (i == 0 ? " OR Write output to the STDOUT" : "");
-				uipd.append((uipd.length() != 0 ? "\n\t" : "") + description);
-				uipdman.append(description + "\n\n");
+				uipd.append((uipd.length() != 0 ? "\n\t" : "")
+						+ outputDescription);
+				uipdman.append(outputDescription + "\n\n");
 				i++;
 			}
 			wrapperContext.put("usageOutputParameter", uip.toString());
@@ -517,13 +521,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 		return template;
 	}
 
-	private boolean addInformationToDebianTemplates(VelocityContext context) {
-		SimpleDateFormat sdf = new SimpleDateFormat(RFC_822_DATE_PATTERN,
-				Locale.ENGLISH);
-		context.put("dateOfGeneration", sdf.format(new Date()));
-		context.put("maintainerEmail", maintainerEmail);
-
-		Installation installation = tool.getInstallation();
+	private String processInstallationInformation(Installation installation) {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		if (installation != null) {
@@ -549,7 +547,18 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				}
 			}
 		}
-		context.put("toolDependencies", sb.toString());
+		return sb.toString();
+	}
+
+	private boolean addInformationToDebianTemplates(VelocityContext context) {
+		SimpleDateFormat sdf = new SimpleDateFormat(RFC_822_DATE_PATTERN,
+				Locale.ENGLISH);
+		context.put("dateOfGeneration", sdf.format(new Date()));
+		context.put("maintainerEmail", maintainerEmail);
+
+		Installation installation = tool.getInstallation();
+		context.put("toolDependencies",
+				processInstallationInformation(installation));
 
 		if (aggregate) {
 			context.put("toolDescription", description);
@@ -741,8 +750,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	}
 
 	private static int createSeveralDebianPackages(
-			DebianBashWrapperGenerator dbwg, CommandLine cmd, Tool tool,
-			File outputdir) {
+			DebianBashWrapperGenerator dbwg, Tool tool, File outputdir) {
 		int exitCode = 0;
 		for (Operation operation : tool.getOperations().getOperation()) {
 			dbwg.setWrapperName(operation.getName());
@@ -802,8 +810,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 					} else {
 
 						// generate a Debian package for each operation
-						createSeveralDebianPackages(dbwg, cmd, tool,
-								outputdirFile);
+						createSeveralDebianPackages(dbwg, tool, outputdirFile);
 					}
 				}
 			}

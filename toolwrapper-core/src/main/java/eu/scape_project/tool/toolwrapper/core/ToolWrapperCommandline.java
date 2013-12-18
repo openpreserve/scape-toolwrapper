@@ -120,7 +120,7 @@ public abstract class ToolWrapperCommandline {
 		Tool tool = null;
 		CommandLine cmd = parseArguments(args);
 		try {
-			if (cmd != null && cmd.hasOption("t") && cmd.hasOption("o")) {
+			if (isCommandLineParamentersValid(cmd)) {
 				tool = Utils.createTool(cmd.getOptionValue("t"));
 				pair = ImmutablePair.of(cmd, tool);
 			} else {
@@ -139,6 +139,10 @@ public abstract class ToolWrapperCommandline {
 					e);
 		}
 		return pair;
+	}
+	
+	private boolean isCommandLineParamentersValid(CommandLine cmd){
+		return cmd != null && cmd.hasOption("t") && cmd.hasOption("o");
 	}
 
 	/** Getter for the options instance variable */

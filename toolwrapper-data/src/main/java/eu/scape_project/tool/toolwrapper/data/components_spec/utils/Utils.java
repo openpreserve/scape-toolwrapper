@@ -88,7 +88,7 @@ public final class Utils {
 			log.error(
 					"An error occured while copying the XML Schema from the resources to a temporary location!",
 					e);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			log.error("An error occured!", e);
 		} finally {
 			if (schemaFile != null) {

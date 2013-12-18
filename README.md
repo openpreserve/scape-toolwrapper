@@ -46,6 +46,10 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 </tool>
 ```
 
+## Toolwrapper and the componentspec
+
+Associated with a tool & tool description, i.e., tool name, tool version, how the tool can be executed to perform a certain operation, there is more information that can be added that makes easier to other persons to find the tool/tools that can be handy to perform a cer 
+
 ## Getting started
 
 ### Requirements
@@ -72,9 +76,9 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 * **toolwrapper-core** component with common core functionalities
     * **pom.xml**
     * **src** java source code and other resources (log4j.xml)
-* **toolwrapper-data**
+* **toolwrapper-data** component with JAXB related code/resources
     * **pom.xml**
-    * **src** java source code and other resources (toolspec XML Schema)
+    * **src** java source code and other resources (toolspec & componentspec XML Schema)
 * **LICENSE**
 * **pom.xml**
 * **README_FILES** folder with files mentioned on the README file
