@@ -212,10 +212,6 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		if (component == null) {
 			workflowTemplate = loadVelocityTemplateFromResources("workflow_template.vm");
 		} else {
-			/*
-			 * Stuff to check out later *********************** 1)
-			 * requiresInstallation semantic annotations
-			 */
 			if (component instanceof MigrationAction) {
 				if (!canMigrationActionWorkflowWithComponentsBeGenerated()) {
 					return false;

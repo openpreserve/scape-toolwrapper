@@ -12,6 +12,7 @@
 			uri="http://opensource.org/licenses/Apache-2.0" />
 		<acceptedMimetype>image/*</acceptedMimetype>
 		<acceptedMimetype>image/*</acceptedMimetype>
+		<inputMeasure name="image_la_la_la" uri="http://purl.org/DP/quality/measures#6"/>
 		<outputMeasure name="image_distance_mean_error_squared_MSE" uri="http://purl.org/DP/quality/measures#6"/>
 		<outputMeasure name="image_distance_mean_error_squared_MSE_2" uri="http://purl.org/DP/quality/measures#6" typeOfProcessingInstruction="JAVA">System.out.println("lala");</outputMeasure>
 		<outputMeasure name="image_distance_mean_error_squared_MSE_3" uri="http://purl.org/DP/quality/measures#6" typeOfProcessingInstruction="BASH">echo "lala"</outputMeasure>

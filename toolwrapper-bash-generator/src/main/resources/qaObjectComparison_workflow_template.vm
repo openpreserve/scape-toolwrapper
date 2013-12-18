@@ -127,6 +127,32 @@
 				</annotations>
 			</port>
 #end
+
+#foreach( $measure in $qaObjectComparison.getInputMeasure() )
+			<port>
+				<name>$measure.getName()</name>
+				<depth>0</depth>
+				<granularDepth>0</granularDepth>
+				<annotations>
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+										<mimeType>text/rdf+n3</mimeType>
+										<content>&lt;&gt; &lt;http://purl.org/DP/components#portType&gt; &lt;http://purl.org/DP/components#MeasurePort&gt; .
+										</content>
+									</annotationBean>
+									<date>$generationDate</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+				</annotations>
+			</port>
+#end
 		</inputPorts>
 		<outputPorts>
 #foreach( $measure in $qaObjectComparison.getOutputMeasure() )
