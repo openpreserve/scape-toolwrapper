@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://scape-project.eu/tool toolwrapper-data/src/main/resources/tool-1.1_draft.xsd" schemaVersion="1.1" name="ImageMagick" version="2.0.0" homepage="http://www.imagemagick.org/script/convert.php">
+	<license name="Apache-2.0" type="FLOSS" uri="http://opensource.org/licenses/Apache-2.0"/>
 	<installation>
 		<operatingSystem operatingSystemName="Debian">
 			<packageManager type="Dpkg">
@@ -19,7 +20,6 @@
 				<license name="Apache-2.0" type="FLOSS" uri="http://opensource.org/licenses/Apache-2.0"/>
 			</dependency>
 		</operatingSystem>
-		<license name="Apache-2.0" type="FLOSS" uri="http://opensource.org/licenses/Apache-2.0"/>
 	</installation>
 	<operations>
 		<operation name="digital-preservation-migration-image-imagemagick-image2txt">

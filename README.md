@@ -37,7 +37,10 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
-<tool name="ImageMagick" version="2.0.0" homepage="http://www.imagemagick.org/script/convert.php">
+<tool name="ImageMagick" version="2.0.0" 
+      homepage="http://www.imagemagick.org/script/convert.php">
+   <license name="Apache-2.0" type="FLOSS" 
+            uri="http://opensource.org/licenses/Apache-2.0"/>
    <installation>
       <operatingSystem operatingSystemName="Debian">
          <packageManager type="Dpkg">
@@ -45,14 +48,16 @@ This example, even if simplified for presentation purpose, demonstrates how one 
             <source>deb http://scape.keep.pt/apt stable main</source>
          </packageManager>
          <dependency name="imagemagick">
-            <license name="Apache-2.0" type="FLOSS" uri="http://opensource.org/licenses/Apache-2.0"/>
+            <license name="Apache-2.0" type="FLOSS" 
+                     uri="http://opensource.org/licenses/Apache-2.0"/>
          </dependency>
       </operatingSystem>
-      <license name="Apache-2.0" type="FLOSS" uri="http://opensource.org/licenses/Apache-2.0"/>
    </installation>
    <operations>
       <operation name="digital-preservation-migration-image-imagemagick-image2txt">
-         <description>Converts any ImageMagick supported image format to Text</description>
+         <description>
+            Converts any ImageMagick supported image format to Text
+         </description>
          <command>/usr/bin/convert ${input} txt:${output}</command>
          <inputs>
             <input name="input" required="true">  
@@ -100,14 +105,16 @@ It is also described using a machine-readable language (XML, respecting a XML sc
 ```
 >One or more output measures, measures produced by a certain tool operation, which may contain processing instructions that will be added to the Taverna workflow. E.g. (using Bash instruction)
 ```xml
-<outputMeasure name="image_width_of_video" uri="http://purl.org/DP/quality/measures#390"
+<outputMeasure name="image_width_of_video" 
+uri="http://purl.org/DP/quality/measures#390"
 typeOfProcessingInstruction="BASH">
 egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
 </outputMeasure>
 ```
 or (using JAVA instruction)
 ```xml
-<outputMeasure name="the_height_of_the_video_track" uri="http://purl.org/DP/quality/measures#391"
+<outputMeasure name="the_height_of_the_video_track" 
+uri="http://purl.org/DP/quality/measures#391"
 typeOfProcessingInstruction="JAVA">
 // dummy result (always set the result to 500)
 the_height_of_the_video_track="500";
@@ -142,10 +149,12 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <components>
-   <component xsi:type="MigrationAction" profile="http://purl.org/DP/components#MigrationAction" 
-   profileVersion="1.0" name="digital-preservation-migration-image-imagemagick-image2txt" 
-   author="Hélder Silva">
-      <license name="Apache-2.0" type="FLOSS" uri="http://opensource.org/licenses/Apache-2.0"/>
+   <component xsi:type="MigrationAction" profileVersion="1.0" 
+              profile="http://purl.org/DP/components#MigrationAction" 
+              name="digital-preservation-migration-image-imagemagick-image2txt" 
+              author="Hélder Silva">
+      <license name="Apache-2.0" type="FLOSS" 
+               uri="http://opensource.org/licenses/Apache-2.0"/>
       <migrationPath>
          <fromMimetype>image/jpeg</fromMimetype>
          <toMimetype>text/plain</toMimetype>      

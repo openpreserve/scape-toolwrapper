@@ -4,4 +4,4 @@ Source: $toolHomepage
 
 Files: *
 Copyright: 2012 SCAPE project <http://www.scape-project.eu/>
-License: Apache-2.0
+License: $license

@@ -252,7 +252,7 @@
 #foreach( $packageManager in $operatingSystem.getPackageManager() ) 
 			&lt;http://purl.org/DP/components#hasPackageManagerConfig&gt; [ 
 				a &lt;http://purl.org/DP/components#$packageManager.getType().value()Config&gt; ;
-				&lt;http://purl.org/DP/components#installsDpkgs&gt; "$esc.xml($packageManager.getConfig().trim())" ;
+				&lt;http://purl.org/DP/components#installsDpkgs&gt; "$esc.xml($operation.getName().trim())" ;
             	&lt;http://purl.org/DP/components#requiresSource&gt; "$packageManager.getSource().trim()"
         	] ;
 #end

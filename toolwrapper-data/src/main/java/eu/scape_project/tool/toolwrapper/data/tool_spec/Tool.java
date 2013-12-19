@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="license" type="{http://scape-project.eu/tool}License"/>
  *         &lt;element name="installation" type="{http://scape-project.eu/tool}Installation" minOccurs="0"/>
  *         &lt;element name="operations" type="{http://scape-project.eu/tool}Operations"/>
  *       &lt;/sequence>
@@ -48,11 +49,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "tool")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Tool", propOrder = {
+    "license",
     "installation",
     "operations"
 })
 public class Tool {
 
+    @XmlElement(required = true)
+    protected License license;
     protected Installation installation;
     @XmlElement(required = true)
     protected Operations operations;
@@ -65,6 +69,30 @@ public class Tool {
     protected String homepage;
     @XmlAttribute(required = true)
     protected BigDecimal schemaVersion;
+
+    /**
+     * Gets the value of the license property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link License }
+     *     
+     */
+    public License getLicense() {
+        return license;
+    }
+
+    /**
+     * Sets the value of the license property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link License }
+     *     
+     */
+    public void setLicense(License value) {
+        this.license = value;
+    }
 
     /**
      * Gets the value of the installation property.

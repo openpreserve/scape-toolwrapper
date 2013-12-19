@@ -79,7 +79,7 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 	private Components components;
 	private Component component;
 
-	/** Public empty constructor (setting all the instance variables to null) */
+	/** Public empty constructor (setting all instance variables to null) */
 	public BashWrapperGenerator() {
 		super();
 		tool = null;

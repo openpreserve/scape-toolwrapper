@@ -12,13 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Declares 1 or more installation dependencies and
- * 				license.
+ * Declares 0 or more installation dependencies.
+ * 			
  * 
  * <p>Java class for Installation complex type.
  * 
@@ -30,7 +29,6 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="operatingSystem" type="{http://scape-project.eu/tool}OperatingSystemDependency" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="license" type="{http://scape-project.eu/tool}License"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -41,14 +39,11 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Installation", propOrder = {
-    "operatingSystem",
-    "license"
+    "operatingSystem"
 })
 public class Installation {
 
     protected List<OperatingSystemDependency> operatingSystem;
-    @XmlElement(required = true)
-    protected License license;
 
     /**
      * Gets the value of the operatingSystem property.
@@ -77,30 +72,6 @@ public class Installation {
             operatingSystem = new ArrayList<OperatingSystemDependency>();
         }
         return this.operatingSystem;
-    }
-
-    /**
-     * Gets the value of the license property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link License }
-     *     
-     */
-    public License getLicense() {
-        return license;
-    }
-
-    /**
-     * Sets the value of the license property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link License }
-     *     
-     */
-    public void setLicense(License value) {
-        this.license = value;
     }
 
 }

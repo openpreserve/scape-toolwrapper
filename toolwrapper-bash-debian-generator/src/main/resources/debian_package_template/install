@@ -4,7 +4,16 @@ $wrapperName usr/bin
 #foreach( $operation in $operations )
 $operation.getName() usr/bin
 #end
+
 #end
 #foreach( $thing in $installList )
 $thing usr/share/$wrapperName/
+#end
+
+#if(!$aggregate)
+${wrapperName}.t2flow usr/share/$wrapperName/
+#else
+#foreach( $operation in $operations )
+${operation.getName()}.t2flow usr/share/$wrapperName/
+#end
 #end

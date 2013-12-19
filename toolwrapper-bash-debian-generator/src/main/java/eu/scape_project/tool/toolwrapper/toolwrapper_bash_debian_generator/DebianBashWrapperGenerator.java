@@ -75,7 +75,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	private static Logger log = Logger
 			.getLogger(DebianBashWrapperGenerator.class);
 	private static final List<String> DEBIAN_FILES = Arrays.asList(
-			"source/format", "compat", "control", "copyright", "dirs", "docs",
+			"source/format", "compat", "control", "copyright", "dirs",
 			"install", "MAN.manpages", "MAN.pod", "README", "rules");
 	private static final String RFC_822_DATE_PATTERN = "EEE, dd MMM yyyy HH:mm:ss Z";
 	private static final String DEBIAN_TEMPLATE_DIRECTORY_NAME = "/debian_package_template/";
@@ -555,6 +555,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 				Locale.ENGLISH);
 		context.put("dateOfGeneration", sdf.format(new Date()));
 		context.put("maintainerEmail", maintainerEmail);
+		context.put("license", tool.getLicense().getName().value());
 
 		Installation installation = tool.getInstallation();
 		context.put("toolDependencies",
