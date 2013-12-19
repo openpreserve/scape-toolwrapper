@@ -106,16 +106,16 @@ It is also described using a machine-readable language (XML, respecting a XML sc
 >One or more output measures, measures produced by a certain tool operation, which may contain processing instructions that will be added to the Taverna workflow. E.g. (using Bash instruction)
 ```xml
 <outputMeasure name="image_width_of_video" 
-uri="http://purl.org/DP/quality/measures#390"
-typeOfProcessingInstruction="BASH">
+               uri="http://purl.org/DP/quality/measures#390"
+               typeOfProcessingInstruction="BASH">
 egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
 </outputMeasure>
 ```
 or (using JAVA instruction)
 ```xml
 <outputMeasure name="the_height_of_the_video_track" 
-uri="http://purl.org/DP/quality/measures#391"
-typeOfProcessingInstruction="JAVA">
+               uri="http://purl.org/DP/quality/measures#391"
+               typeOfProcessingInstruction="JAVA">
 // dummy result (always set the result to 500)
 the_height_of_the_video_track="500";
 </outputMeasure>
@@ -131,7 +131,8 @@ the_height_of_the_video_track="500";
 >One or more output measures, measure that can be "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
 ```xml
 <outputMeasure name="image_distance_mean_error_squared_MSE" 
-uri="http://purl.org/DP/quality/measures#6" typeOfProcessingInstruction="JAVA">
+               uri="http://purl.org/DP/quality/measures#6" 
+               typeOfProcessingInstruction="JAVA">
 import java.util.regex.*;
 Pattern thePat = Pattern.compile(".+\\((\\d+\\.?\\d*)\\)");
 Matcher matcher = thePat.matcher(STDERR_IN);
@@ -288,12 +289,12 @@ Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes 
 
 ```bash
 $> cd $TOOLWRAPPER_GITHUB_FOLDER
-$> ./toolwrapper-bash-generator/bin/generate.sh -t \
+$> ./toolwrapper-bash-generator/bin/generate.sh -e hsilva@keep.pt -o output_dir -t \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -c \
-  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component -o output_dir
+  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component 
 $> ./toolwrapper-bash-debian-generator/bin/generate.sh -t \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -ch \
-  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.changelog -e hsilva@keep.pt \
+  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.changelog \
   -i output_dir -o output_dir 
 ```
 
