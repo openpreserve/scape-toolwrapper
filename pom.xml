@@ -1,5 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>eu.scape-project</groupId>
+		<artifactId>scape-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.scape-project.tool</groupId>
 	<artifactId>toolwrapper</artifactId>
@@ -12,6 +17,31 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<!-- for snapshot builds when building with travis -->
+	<profiles>
+	  <profile>
+		<id>travisbuild</id>
+		<activation>
+			<!-- active by default so we can get scape parent pom -->
+			<activeByDefault>true</activeByDefault>
+			<property>
+				<name>env.TRAVIS</name>
+				<value>true</value>
+			</property>
+		</activation>
+		  <repositories>
+			<repository>
+			  <id>sonatypesnapshots</id>
+			  <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+			  <layout>default</layout>
+			  <snapshots>
+				<enabled>true</enabled>
+			  </snapshots>
+			</repository>
+		  </repositories>
+	   </profile>
+	</profiles>
+	
 	<packaging>pom</packaging>
 
 	<modules>
