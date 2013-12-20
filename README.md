@@ -31,6 +31,12 @@ Tools, and tools invocations, are described using a machine-readable language (X
 2. Tool installation information, i.e., software dependencies, license, etc;
 3. One or more concrete operations, pre-described, that can be executed for a particular input to generate a particular output.
 
+**Changes from toolspec version 1.0 to 1.1:**
+
+1. The element ```<otherProperties>``` no longer exists.
+2. The element ```<installation>``` now allows to specify much more information.
+
+
 **Example:**
 
 This example, even if simplified for presentation purpose, demonstrates how one could describe a image file format conversion using ImageMagick.
@@ -89,7 +95,7 @@ It is also described using a machine-readable language (XML, respecting a XML sc
 
 ### Migration Component
 
->One or more migration paths. E.g.
+One or more migration paths. E.g.
 ```xml
 <migrationPath>
    <fromMimetype>image/png</fromMimetype>
@@ -97,59 +103,12 @@ It is also described using a machine-readable language (XML, respecting a XML sc
 </migrationPath>
 ```
 
-### Characterisation Component
-
->One or more accepted mimetypes (the same # as the inputs of the operation). E.g.
-```xml
-<acceptedMimetype>video/quicktime</acceptedMimetype>
-```
->One or more output measures, measures produced by a certain tool operation, which may contain processing instructions that will be added to the Taverna workflow. E.g. (using Bash instruction)
-```xml
-<outputMeasure name="image_width_of_video" 
-               uri="http://purl.org/DP/quality/measures#390"
-               typeOfProcessingInstruction="BASH">
-egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
-</outputMeasure>
-```
-or (using JAVA instruction)
-```xml
-<outputMeasure name="the_height_of_the_video_track" 
-               uri="http://purl.org/DP/quality/measures#391"
-               typeOfProcessingInstruction="JAVA">
-// dummy result (always set the result to 500)
-the_height_of_the_video_track="500";
-</outputMeasure>
-```
-
-### Quality Assurance Component
-
->Two accepted mimetypes (as this compares 2 representations). E.g.
-```xml
-<acceptedMimetype>image/*</acceptedMimetype>
-<acceptedMimetype>image/*</acceptedMimetype>
-```
->One or more output measures, measure that can be "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
-```xml
-<outputMeasure name="image_distance_mean_error_squared_MSE" 
-               uri="http://purl.org/DP/quality/measures#6" 
-               typeOfProcessingInstruction="JAVA">
-import java.util.regex.*;
-Pattern thePat = Pattern.compile(".+\\((\\d+\\.?\\d*)\\)");
-Matcher matcher = thePat.matcher(STDERR_IN);
-if (matcher.find()) {
-   image_distance_mean_error_squared_MSE = matcher.group(1);
-}else{
-   image_distance_mean_error_squared_MSE="ERROR";
-}
-</outputMeasure>
-```
-
 **Example:**
 
 This example, even if simplified for presentation purpose, demonstrates how one could describe a image file format conversion using ImageMagick (in what concerns SCAPE Component info).
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<components>
+<components schemaVersion="1.1">
    <component xsi:type="MigrationAction" profileVersion="1.0" 
               profile="http://purl.org/DP/components#MigrationAction" 
               name="digital-preservation-migration-image-imagemagick-image2txt" 
@@ -174,7 +133,111 @@ This example, even if simplified for presentation purpose, demonstrates how one 
       </migrationPath>
    </component>
 </components>
+```
 
+### Characterisation Component
+
+One or more accepted mimetypes (the same # as the inputs of the operation). E.g.
+```xml
+<acceptedMimetype>video/quicktime</acceptedMimetype>
+```
+One or more output measures, measures produced by a certain tool operation, which may contain processing instructions that will be added to the Taverna workflow. E.g. (using Bash instruction)
+```xml
+<outputMeasure name="image_width_of_video" 
+               uri="http://purl.org/DP/quality/measures#390"
+               typeOfProcessingInstruction="BASH">
+    egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
+</outputMeasure>
+```
+or (using JAVA instruction)
+```xml
+<outputMeasure name="the_height_of_the_video_track" 
+               uri="http://purl.org/DP/quality/measures#391"
+               typeOfProcessingInstruction="JAVA">
+    // dummy result (always set the result to 500)
+    the_height_of_the_video_track="500";
+</outputMeasure>
+```
+
+**Example:**
+
+This example, even if simplified for presentation purpose, demonstrates how one could describe a video characterisation using FFProbe (in what concerns SCAPE Component info).
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<components schemaVersion="1.1">                 
+   <component xsi:type="Characterisation"   
+      profile="http://purl.org/DP/components#Characterisation"
+      name="digital-preservation-characterisation-video-ffprobe-video2xml"
+      author="Hélder Silva">
+      <license name="Apache-2.0" type="FLOSS"  
+         uri="http://opensource.org/licenses/Apache-2.0" />
+      <acceptedMimetype>video/msvideo</acceptedMimetype>
+      <acceptedMimetype>video/quicktime</acceptedMimetype>
+      <outputMeasure name="image_width_of_video" 
+                     uri="http://purl.org/DP/quality/measures#390" 
+                     typeOfProcessingInstruction="BASH">
+         egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
+      </outputMeasure>
+      <outputMeasure name="the_height_of_the_video_track" 
+                     uri="http://purl.org/DP/quality/measures#391" 
+                     typeOfProcessingInstruction="BASH">
+         egrep "codec_type=\"video\"" %%output%% | sed 's#^.*height="##;s#".*##'
+      </outputMeasure>
+   </component>
+</components>
+```
+
+### Quality Assurance Component
+
+Two accepted mimetypes (as this compares 2 representations). E.g.
+```xml
+<acceptedMimetype>image/*</acceptedMimetype>
+<acceptedMimetype>image/*</acceptedMimetype>
+```
+One or more output measures, measure that can be "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
+```xml
+<outputMeasure name="image_distance_mean_error_squared_MSE" 
+               uri="http://purl.org/DP/quality/measures#6" 
+               typeOfProcessingInstruction="JAVA">
+    import java.util.regex.*;
+    Pattern thePat = Pattern.compile(".+\\((\\d+\\.?\\d*)\\)");
+    Matcher matcher = thePat.matcher(STDERR_IN);
+    if (matcher.find()) {
+       image_distance_mean_error_squared_MSE = matcher.group(1);
+    }else{
+       image_distance_mean_error_squared_MSE="ERROR";
+    }
+</outputMeasure>
+```
+
+**Example:**
+
+This example, even if simplified for presentation purpose, demonstrates how one could describe an image comparison using ImageMagick (in what concerns SCAPE Component info).
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<components schemaVersion="1.1">                 
+   <component xsi:type="QAObjectComparison" 
+      profile="http://purl.org/DP/components#QAObjectComparison"
+      name="digital-preservation-qaobject-imagemagick-compare-with-mse"
+      author="Hélder Silva">
+      <license name="Apache-2.0" type="FLOSS"  
+         uri="http://opensource.org/licenses/Apache-2.0" />
+      <acceptedMimetype>image/*</acceptedMimetype>
+      <acceptedMimetype>image/*</acceptedMimetype>
+		<outputMeasure name="image_distance_mean_error_squared_MSE" 
+                     uri="http://purl.org/DP/quality/measures#6" 
+                     typeOfProcessingInstruction="JAVA">
+         import java.util.regex.*;
+         Pattern thePat = Pattern.compile(".+\\((\\d+\\.?\\d*)\\)");
+         Matcher matcher = thePat.matcher(STDERR_IN);
+         if (matcher.find()) {
+            image_distance_mean_error_squared_MSE = matcher.group(1);
+         }else{
+            image_distance_mean_error_squared_MSE="ERROR";
+         }
+      </outputMeasure>
+   </component>
+</components>
 ```
 
 ## Getting started
