@@ -4,6 +4,7 @@
 	xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink"
 	schemaVersion="1.1" name="FFmpeg" version="1.0.1" homepage="http://ffmpeg.org/">
 	
+	<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS" />
 	<installation>
 		<operatingSystem operatingSystemName="Debian">
 			<packageManager type="Dpkg">
@@ -15,7 +16,6 @@ deb-src http://ppa.launchpad.net/jon-severinsson/ffmpeg/ubuntu precise main </so
 				<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS"></license>
 			</dependency>
 		</operatingSystem>
-		<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS" />
 	</installation>
 
 	<operations>

@@ -302,6 +302,8 @@ If one executes the **bash-generator** first, for a given toolspec (and optional
                                              +---------------------+
 </pre>
   
+**Note:** when executing the bash wrapped version of the tool, please make sure that parameters made of multiple terms (white-space delimited) are provided within double quotes (e.g. -compress None should be "-compress None").
+   
 Then, if one wants to generate a Debian package, for a given toolspec (and optionally for the respectively componentspec) and for the previously generated artifacts, one executes the **bash-debian-generator**, as the following diagram explains.
 
 <pre> +---------------------+

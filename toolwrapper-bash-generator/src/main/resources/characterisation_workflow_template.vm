@@ -137,7 +137,7 @@
 								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
 									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
 										<mimeType>text/rdf+n3</mimeType>
-										<content>&lt;&gt;    &lt;http://purl.org/DP/components#providesType&gt; &lt;$measure.getUri()&gt; . </content>
+										<content>&lt;&gt;    &lt;http://purl.org/DP/components#provides&gt; &lt;$measure.getUri()&gt; . </content>
 									</annotationBean>
 									<date>$generationDate</date>
       								<creators />
