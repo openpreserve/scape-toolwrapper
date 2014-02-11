@@ -1,109 +1,164 @@
 package eu.scape_project.tool.toolwrapper.workflow_uploader;
 
-import java.util.Map.Entry;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.glassfish.jersey.client.filter.HttpBasicAuthFilter;
+
+import eu.scape_project.tool.toolwrapper.core.exceptions.ErrorParsingCmdArgsException;
+import eu.scape_project.tool.toolwrapper.data.components_spec.Component;
+import eu.scape_project.tool.toolwrapper.data.components_spec.Components;
 
 public class WorkflowUploader {
 	private static Logger logger = Logger.getLogger(WorkflowUploader.class);
 
 	private Client restClient;
 	private Options options;
-	private static final String DEFAULT_MY_EXPERIMENT_BASE_URL = "http://www.myexperiment.org";
-	private static final String DEFAULT_MY_EXPERIMENT_SESSION_COOKIE_NAME = "myexperiment_session";
-
-	private String myExperimentBaseURL;
 
 	public WorkflowUploader() {
-		myExperimentBaseURL = DEFAULT_MY_EXPERIMENT_BASE_URL;
 
 		// REST client instantiation and configuration
 		restClient = ClientBuilder.newClient();
 
 		Option opt;
-		options = new Options();
-		opt = new Option("w", "workflow", true, "workflow file location");
+		setOptions(new Options());
+
+		opt = new Option("s", "componentspec", true,
+				"component spec file location");
 		opt.setRequired(true);
-		options.addOption(opt);
-		opt = new Option("o", "outDir", true,
-				"directory where to put the generated artifacts");
+		getOptions().addOption(opt);
+
+		opt = new Option("c", "component", true, "component file location");
 		opt.setRequired(true);
-		options.addOption(opt);
+		getOptions().addOption(opt);
+
+		opt = new Option("u", "username", true, "username");
+		opt.setRequired(true);
+		getOptions().addOption(opt);
+
+		opt = new Option("p", "password", true, "password");
+		opt.setRequired(true);
+		getOptions().addOption(opt);
+
+		opt = new Option("i", "family", true, "component family id");
+		opt.setRequired(true);
+		getOptions().addOption(opt);
+
 	}
 
-	public WebTarget getWebTarget(String resourceLocation) {
-		return restClient.target(resourceLocation);
+	public Options getOptions() {
+		return options;
 	}
 
-	public String getMyExperimentSessionID(String username, String password) {
+	public void setOptions(Options options) {
+		this.options = options;
+	}
+
+	public String uploadComponentToMyExperiment(String username,
+			String password, String familyId, String componentSpecFilePath,
+			String componentFilePath) throws IOException {
 		String res = null;
-		String cookieRequestData = "<session><username>" + username
-				+ "</username><password>" + password + "</password></session>";
 
-		// HTTP POST request
-		WebTarget loginRequest = restClient
-				.target(DEFAULT_MY_EXPERIMENT_BASE_URL + "/session");
-		Response response = loginRequest.request().post(
-				Entity.entity(cookieRequestData, MediaType.APPLICATION_XML));
-		logger.debug("<<<<<<<\n" + response + "\n<<<<<<<");
-		MultivaluedMap<String, Object> headers = response.getHeaders();
-		for (String headerName : headers.keySet()) {
-			logger.debug("header:" + headerName + " " + headers.get(headerName));
-		}
+		Components components = eu.scape_project.tool.toolwrapper.data.components_spec.utils.Utils
+				.createComponents(componentSpecFilePath);
 
-		logger.debug("status:" + response.getStatus());
-		if (response.getStatus() == Status.OK.getStatusCode()) {
-			for (Entry<String, NewCookie> cookieEntry : response.getCookies()
-					.entrySet()) {
-				logger.debug("Cookie:" + cookieEntry.getKey());
-				if (DEFAULT_MY_EXPERIMENT_SESSION_COOKIE_NAME
-						.equals(cookieEntry.getKey())) {
-					res = cookieEntry.getValue().getValue();
-					break;
+		if (components != null) {
+
+			for (Component component : components.getComponent()) {
+
+				String title = component.getName();
+				String description = "TBA";
+				String license = component.getLicense().getName().toString();
+
+				byte[] encodedBytes = Base64.encodeBase64(IOUtils
+						.toByteArray(new FileInputStream(componentFilePath)));
+				String base64 = new String(encodedBytes);
+
+				String postData = "<workflow>"
+						+ "<title>%s</title>"
+						+ "<description>%s</description>"
+						+ "<component-family>http://www.myexperiment.org/packs/%s.html</component-family>"
+						+ "<license-type>%s</license-type>"
+						+ "<content-type>application/vnd.taverna.t2flow+xml</content-type>"
+						+ "<content>%s</content>" + "</workflow>";
+
+				postData = String.format(postData, title, description,
+						familyId, license, base64);
+
+				logger.debug(postData);
+
+				// set basic authentication
+				HttpBasicAuthFilter httpBasicAuthFilter = new HttpBasicAuthFilter(
+						username, password);
+				restClient.register(httpBasicAuthFilter);
+
+				// HTTP POST request
+				WebTarget uploadRequest = restClient
+						.target("http://www.myexperiment.org/component.xml");
+
+				Response response = uploadRequest.request().post(
+						Entity.entity(postData, MediaType.APPLICATION_XML));
+
+				logger.debug("status:" + response.getStatus());
+				if (response.getStatus() == Status.OK.getStatusCode()) {
+					logger.info("Component uploaded with success!");
+				} else {
+					logger.error("Error uploading component!\n"
+							+ response.readEntity(String.class));
 				}
 			}
 		}
 		return res;
 	}
 
-	public static void main(String[] args) {
-		// obtain object instance
-		WorkflowUploader workflowUploader = new WorkflowUploader();
-		// authenticate user on myExperiment
-		String myExperimentSessionID = workflowUploader
-				.getMyExperimentSessionID(args[0], args[1]);
-		logger.debug("myExperimentSessionID>" + myExperimentSessionID);
-		// myExperimentSessionID = "3f6ac15e6a525ed0fe3d308f6192a6ab";
-
-		if (myExperimentSessionID != null) {
-			// if user was successfully authenticated on myExperiment
-
-			Cookie authenticationCookie = new Cookie(
-					DEFAULT_MY_EXPERIMENT_SESSION_COOKIE_NAME,
-					myExperimentSessionID);
-			// NewCookie authenticationCookie = new NewCookie(
-			// DEFAULT_MY_EXPERIMENT_SESSION_COOKIE_NAME,
-			// myExperimentSessionID);
-			WebTarget webTarget = workflowUploader
-					.getWebTarget("http://www.myexperiment.org/workflow.xml?id=3923");
-			Response response = webTarget.request()
-					.cookie(authenticationCookie).get();
-
-			// Response response = webTarget.request().get();
-			logger.debug("<<<<" + response.toString());
+	private CommandLine parseArguments(String[] args)
+			throws ErrorParsingCmdArgsException {
+		CommandLineParser parser = new PosixParser();
+		CommandLine commandLine = null;
+		try {
+			commandLine = parser.parse(options, args);
+		} catch (org.apache.commons.cli.ParseException e) {
+			throw new ErrorParsingCmdArgsException(e);
 		}
+		return commandLine;
 	}
+
+	public static void main(String[] args) throws IOException,
+			ErrorParsingCmdArgsException {
+
+		WorkflowUploader workflowUploader = new WorkflowUploader();
+
+		CommandLine parseArguments = workflowUploader.parseArguments(args);
+
+		logger.debug("<" + parseArguments.getOptionValue("u") + ">\n" + "<"
+				+ parseArguments.getOptionValue("p") + ">\n" + "<"
+				+ parseArguments.getOptionValue("i") + ">\n" + "<"
+				+ parseArguments.getOptionValue("s") + ">\n" + "<"
+				+ parseArguments.getOptionValue("c") + ">\n");
+
+		workflowUploader.uploadComponentToMyExperiment(
+				parseArguments.getOptionValue("u"),
+				parseArguments.getOptionValue("p"),
+				parseArguments.getOptionValue("i"),
+				parseArguments.getOptionValue("s"),
+				parseArguments.getOptionValue("c"));
+
+	}
+
 }

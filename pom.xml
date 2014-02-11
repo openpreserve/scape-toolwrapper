@@ -48,7 +48,7 @@
 		<module>toolwrapper-bash-generator</module>
 		<module>toolwrapper-bash-debian-generator</module>
 		<module>toolwrapper-core</module>
-		<!--<module>toolwrapper-workflow-uploader</module>-->
+		<module>toolwrapper-workflow-uploader</module>
 		<module>toolwrapper-data</module>
 	</modules>
 
