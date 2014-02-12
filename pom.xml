@@ -21,35 +21,35 @@
 
 	<!-- for snapshot builds when building with travis -->
 	<profiles>
-	  <profile>
-		<id>travisbuild</id>
-		<activation>
-			<!-- active by default so we can get scape parent pom -->
-			<activeByDefault>true</activeByDefault>
-			<property>
-				<name>env.TRAVIS</name>
-				<value>true</value>
-			</property>
-		</activation>
-		  <repositories>
-			<repository>
-			  <id>sonatypesnapshots</id>
-			  <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-			  <layout>default</layout>
-			  <snapshots>
-				<enabled>true</enabled>
-			  </snapshots>
-			</repository>
-		  </repositories>
-	   </profile>
+		<profile>
+			<id>travisbuild</id>
+			<activation>
+				<!-- active by default so we can get scape parent pom -->
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>env.TRAVIS</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>sonatypesnapshots</id>
+					<url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+					<layout>default</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
 	</profiles>
-	
+
 	<modules>
+		<module>toolwrapper-data</module>
+		<module>toolwrapper-core</module>
 		<module>toolwrapper-bash-generator</module>
 		<module>toolwrapper-bash-debian-generator</module>
-		<module>toolwrapper-core</module>
-		<module>toolwrapper-workflow-uploader</module>
-		<module>toolwrapper-data</module>
+		<module>toolwrapper-component-uploader</module>
 	</modules>
 
 	<build>
@@ -138,6 +138,11 @@
 				<groupId>org.apache.velocity</groupId>
 				<artifactId>velocity-tools</artifactId>
 				<version>2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.8</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

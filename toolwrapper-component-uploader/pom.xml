@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>toolwrapper-workflow-uploader</artifactId>
-	<name>SCAPE ToolWrapper - Workflow uploader component</name>
+	<artifactId>toolwrapper-component-uploader</artifactId>
+	<name>SCAPE ToolWrapper - Component uploader component</name>
 	<url>www.scape-project.eu/</url>
 
 	<parent>
@@ -28,7 +28,7 @@
                <archive>
                   <manifest>
                      <addClasspath>true</addClasspath>        
-                     <mainClass>eu.scape_project.tool.toolwrapper.workflow_uploader.WorkflowUploader</mainClass>
+                     <mainClass>eu.scape_project.tool.toolwrapper.component_uploader.ComponentUploader</mainClass>
                   </manifest>
                </archive>
             </configuration>
@@ -82,7 +82,6 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.scape-project.tool</groupId>

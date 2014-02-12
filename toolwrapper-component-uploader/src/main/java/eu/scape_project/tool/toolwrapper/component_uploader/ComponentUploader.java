@@ -1,4 +1,4 @@
-package eu.scape_project.tool.toolwrapper.workflow_uploader;
+package eu.scape_project.tool.toolwrapper.component_uploader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,9 +30,9 @@ import eu.scape_project.tool.toolwrapper.core.exceptions.ErrorParsingCmdArgsExce
 import eu.scape_project.tool.toolwrapper.data.components_spec.Component;
 import eu.scape_project.tool.toolwrapper.data.components_spec.Components;
 
-public class WorkflowUploader {
+public class ComponentUploader {
 
-	private static Logger logger = Logger.getLogger(WorkflowUploader.class);
+	private static Logger logger = Logger.getLogger(ComponentUploader.class);
 
 	private static final String MY_EXPERIMENT_COMPONENT_URI = "http://www.myexperiment.org/component.xml";
 	private static final String DEFAULT_DESCRIPTION = "TBA";
@@ -48,7 +48,7 @@ public class WorkflowUploader {
 	private Client restClient;
 	private Options options;
 
-	public WorkflowUploader() {
+	public ComponentUploader() {
 
 		// REST client instantiation and configuration
 		restClient = ClientBuilder.newClient();
@@ -117,10 +117,10 @@ public class WorkflowUploader {
 	 *            myExperiment license (myExperiment accepted license set
 	 *            doesn't match with Component license set). if no license is
 	 *            provided, by default this will be set to
-	 *            {@link WorkflowUploader.DEFAULT_LICENSE}
+	 *            {@link ComponentUploader.DEFAULT_LICENSE}
 	 * @param description
 	 *            if no description is provided, by default this will be set to
-	 *            {@link WorkflowUploader.DEFAULT_DESCRIPTION}
+	 *            {@link ComponentUploader.DEFAULT_DESCRIPTION}
 	 * 
 	 * @return true if the upload was successful, false otherwise
 	 * 
@@ -220,11 +220,11 @@ public class WorkflowUploader {
 
 		int exitCode = 0;
 
-		WorkflowUploader workflowUploader = new WorkflowUploader();
+		ComponentUploader componentUploader = new ComponentUploader();
 
 		try {
 
-			CommandLine parseArguments = workflowUploader.parseArguments(args);
+			CommandLine parseArguments = componentUploader.parseArguments(args);
 
 			logger.debug("<" + parseArguments.getOptionValue("u") + ">\n" + "<"
 					+ parseArguments.getOptionValue("p") + ">\n" + "<"
@@ -234,7 +234,7 @@ public class WorkflowUploader {
 					+ parseArguments.getOptionValue("l") + ">\n" + "<"
 					+ parseArguments.getOptionValue("d") + ">\n");
 
-			if (!workflowUploader.uploadComponentToMyExperiment(
+			if (!componentUploader.uploadComponentToMyExperiment(
 					parseArguments.getOptionValue("u"),
 					parseArguments.getOptionValue("p"),
 					parseArguments.getOptionValue("i"),
@@ -246,7 +246,7 @@ public class WorkflowUploader {
 			}
 		} catch (ErrorParsingCmdArgsException e) {
 			logger.error("[ERROR] " + e.getMessage());
-			workflowUploader.printUsage();
+			componentUploader.printUsage();
 			exitCode = 2;
 		}
 
