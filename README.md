@@ -6,7 +6,7 @@ The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java too
 2. **Tool invocation** (simplified) through command-line wrapping;
 3. **Artifacts generation** (associated to a tool invocation, e.g., Taverna workflow);
 4. **Packaging** of all the generated artifacts for easier distribution and installation;
-5. **Component upload** bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment site. 
+5. **Component upload** bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment website. 
 
 **What you'll find in this README:**
 * [Toolwrapper and the Tool Spec (toolspec)](#toolwrapper-and-the-tool-spec-toolspec)
@@ -25,7 +25,7 @@ The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java too
   * [How to validate a componentspec against the schema](#how-to-validate-a-componentspec-against-the-schema)
   * [How to generate a bash wrapper (and optionally a Component, i.e. Taverna workflow with semantic annotations)](#how-to-generate-a-bash-wrapper-and-optionally-a-component-ie-taverna-workflow-with-semantic-annotations)
   * [How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)](#how-to-generate-a-debian-package-from-previously-generated-bash-wrapper-and-taverna-workflow)
-  * [How to upload a Component to the myExperiment site (using previously generated Taverna workflow)](#how-to-upload-a-component-to-the-myexperiment-site-using-previously-generated-taverna-workflow)
+  * [How to upload a Component to the myExperiment website (using previously generated Taverna workflow)](#how-to-upload-a-component-to-the-myexperiment-website-using-previously-generated-taverna-workflow)
   * [How to develop a specific functionality for the Toolwrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
 * [Acknowledgements](#acknowledgements) 
 
@@ -95,7 +95,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 ## Toolwrapper and the Component Spec (componentspec)
 
 In the SCAPE context, a Component is a Taverna workflow adhering to a Component Profile and used as a building block in a Preservation Action Plan.
-These Taverna workflows will "live" in the myExperiment site and allow anyone to search/use them. In order to allow a more meanful search/increase their discoverability, these workflows will be semanticlly annotated with special tool information such as, and for file format migration tools, the supported input formats and output formats, or for the characterisation tools what type of file characteristics the tool can produce, etc.
+These Taverna workflows will "live" in the myExperiment website and allow anyone to search/use them. In order to allow a more meanful search/increase their discoverability, these workflows will be semanticlly annotated with special tool information such as, and for file format migration tools, the supported input formats and output formats, or for the characterisation tools what type of file characteristics the tool can produce, etc.
 
 In what concerns the Toolwrapper, as it produces Taverna workflows from the toolspec and as the toolspec only allows to specify a limited set of information (described in the previous section), another spec file was created and named Component Spec (componentspec).
 It is also described using a machine-readable language (XML, respecting a XML schema) and allows one to specify (as specified in the different [SCAPE Component Profiles](https://github.com/openplanets/scape-component-profiles)):
@@ -269,7 +269,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
     * **bin** folder with script that eases the component execution
     * **pom.xml**
     * **src** java source code and other resources (templates for bash wrapper and Taverna workflow)
-* _**toolwrapper-component-uploader**_ Toolwrapper component that eases the process of uploading a Component to the myExperiment site
+* _**toolwrapper-component-uploader**_ Toolwrapper component that eases the process of uploading a Component (Taverna workflow) to the myExperiment website
     * **bin** folder with script that eases the component execution
     * **pom.xml**
     * **src** java source code and other resources
@@ -362,7 +362,7 @@ $> cd $TOOLWRAPPER_SOURCE_DIR
 $> xmllint --noout --schema toolwrapper-data/src/main/resources/tool-1.1_draft.xsd toolspec.xml
 ```
 
-### How to validate a component spec against the schema
+### How to validate a componentspec against the schema
 
 The schema for the componentspec is located under **toolwrapper-data/src/main/resources/** and it's named component-1.X_draft.xsd, where **X** is a number.
 
@@ -386,6 +386,8 @@ Optional file:
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
+**Tip:** If run without any argument, the **generate.sh** script will output an usage message explaining what arguments one can pass (and their meaning) and which of them are mandatory.
+
 ```bash
 $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./toolwrapper-bash-generator/bin/generate.sh -e hsilva@keep.pt -o output_dir -t \
@@ -399,21 +401,26 @@ One may find the produced artifacts under the directory **output_dir**. The bash
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
+**Tip:** If run without any argument, the **generate.sh** script will output an usage message explaining what arguments one can pass (and their meaning) and which of them are mandatory.
+
 ```bash
 $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./toolwrapper-bash-debian-generator/bin/generate.sh -e EMAIL -t \
-  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -ch\ 
+  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -ch \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.changelog \
   -i output_dir -o output_dir 
 ```
 
 The produced Debian package may be found under the directory **output_dir/debian**.
 
-### How to upload a Component to the myExperiment site (using previously generated Taverna workflow)
+### How to upload a Component to the myExperiment website (using previously generated Taverna workflow)
+
+**Tip:** If run without any argument, the **upload.sh** script will output an usage message explaining what arguments one can pass (and their meaning) and which of them are mandatory.
 
 ```bash
 $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./toolwrapper-component-uploader/bin/upload.sh -u USERNAME -p PASSWORD \
+-t README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml \
 -c output_dir/workflow/digital-preservation-migration-image-imagemagick-image2txt.t2flow \
 -i 579 -s README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component
 ```
