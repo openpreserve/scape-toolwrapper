@@ -5,7 +5,8 @@ The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java too
 1. **Tool description** (through the toolspec & optionally with the componentspec);
 2. **Tool invocation** (simplified) through command-line wrapping;
 3. **Artifacts generation** (associated to a tool invocation, e.g., Taverna workflow);
-4. **Packaging** of all the generated artifacts for easier distribution and installation.
+4. **Packaging** of all the generated artifacts for easier distribution and installation;
+5. **Component upload** bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment site. 
 
 **What you'll find in this README:**
 * [Toolwrapper and the Tool Spec (toolspec)](#toolwrapper-and-the-tool-spec-toolspec)
@@ -19,8 +20,13 @@ The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java too
   * [Compilation process](#compilation-process)
   * [How toolwrapper works](#how-toolwrapper-works)
   * [Different Debian package generation scenarios](#different-debian-package-generation-scenarios)
-  * [How to generate a Debian package from a toolspec](#how-to-generate-a-debian-package-from-a-toolspec-and-optionally-from-the-respectively-componentspec)
-  * [How to develop a specific functionality for the toolwrapper](#how-to-develop-a-specific-functionality-for-the-Toolwrapper)
+* [How to's...](#how-tos)
+  * [How to validate a toolspec against the schema](#how-to-validate-a-toolspec-against-the-schema)
+  * [How to validate a componentspec against the schema](#how-to-validate-a-componentspec-against-the-schema)
+  * [How to generate a bash wrapper (and optionally a Component, i.e. Taverna workflow with semantic annotations)](#how-to-generate-a-bash-wrapper-and-optionally-a-component-ie-taverna-workflow-with-semantic-annotations)
+  * [How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)](#how-to-generate-a-debian-package-from-previously-generated-bash-wrapper-and-taverna-workflow)
+  * [How to upload a Component to the myExperiment site (using previously generated Taverna workflow)](#how-to-upload-a-component-to-the-myexperiment-site-using-previously-generated-taverna-workflow)
+  * [How to develop a specific functionality for the Toolwrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
 * [Acknowledgements](#acknowledgements) 
 
 ## Toolwrapper and the Tool Spec (toolspec)
@@ -35,6 +41,7 @@ Tools, and tools invocations, are described using a machine-readable language (X
 
 1. The element ```<otherProperties>``` no longer exists.
 2. The element ```<installation>``` now allows to specify much more information.
+3. An element ```<license>``` was added under ```<tool>``` to express the license of a tool description.
 
 
 **Example:**
@@ -262,6 +269,10 @@ This example, even if simplified for presentation purpose, demonstrates how one 
     * **bin** folder with script that eases the component execution
     * **pom.xml**
     * **src** java source code and other resources (templates for bash wrapper and Taverna workflow)
+* _**toolwrapper-component-uploader**_ Toolwrapper component that eases the process of uploading a Component to the myExperiment site
+    * **bin** folder with script that eases the component execution
+    * **pom.xml**
+    * **src** java source code and other resources
 * **CHANGELOG.txt**
 * **toolwrapper-core** toolwrapper component with common core functionalities
     * **pom.xml**
@@ -339,7 +350,29 @@ This will generate 1 Debian package named OPERATION-NAME\_VERSION\_all.deb
     1. Generate a Debian package with all artifacts (named DEB-NAME\_VERSION\_all.deb, where DEB-NAME is passed as a parameter through the command-line)
     2. Generate a Debian package per operation (named OPERATION-NAME\_VERSION\_all.deb) **DEFAULT**
 
-### How to generate a Debian package from a toolspec (and optionally from the respectively componentspec)
+## How to's...
+
+### How to validate a toolspec against the schema
+
+The schema for the toolspec is located under **toolwrapper-data/src/main/resources/** and it's named tool-1.X_draft.xsd, where **X** is a number.
+
+To validate a toolspec called toolspec.xml, located in TOOLWRAPPER_SOURCE_DIR, in linux do (to install xmllint in Debian based machines do ```sudo apt-get install libxml2-utils```):
+```bash
+$> cd $TOOLWRAPPER_SOURCE_DIR
+$> xmllint --noout --schema toolwrapper-data/src/main/resources/tool-1.1_draft.xsd toolspec.xml
+```
+
+### How to validate a component spec against the schema
+
+The schema for the componentspec is located under **toolwrapper-data/src/main/resources/** and it's named component-1.X_draft.xsd, where **X** is a number.
+
+To validate a componentspec called componentspec.xml, located in TOOLWRAPPER_SOURCE_DIR, in linux do (to install xmllint in Debian based machines do ```sudo apt-get install libxml2-utils```):
+```bash
+$> cd $TOOLWRAPPER_SOURCE_DIR
+$> xmllint --noout --schema toolwrapper-data/src/main/resources/component-1.1_draft.xsd componentspec.xml
+```
+
+### How to generate a bash wrapper (and optionally a Component, i.e. Taverna workflow with semantic annotations)
 
 Files required:
 
@@ -348,7 +381,8 @@ Files required:
 
 Optional file:
 
-* componentspec (e.g. digital-preservation-migration-image-imagemagick.image2txt.component)
+* componentspec (e.g. digital-preservation-migration-image-imagemagick-image2txt.component)
+**Note:** If no componentspec is provided, the Toolwrapper still's going to produce a Taverna workflow but without any semantic annotations regarding a Component. 
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
 
@@ -357,13 +391,34 @@ $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./toolwrapper-bash-generator/bin/generate.sh -e hsilva@keep.pt -o output_dir -t \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -c \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component 
-$> ./toolwrapper-bash-debian-generator/bin/generate.sh -t \
-  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -ch \
+```
+
+One may find the produced artifacts under the directory **output_dir**. The bash will be located under **output_dir/bash** and the Taverna workflow under **output_dir/workflow**.
+
+### How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)
+
+Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
+
+```bash
+$> cd $TOOLWRAPPER_GITHUB_FOLDER
+$> ./toolwrapper-bash-debian-generator/bin/generate.sh -e EMAIL -t \
+  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -ch\ 
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.changelog \
   -i output_dir -o output_dir 
 ```
 
-### How to develop a specific functionality for the toolwrapper
+The produced Debian package may be found under the directory **output_dir/debian**.
+
+### How to upload a Component to the myExperiment site (using previously generated Taverna workflow)
+
+```bash
+$> cd $TOOLWRAPPER_GITHUB_FOLDER
+$> ./toolwrapper-component-uploader/bin/upload.sh -u USERNAME -p PASSWORD \
+-c output_dir/workflow/digital-preservation-migration-image-imagemagick-image2txt.t2flow \
+-i 579 -s README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component
+```
+
+### How to develop a specific functionality for the Toolwrapper
 
 TBA (e.g., generate RPM for Red Hat and others)
 

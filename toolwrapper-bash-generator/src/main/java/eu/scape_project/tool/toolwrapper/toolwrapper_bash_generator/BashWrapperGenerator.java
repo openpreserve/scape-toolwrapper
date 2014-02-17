@@ -60,6 +60,7 @@ import eu.scape_project.tool.toolwrapper.data.tool_spec.Input;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Operation;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Output;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Parameter;
+import eu.scape_project.tool.toolwrapper.data.tool_spec.ParameterPossibleValue;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 
 /**
@@ -406,6 +407,16 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 			String paramDescription = value + " > " + param.getDescription();
 			uipd.append((uipd.length() != 0 ? "\n\t" : "") + paramDescription);
 			uipdman.append(paramDescription + "\n\n");
+
+			for (ParameterPossibleValue possibleValue : param
+					.getPossibleValue()) {
+				uipd.append((uipd.length() != 0 ? "\n\t\t" : "") + "\\\""
+						+ possibleValue.getValue() + "\\\" > "
+						+ possibleValue.getDescription());
+				uipdman.append("\t\\\""
+						+ possibleValue.getValue() + "\\\" > "
+						+ possibleValue.getDescription() + "\n\n");
+			}
 		}
 		wrapperContext.put("usageParamParameter", uip.toString());
 		wrapperContext.put("usageParamParameterDescription", uipd.toString());

@@ -4,8 +4,11 @@
 	xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink"
 	schemaVersion="1.1" name="ImageMagick" version="2.0.0"
 	homepage="http://www.imagemagick.org/script/convert.php">
+	<!-- license of this tool description (Debian generated, etc) -->
 	<license name="Apache-2.0" type="FLOSS"
 		uri="http://opensource.org/licenses/Apache-2.0" />
+
+	<!-- installation requirements (useful for Debian generation and for Component generation) -->
 	<installation>
 		<operatingSystem operatingSystemName="Debian">
 			<packageManager type="Dpkg">
@@ -29,6 +32,7 @@
 		</operatingSystem>
 	</installation>
 
+	<!-- One or more tool operations (or invocations if you like it). This is the main focus of the SCAPE Toolwrapper -->
 	<operations>
 		<operation
 			name="digital-preservation-migration-image-imagemagick-image2tiff">
