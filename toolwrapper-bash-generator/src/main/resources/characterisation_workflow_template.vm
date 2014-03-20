@@ -866,7 +866,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 #if( $measure.getTypeOfProcessingInstruction() )
                         <script>$esc.xml($measure.getValue())</script>
 #else
-						<script>Syste.out.println("Must open Taverna Workbench and complete the workflow!");</script>
+						<script>System.out.println("Must open Taverna Workbench and complete the workflow!");</script>
 #end
                         <dependencies/>
                      </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
