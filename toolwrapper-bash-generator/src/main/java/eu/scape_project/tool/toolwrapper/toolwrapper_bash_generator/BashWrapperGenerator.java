@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -89,8 +90,8 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		operation = null;
 		wrapperName = null;
 		bashWrapperTemplate = null;
-		SimpleDateFormat sdf = new SimpleDateFormat(
-				Constants.FULL_DATE_WITH_TIMEZONE, Locale.getDefault());
+		SimpleDateFormat sdf = new SimpleDateFormat(Constants.FULL_DATE_WITH_TIMEZONE);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		generationDate = sdf.format(new Date());
 
 		Options options = super.getOptions();
