@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://scape-project.eu/tool toolwrapper-data/src/main/resources/tool-1.1_draft.xsd"
+	xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink"
+	schemaVersion="1.1" name="FFmpeg" version="1.0.1" homepage="http://ffmpeg.org/">
+	
+	<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS" />
+	<installation>
+		<operatingSystem operatingSystemName="Debian">
+			<packageManager type="Dpkg">
+				<config>ffmpeg (>= 0.10.0)</config>
+				<source>deb http://ppa.launchpad.net/jon-severinsson/ffmpeg/ubuntu precise main 
+deb-src http://ppa.launchpad.net/jon-severinsson/ffmpeg/ubuntu precise main </source>
+			</packageManager>
+			<dependency name="ffmpeg" version=">= 0.10.0">
+				<license name="LGPL-2.1" uri="http://opensource.org/licenses/LGPL-2.1" type="FLOSS"></license>
+			</dependency>
+		</operatingSystem>
+	</installation>
+
+	<operations>
+		<operation
+			name="digital-preservation-characterisation-video-ffprobe-video2xml">
+			<description>Characterises video and outputs information as XML</description>
+			<command>ffprobe -show_streams -show_format -print_format xml="x=1" -noprivate -show_versions -i ${input} > ${output}</command>
+			<inputs>
+				<input name="input" required="true">
+					<description>Reference to input file</description>
+				</input>
+				<parameter name="params" required="false">
+					<description>Additional conversion parameters</description>
+				</parameter>
+			</inputs>
+			<outputs>
+				<output name="output" required="true">
+					<format registryName="web">http://www.ffmpeg.org/schema/ffprobe.xsd</format>
+					<description>Reference to output file</description>
+					<extension>xml</extension>
+				</output>
+			</outputs>
+		</operation>
+	</operations>
+</tool>

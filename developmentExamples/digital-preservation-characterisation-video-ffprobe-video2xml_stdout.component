@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://scape-project.eu/component" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xsi:schemaLocation="http://scape-project.eu/component toolwrapper-data/src/main/resources/component-1.1_draft.xsd"
+	schemaVersion="1.1">
+	<component xsi:type="Characterisation" 
+		profile="http://purl.org/DP/components#Characterisation"
+		profileVersion="1.0"
+		name="digital-preservation-characterisation-video-ffprobe-video2xml_stdout"
+		author="Hélder Silva">
+		<license name="Apache-2.0" type="FLOSS"
+			uri="http://opensource.org/licenses/Apache-2.0" />
+		<acceptedMimetype>video/msvideo</acceptedMimetype>
+		<acceptedMimetype>video/quicktime</acceptedMimetype>
+		<outputMeasure name="image_width_of_video" uri="http://purl.org/DP/quality/measures#390" typeOfProcessingInstruction="BASH">egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'</outputMeasure>
+		<outputMeasure name="the_height_of_the_video_track" uri="http://purl.org/DP/quality/measures#391" typeOfProcessingInstruction="BASH">egrep "codec_type=\"video\"" %%output%% | sed 's#^.*height="##;s#".*##'</outputMeasure>
+		<outputMeasure name="the_height_of_the_video_track_2" uri="http://purl.org/DP/quality/measures#391" typeOfProcessingInstruction="JAVA">System.out.println("lala");</outputMeasure>
+		<outputMeasure name="image_width_of_video_2" uri="http://purl.org/DP/quality/measures#390"/>
+	</component>
+</components>

@@ -8,10 +8,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.scape-project.tool</groupId>
 	<artifactId>toolwrapper</artifactId>
-	<version>1.0.1</version>
+	<version>2.0.0</version>
 	<name>SCAPE ToolWrapper</name>
 	<url>www.scape-project.eu/</url>
 	<description>TBA</description>
+
+	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,52 +21,131 @@
 
 	<!-- for snapshot builds when building with travis -->
 	<profiles>
-	  <profile>
-		<id>travisbuild</id>
-		<activation>
-			<!-- active by default so we can get scape parent pom -->
-			<activeByDefault>true</activeByDefault>
-			<property>
-				<name>env.TRAVIS</name>
-				<value>true</value>
-			</property>
-		</activation>
-		  <repositories>
-			<repository>
-			  <id>sonatypesnapshots</id>
-			  <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-			  <layout>default</layout>
-			  <snapshots>
-				<enabled>true</enabled>
-			  </snapshots>
-			</repository>
-		  </repositories>
-	   </profile>
+		<profile>
+			<id>travisbuild</id>
+			<activation>
+				<!-- active by default so we can get scape parent pom -->
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>env.TRAVIS</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>sonatypesnapshots</id>
+					<url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+					<layout>default</layout>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
 	</profiles>
-	
-	<packaging>pom</packaging>
 
 	<modules>
-		<module>bash-generator</module>
-		<module>bash-debian-generator</module>
-		<module>core</module>
-		<module>data</module>
-		<!--<module>rest-generator</module> -->
+		<module>toolwrapper-data</module>
+		<module>toolwrapper-core</module>
+		<module>toolwrapper-bash-generator</module>
+		<module>toolwrapper-bash-debian-generator</module>
+		<module>toolwrapper-component-uploader</module>
 	</modules>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.17</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.jms</groupId>
+						<artifactId>jms</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.sun.jdmk</groupId>
+						<artifactId>jmxtools</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.sun.jmx</groupId>
+						<artifactId>jmxri</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-cli</groupId>
+				<artifactId>commons-cli</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>eu.scape-project.tool</groupId>
+				<artifactId>toolwrapper-data</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>eu.scape-project.tool</groupId>
+				<artifactId>toolwrapper-core</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.velocity</groupId>
+				<artifactId>velocity</artifactId>
+				<version>1.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.core</groupId>
+				<artifactId>jersey-client</artifactId>
+				<version>2.4.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.velocity</groupId>
+				<artifactId>velocity-tools</artifactId>
+				<version>2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.8</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<organization>
 		<name>KEEP SOLUTIONS</name>

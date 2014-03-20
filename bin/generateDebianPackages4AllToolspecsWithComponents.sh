@@ -48,8 +48,9 @@ do
 	TOOLSPEC_PATH=$i
 	TOOLSPEC_SCRIPT_PATH=`echo $TOOLSPEC_PATH | sed 's#\.[a-zA-Z]\+#.sh#'`
 	CHANGELOG_PATH=`echo $TOOLSPEC_PATH | sed 's#\.[a-zA-Z]\+#.changelog#'`
+	COMPONENT_PATH=`echo $TOOLSPEC_PATH | sed 's#\.[a-zA-Z]\+#.component#'`
 	TEMP_FOLDER=$(mktemp -d)
-	$TOOLWRAPPER_BASE_DIR/toolwrapper-bash-generator/bin/generate.sh -t $TOOLSPEC_PATH -o $TEMP_FOLDER
+	$TOOLWRAPPER_BASE_DIR/toolwrapper-bash-generator/bin/generate.sh -t $TOOLSPEC_PATH -o $TEMP_FOLDER -c $COMPONENT_PATH
 	if [ -e $TOOLSPEC_SCRIPT_PATH ]; then
 		cp $TOOLSPEC_SCRIPT_PATH "$TEMP_FOLDER/install/"
 	fi
@@ -60,7 +61,7 @@ do
 			cp $i $DEBIAN_OUTPUT_DIRECTORY
 		done
 	fi
-	rm -rf $TEMP_FOLDER
+	#rm -rf $TEMP_FOLDER
 done
 
 exit 0

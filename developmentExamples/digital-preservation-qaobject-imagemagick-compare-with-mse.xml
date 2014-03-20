@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://scape-project.eu/tool toolwrapper-data/src/main/resources/tool-1.1_draft.xsd"
+	xmlns="http://scape-project.eu/tool" xmlns:xlink="http://www.w3.org/1999/xlink"
+	schemaVersion="1.1" name="ImageMagick" version="2.0.0"
+	homepage="http://www.imagemagick.org/script/compare.php">
+	<license name="Apache-2.0" type="FLOSS"
+		uri="http://opensource.org/licenses/Apache-2.0" />
+	<installation>
+		<operatingSystem operatingSystemName="Debian">
+			<packageManager type="Dpkg">
+				<config>imagemagick</config>
+				<source>deb http://scape.keep.pt/apt stable main</source>
+			</packageManager>
+			<dependency name="imagemagick">
+				<license name="Apache-2.0" type="FLOSS"
+					uri="http://opensource.org/licenses/Apache-2.0" />
+			</dependency>
+		</operatingSystem>
+		<operatingSystem operatingSystemName="Ubuntu">
+			<packageManager type="Dpkg">
+				<config>imagemagick</config>
+				<source>deb http://scape.keep.pt/apt stable main</source>
+			</packageManager>
+			<dependency name="imagemagick">
+				<license name="Apache-2.0" type="FLOSS"
+					uri="http://opensource.org/licenses/Apache-2.0" />
+			</dependency>
+		</operatingSystem>
+	</installation>
+
+	<operations>
+		<operation
+			name="digital-preservation-qaobject-imagemagick-compare-with-mse">
+			<description>Compares 2 images using MSE method</description>
+			<command>/usr/bin/compare -metric MSE ${input1} ${input2} ${difference}</command>
+			<inputs>
+				<input name="input1" required="true">
+					<description>Reference to the first image file</description>
+				</input>
+				<input name="input2" required="true">
+					<description>Reference to the second image file</description>
+				</input>
+				<parameter name="difference" required="true">
+					<description>Image that will contain the difference between the two images</description>
+				</parameter>
+			</inputs>
+			<outputs>
+				<stdout />
+			</outputs>
+		</operation>
+	</operations>
+</tool>
