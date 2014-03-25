@@ -1,6 +1,6 @@
-# SCAPE Toolwrapper
+# Toolwrapper
 
-The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java tool developed in the SCAPE Project to simplify the execution of the following tasks:
+The Toolwrapper (previously known as SCAPE Toolwrapper) is a Java tool developed in the SCAPE Project to simplify the execution of the following tasks:
 
 1. **Tool description** (through the toolspec & optionally with the componentspec);
 2. **Tool invocation** (simplified) through command-line wrapping;
@@ -8,7 +8,10 @@ The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java too
 4. **Packaging** of all the generated artifacts for easier distribution and installation;
 5. **Component upload** bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment website. 
 
+---
+
 **What you'll find in this README:**
+
 * [Toolwrapper and the Tool Spec (toolspec)](#toolwrapper-and-the-tool-spec-toolspec)
 * [Toolwrapper and the Component Spec (componentspec)](#toolwrapper-and-the-component-spec-componentspec)
   * [Migration Component](#migration-component)
@@ -29,7 +32,7 @@ The SCAPE Toolwrapper, from now on referred simply as Toolwrapper, is a Java too
   * [How to develop a specific functionality for the Toolwrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
 * [Acknowledgements](#acknowledgements) 
 
-## Toolwrapper and the Tool Spec (toolspec)
+## Toolwrapper and the Tool Spec
 
 Tools, and tools invocations, are described using a machine-readable language (XML, respecting a XML schema) called toolspec. On this file, one can specify:
 
@@ -92,7 +95,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ```
 
-## Toolwrapper and the Component Spec (componentspec)
+## Toolwrapper and the Component Spec
 
 In the SCAPE context, a Component is a Taverna workflow adhering to a Component Profile and used as a building block in a Preservation Action Plan.
 These Taverna workflows will "live" in the myExperiment website and allow anyone to search/use them. In order to allow a more meanful search/increase their discoverability, these workflows will be semanticlly annotated with special tool information such as, and for file format migration tools, the supported input formats and output formats, or for the characterisation tools what type of file characteristics the tool can produce, etc.
