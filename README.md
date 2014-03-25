@@ -1,6 +1,6 @@
-# Toolwrapper
+# ToolWrapper
 
-The Toolwrapper (previously known as SCAPE Toolwrapper) is a Java tool developed in the SCAPE Project to simplify the execution of the following tasks:
+The ToolWrapper (previously known as SCAPE ToolWrapper) is a Java tool developed in the SCAPE Project to simplify the execution of the following tasks:
 
 1. **Tool description** (through the toolspec & optionally with the componentspec);
 2. **Tool invocation** (simplified) through command-line wrapping;
@@ -12,8 +12,8 @@ The Toolwrapper (previously known as SCAPE Toolwrapper) is a Java tool developed
 
 **What you'll find in this README:**
 
-* [Toolwrapper and the Tool Spec (toolspec)](#toolwrapper-and-the-tool-spec-toolspec)
-* [Toolwrapper and the Component Spec (componentspec)](#toolwrapper-and-the-component-spec-componentspec)
+* [ToolWrapper and the Tool Spec (toolspec)](#toolwrapper-and-the-tool-spec-toolspec)
+* [ToolWrapper and the Component Spec (componentspec)](#toolwrapper-and-the-component-spec-componentspec)
   * [Migration Component](#migration-component)
   * [Characterisation Component](#characterisation-component)
   * [Quality Assurance Component](#quality-assurance-component)
@@ -21,7 +21,7 @@ The Toolwrapper (previously known as SCAPE Toolwrapper) is a Java tool developed
   * [Requirements](#requirements)
   * [Project directory structure](#project-directory-structure)
   * [Compilation process](#compilation-process)
-  * [How toolwrapper works](#how-toolwrapper-works)
+  * [How ToolWrapper works](#how-toolwrapper-works)
   * [Different Debian package generation scenarios](#different-debian-package-generation-scenarios)
 * [How to's...](#how-tos)
   * [How to validate a toolspec against the schema](#how-to-validate-a-toolspec-against-the-schema)
@@ -29,10 +29,10 @@ The Toolwrapper (previously known as SCAPE Toolwrapper) is a Java tool developed
   * [How to generate a bash wrapper (and optionally a Component, i.e. Taverna workflow with semantic annotations)](#how-to-generate-a-bash-wrapper-and-optionally-a-component-ie-taverna-workflow-with-semantic-annotations)
   * [How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)](#how-to-generate-a-debian-package-from-previously-generated-bash-wrapper-and-taverna-workflow)
   * [How to upload a Component to the myExperiment website (using previously generated Taverna workflow)](#how-to-upload-a-component-to-the-myexperiment-website-using-previously-generated-taverna-workflow)
-  * [How to develop a specific functionality for the Toolwrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
+  * [How to develop a specific functionality for the ToolWrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
 * [Acknowledgements](#acknowledgements) 
 
-## Toolwrapper and the Tool Spec
+## ToolWrapper and the Tool Spec
 
 Tools, and tools invocations, are described using a machine-readable language (XML, respecting a XML schema) called toolspec. On this file, one can specify:
 
@@ -95,12 +95,12 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ```
 
-## Toolwrapper and the Component Spec
+## ToolWrapper and the Component Spec
 
 In the SCAPE context, a Component is a Taverna workflow adhering to a Component Profile and used as a building block in a Preservation Action Plan.
 These Taverna workflows will "live" in the myExperiment website and allow anyone to search/use them. In order to allow a more meanful search/increase their discoverability, these workflows will be semanticlly annotated with special tool information such as, and for file format migration tools, the supported input formats and output formats, or for the characterisation tools what type of file characteristics the tool can produce, etc.
 
-In what concerns the Toolwrapper, as it produces Taverna workflows from the toolspec and as the toolspec only allows to specify a limited set of information (described in the previous section), another spec file was created and named Component Spec (componentspec).
+In what concerns the ToolWrapper, as it produces Taverna workflows from the toolspec and as the toolspec only allows to specify a limited set of information (described in the previous section), another spec file was created and named Component Spec (componentspec).
 It is also described using a machine-readable language (XML, respecting a XML schema) and allows one to specify (as specified in the different [SCAPE Component Profiles](https://github.com/openplanets/scape-component-profiles)):
 
 ### Migration Component
@@ -259,7 +259,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
     * Debian/ubuntu: ```sudo apt-get install openjdk-6-jdk```
 3. Build tools (for Java and Debian packaging)
     * Debian/ubuntu: ```sudo apt-get install build-essential dh-make devscripts debhelper lintian maven```
-4. Clone of Scape Toolwrapper github repository
+4. Clone of Scape ToolWrapper github repository
     * Unix/linux: ```git clone https://github.com/openplanets/scape-toolwrapper.git```
 
 ### Project directory structure
@@ -296,9 +296,9 @@ $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> mvn package
 ```
 
-### How toolwrapper works
+### How ToolWrapper works
 
-In the project directory, there are 2 Toolwrapper components (for now) whose name ends up with "generator". These, when executed in a certain sequence, generate different outputs.  
+In the project directory, there are 2 ToolWrapper components (for now) whose name ends up with "generator". These, when executed in a certain sequence, generate different outputs.  
 If one executes the **bash-generator** first, for a given toolspec (and optionally for the respectively componentspec), one will end up with a bash wrapper and a Taverna workflow, as the following diagram explains.
 
 <pre>                                             +---------------------+
@@ -342,7 +342,7 @@ Then, if one wants to generate a Debian package, for a given toolspec (and optio
 </pre>
   
 **Sum up:**  
-1. Toolwrapper components can be combined, in the correct order, passing generated artifacts through a folder (i.e., the output folder of the **bash-generator** will be the input folder of the **bash-debian-generator**).  
+1. ToolWrapper components can be combined, in the correct order, passing generated artifacts through a folder (i.e., the output folder of the **bash-generator** will be the input folder of the **bash-debian-generator**).  
 2. An install folder is generated by the **bash-generator**, which can be used to place scripts/files/programs that should be installed alongside with the bash wrapper and workflow. These scripts/files/programs are going to be placed under **/usr/share/OPERATION-NAME/**.
   
 ### Different Debian package generation scenarios
@@ -385,9 +385,9 @@ Files required:
 Optional file:
 
 * componentspec (e.g. digital-preservation-migration-image-imagemagick-image2txt.component)
-**Note:** If no componentspec is provided, the Toolwrapper still's going to produce a Taverna workflow but without any semantic annotations regarding a Component. 
+**Note:** If no componentspec is provided, the ToolWrapper still's going to produce a Taverna workflow but without any semantic annotations regarding a Component. 
 
-Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
+Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape ToolWrapper repository was cloned into):
 
 **Tip:** If run without any argument, the **generate.sh** script will output an usage message explaining what arguments one can pass (and their meaning) and which of them are mandatory.
 
@@ -402,7 +402,7 @@ One may find the produced artifacts under the directory **output_dir**. The bash
 
 ### How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)
 
-Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape Toolwrapper repository was cloned into):
+Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape ToolWrapper repository was cloned into):
 
 **Tip:** If run without any argument, the **generate.sh** script will output an usage message explaining what arguments one can pass (and their meaning) and which of them are mandatory.
 
@@ -428,7 +428,7 @@ $> ./toolwrapper-component-uploader/bin/upload.sh -u USERNAME -p PASSWORD \
 -i 579 -s README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component
 ```
 
-### How to develop a specific functionality for the Toolwrapper
+### How to develop a specific functionality for the ToolWrapper
 
 TBA (e.g., generate RPM for Red Hat and others)
 
