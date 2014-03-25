@@ -8,7 +8,7 @@ The Toolwrapper (previously known as SCAPE Toolwrapper) is a Java tool developed
 4. **Packaging** of all the generated artifacts for easier distribution and installation;
 5. **Component upload** bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment website. 
 
----
+
 
 **What you'll find in this README:**
 
