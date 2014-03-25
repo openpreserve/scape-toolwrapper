@@ -203,7 +203,7 @@
 			&lt;http://purl.org/DP/components#hasSourceConfiguration&gt; [ 
 				a &lt;http://purl.org/DP/components#$packageManager.getType().value()Configuration&gt; ;
 				&lt;http://purl.org/DP/components#installsDpkgs&gt; "$esc.xml($operation.getName().trim())" ;
-            	&lt;http://purl.org/DP/components#requiresiAptSource&gt; "$packageManager.getSource().trim()"
+            	&lt;http://purl.org/DP/components#requiresAptSource&gt; "$packageManager.getSource().trim()"
         	] ;
 #end
 #foreach( $dependency in $operatingSystem.getDependency() )        	
