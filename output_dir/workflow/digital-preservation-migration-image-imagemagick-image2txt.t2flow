@@ -1,0 +1,688 @@
+<?xml version="1.0"?>
+<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0">
+	<dataflow id="c3cf63f7-e18b-453a-825f-5a4503ab3e55" role="top">
+		<name>Workflow_digital-preservation-migration-image-imagemagick-image2txt_2.0.0</name>
+		<inputPorts>
+			<port>
+				<name>input</name>
+				<depth>0</depth>
+				<granularDepth>0</granularDepth>
+				<annotations>
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>Reference to input file</text>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+					<annotation_chain_2_2 encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+										<mimeType>text/rdf+n3</mimeType>
+										<content>&lt;&gt; &lt;http://purl.org/DP/components#accepts&gt; &lt;http://purl.org/DP/components#SourceObject&gt; . </content>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain_2_2>
+				</annotations>
+			</port>
+			<port>
+				<name>params</name>
+				<depth>0</depth>
+				<granularDepth>0</granularDepth>
+				<annotations>
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>Additional conversion parameters</text>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+					<annotation_chain_2_2 encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+										<mimeType>text/rdf+n3</mimeType>
+										<content>&lt;&gt; &lt;http://purl.org/DP/components#accepts&gt; &lt;http://purl.org/DP/components#Parameter&gt; . 
+										</content>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+									<creators/>
+									<curationEventList/>
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain_2_2>
+				</annotations>
+			</port>
+		</inputPorts>
+		<outputPorts>
+			<port>
+				<name>output</name>
+				<annotations>
+					<annotation_chain_2_2 encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+										<mimeType>text/rdf+n3</mimeType>
+										<content>&lt;&gt;    &lt;http://purl.org/DP/components#provides&gt; &lt;http://purl.org/DP/components#TargetObject&gt; . </content>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+      								<creators />
+      								<curationEventList />
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain_2_2>
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>Reference to output file</text>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+									<creators />
+									<curationEventList />
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+				</annotations>
+			</port>
+			<port>
+				<name>status</name>
+				<annotations>
+					<annotation_chain_2_2 encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+										<mimeType>text/rdf+n3</mimeType>
+										<content>&lt;&gt;    &lt;http://purl.org/DP/components#provides&gt; &lt;http://purl.org/DP/components#Status&gt; . </content>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+      								<creators />
+      								<curationEventList />
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain_2_2>
+					<annotation_chain encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+							<annotationAssertions>
+								<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+									<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+										<text>STDOUT and STDERR of the action</text>
+									</annotationBean>
+									<date>2014-03-26 11:39:31.607 UTC</date>
+									<creators />
+									<curationEventList />
+								</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain>
+				</annotations>
+			</port>
+		</outputPorts>
+		<processors>
+			<processor>
+				<name>commandline_tool_invocation</name>
+				<inputPorts>
+					<port>
+						<name>input_inner</name>
+						<depth>0</depth>
+					</port>
+					<port>
+						<name>params_inner</name>
+						<depth>0</depth>
+					</port>
+					<port>
+						<name>output_inner</name>
+						<depth>0</depth>
+					</port>
+				</inputPorts>
+				<outputPorts>
+					<port>
+						<name>STDOUT</name>
+						<depth>0</depth>
+						<granularDepth>0</granularDepth>
+					</port>
+					<port>
+						<name>STDERR</name>
+						<depth>0</depth>
+						<granularDepth>0</granularDepth>
+					</port>
+				</outputPorts>
+				
+				<annotations>
+					<annotation_chain_2_2 encoding="xstream">
+						<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  							<annotationAssertions>
+    							<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      								<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+        								<mimeType>text/rdf+n3</mimeType>
+        								<content>
+		&lt;&gt; &lt;http://purl.org/DP/components#requiresInstallation&gt; [ 
+			a &lt;http://purl.org/DP/components#Installation&gt; ;
+			&lt;http://purl.org/DP/components#hasEnvironment&gt; &lt;http://purl.org/DP/components#Debian&gt; ;
+			&lt;http://purl.org/DP/components#hasSourceConfiguration&gt; [ 
+				a &lt;http://purl.org/DP/components#DpkgConfiguration&gt; ;
+				&lt;http://purl.org/DP/components#installsDpkgs&gt; "digital-preservation-migration-image-imagemagick-image2txt" ;
+            	&lt;http://purl.org/DP/components#requiresAptSource&gt; "deb http://scape.keep.pt/apt stable main"
+        	] ;
+    		&lt;http://purl.org/DP/components#dependsOn&gt; [ 
+    			a &lt;http://purl.org/DP/components#Dependency&gt; ;
+            	&lt;http://www.w3.org/2004/02/skos/core#prefLabel&gt; "imagemagick" ;
+            	&lt;http://creativecommons.org/ns#license&gt; &lt;http://opensource.org/licenses/Apache-2.0&gt;
+        	]
+        ] .
+		&lt;&gt; &lt;http://purl.org/DP/components#requiresInstallation&gt; [ 
+			a &lt;http://purl.org/DP/components#Installation&gt; ;
+			&lt;http://purl.org/DP/components#hasEnvironment&gt; &lt;http://purl.org/DP/components#Ubuntu&gt; ;
+			&lt;http://purl.org/DP/components#hasSourceConfiguration&gt; [ 
+				a &lt;http://purl.org/DP/components#DpkgConfiguration&gt; ;
+				&lt;http://purl.org/DP/components#installsDpkgs&gt; "digital-preservation-migration-image-imagemagick-image2txt" ;
+            	&lt;http://purl.org/DP/components#requiresAptSource&gt; "deb http://scape.keep.pt/apt stable main"
+        	] ;
+    		&lt;http://purl.org/DP/components#dependsOn&gt; [ 
+    			a &lt;http://purl.org/DP/components#Dependency&gt; ;
+            	&lt;http://www.w3.org/2004/02/skos/core#prefLabel&gt; "imagemagick" ;
+            	&lt;http://creativecommons.org/ns#license&gt; &lt;http://opensource.org/licenses/Apache-2.0&gt;
+        	]
+        ] .
+										</content>
+      								</annotationBean>
+      								<date>2014-03-26 11:39:31.607 UTC</date>
+      								<creators />
+      								<curationEventList />
+    							</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  							</annotationAssertions>
+						</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+					</annotation_chain_2_2>
+				</annotations>
+				
+				<activities>
+					<activity>
+						<raven>
+							<group>net.sf.taverna.t2.activities</group>
+							<artifact>external-tool-activity</artifact>
+							<version>1.4</version>
+						</raven>
+						<class>net.sf.taverna.t2.activities.externaltool.ExternalToolActivity</class>
+						<inputMap>
+							<map from="input_inner" to="input_inner"/>
+							<map from="params_inner" to="params_inner"/>
+							<map from="output_inner" to="output_inner"/>
+						</inputMap>
+						<outputMap>
+							<map from="STDOUT" to="STDOUT"/>
+							<map from="STDERR" to="STDERR"/>
+						</outputMap>
+						<configBean encoding="xstream">
+							<net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean xmlns="">
+								<mechanismType>789663B8-DA91-428A-9F7D-B3F3DA185FD4</mechanismType>
+								<mechanismName>default local</mechanismName>
+								<mechanismXML>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xD;
+&lt;localInvocation&gt;&lt;shellPrefix&gt;/bin/sh -c&lt;/shellPrefix&gt;&lt;linkCommand&gt;/bin/ln -s %%PATH_TO_ORIGINAL%% %%TARGET_NAME%%&lt;/linkCommand&gt;&lt;/localInvocation&gt;&#xD;
+</mechanismXML>
+								<externaltoolid>59f238ca-4f34-44f0-84f7-dbb7b7c534e7</externaltoolid>
+								<useCaseDescription>
+									<usecaseid/>
+									<description/>
+									<command>digital-preservation-migration-image-imagemagick-image2txt -i %%input_inner%% -p %%params_inner%% -o %%output_inner%% </command>
+									<preparingTimeoutInSeconds>1200</preparingTimeoutInSeconds>
+									<executionTimeoutInSeconds>1800</executionTimeoutInSeconds>
+									<tags>
+										<string>input_inner</string>
+										<string>params_inner</string>
+										<string>output_inner</string>
+									</tags>
+									<REs/>
+									<queue__preferred/>
+									<queue__deny/>
+									<static__inputs/>
+									<inputs>
+										<entry>
+											<string>input_inner</string>
+											<de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+												<tag>input_inner</tag>
+												<file>false</file>
+												<tempFile>false</tempFile>
+												<binary>false</binary>
+												<charsetName>UTF-8</charsetName>
+												<forceCopy>false</forceCopy>
+												<list>false</list>
+												<concatenate>false</concatenate>
+												<mime/>
+											</de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+										</entry>
+										<entry>
+											<string>params_inner</string>
+											<de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+												<tag>params_inner</tag>
+												<file>false</file>
+												<tempFile>false</tempFile>
+												<binary>false</binary>
+												<charsetName>UTF-8</charsetName>
+												<forceCopy>false</forceCopy>
+												<list>false</list>
+												<concatenate>false</concatenate>
+												<mime/>
+											</de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+										</entry>
+										<entry>
+											<string>output_inner</string>
+											<de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+												<tag>output_inner</tag>
+												<file>false</file>
+												<tempFile>false</tempFile>
+												<binary>false</binary>
+												<charsetName>UTF-8</charsetName>
+												<forceCopy>false</forceCopy>
+												<list>false</list>
+												<concatenate>false</concatenate>
+												<mime/>
+											</de.uni__luebeck.inb.knowarc.usecases.ScriptInputUser>
+										</entry>
+									</inputs>
+									<outputs/>
+									<includeStdIn>false</includeStdIn>
+									<includeStdOut>true</includeStdOut>
+									<includeStdErr>true</includeStdErr>
+									<validReturnCodes>
+										<int>0</int>
+									</validReturnCodes>
+								</useCaseDescription>
+								<edited>false</edited>
+							</net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean>
+						</configBean>
+						<annotations/>
+					</activity>
+				</activities>
+				<dispatchStack>
+					<dispatchLayer>
+						<raven>
+							<group>net.sf.taverna.t2.core</group>
+							<artifact>workflowmodel-impl</artifact>
+							<version>1.4</version>
+						</raven>
+						<class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class>
+						<configBean encoding="xstream">
+							<net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+								<maxJobs>1</maxJobs>
+							</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig>
+						</configBean>
+					</dispatchLayer>
+					<dispatchLayer>
+						<raven>
+							<group>net.sf.taverna.t2.core</group>
+							<artifact>workflowmodel-impl</artifact>
+							<version>1.4</version>
+						</raven>
+						<class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class>
+						<configBean encoding="xstream">
+							<null xmlns=""/>
+						</configBean>
+					</dispatchLayer>
+					<dispatchLayer>
+						<raven>
+							<group>net.sf.taverna.t2.core</group>
+							<artifact>workflowmodel-impl</artifact>
+							<version>1.4</version>
+						</raven>
+						<class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class>
+						<configBean encoding="xstream">
+							<null xmlns=""/>
+						</configBean>
+					</dispatchLayer>
+					<dispatchLayer>
+						<raven>
+							<group>net.sf.taverna.t2.core</group>
+							<artifact>workflowmodel-impl</artifact>
+							<version>1.4</version>
+						</raven>
+						<class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class>
+						<configBean encoding="xstream">
+							<net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+								<backoffFactor>1.0</backoffFactor>
+								<initialDelay>1000</initialDelay>
+								<maxDelay>5000</maxDelay>
+								<maxRetries>0</maxRetries>
+							</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig>
+						</configBean>
+					</dispatchLayer>
+					<dispatchLayer>
+						<raven>
+							<group>net.sf.taverna.t2.core</group>
+							<artifact>workflowmodel-impl</artifact>
+							<version>1.4</version>
+						</raven>
+						<class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class>
+						<configBean encoding="xstream">
+							<null xmlns=""/>
+						</configBean>
+					</dispatchLayer>
+				</dispatchStack>
+				<iterationStrategyStack>
+					<iteration>
+						<strategy>
+							<cross>
+								<port name="input_inner" depth="0"/>
+								<port name="params_inner" depth="0"/>
+								<port name="output_inner" depth="0"/>
+							</cross>
+						</strategy>
+					</iteration>
+				</iterationStrategyStack>
+			</processor>
+			
+			<processor>
+            <name>create_output</name>
+            <inputPorts/>
+            <outputPorts>
+               <port>
+                  <name>output</name>
+                  <depth>0</depth>
+                  <granularDepth>0</granularDepth>
+               </port>
+            </outputPorts>
+            <annotations/>
+            <activities>
+               <activity>
+                  <raven>
+                     <group>net.sf.taverna.t2.activities</group>
+                     <artifact>beanshell-activity</artifact>
+                     <version>1.4</version>
+                  </raven>
+                  <class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class>
+                  <inputMap/>
+                  <outputMap>
+                     <map from="output" to="output"/>
+                  </outputMap>
+                  <configBean encoding="xstream">
+                     <net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
+                        <inputs/>
+                        <outputs>
+                           <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+                              <name>output</name>
+                              <depth>0</depth>
+                              <mimeTypes/>
+                              <granularDepth>0</granularDepth>
+                           </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+                        </outputs>
+                        <classLoaderSharing>workflow</classLoaderSharing>
+                        <localDependencies/>
+                        <artifactDependencies/>
+                        <script>File target = File.createTempFile(Long.toString(System.nanoTime()), ".txt");
+String output = target.getAbsolutePath();</script>
+                        <dependencies/>
+                     </net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean>
+                  </configBean>
+                  <annotations/>
+               </activity>
+            </activities>
+            <dispatchStack>
+               <dispatchLayer>
+                  <raven>
+                     <group>net.sf.taverna.t2.core</group>
+                     <artifact>workflowmodel-impl</artifact>
+                     <version>1.4</version>
+                  </raven>
+                  <class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class>
+                  <configBean encoding="xstream">
+                     <net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+                        <maxJobs>1</maxJobs>
+                     </net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig>
+                  </configBean>
+               </dispatchLayer>
+               <dispatchLayer>
+                  <raven>
+                     <group>net.sf.taverna.t2.core</group>
+                     <artifact>workflowmodel-impl</artifact>
+                     <version>1.4</version>
+                  </raven>
+                  <class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class>
+                  <configBean encoding="xstream">
+                     <null xmlns=""/>
+                  </configBean>
+               </dispatchLayer>
+               <dispatchLayer>
+                  <raven>
+                     <group>net.sf.taverna.t2.core</group>
+                     <artifact>workflowmodel-impl</artifact>
+                     <version>1.4</version>
+                  </raven>
+                  <class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class>
+                  <configBean encoding="xstream">
+                     <null xmlns=""/>
+                  </configBean>
+               </dispatchLayer>
+               <dispatchLayer>
+                  <raven>
+                     <group>net.sf.taverna.t2.core</group>
+                     <artifact>workflowmodel-impl</artifact>
+                     <version>1.4</version>
+                  </raven>
+                  <class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class>
+                  <configBean encoding="xstream">
+                     <net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+                        <backoffFactor>1.0</backoffFactor>
+                        <initialDelay>1000</initialDelay>
+                        <maxDelay>5000</maxDelay>
+                        <maxRetries>0</maxRetries>
+                     </net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig>
+                  </configBean>
+               </dispatchLayer>
+               <dispatchLayer>
+                  <raven>
+                     <group>net.sf.taverna.t2.core</group>
+                     <artifact>workflowmodel-impl</artifact>
+                     <version>1.4</version>
+                  </raven>
+                  <class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class>
+                  <configBean encoding="xstream">
+                     <null xmlns=""/>
+                  </configBean>
+               </dispatchLayer>
+            </dispatchStack>
+            <iterationStrategyStack>
+               <iteration>
+                  <strategy/>
+               </iteration>
+            </iterationStrategyStack>
+         </processor>
+		</processors>
+		<conditions/>
+		<datalinks>
+			<datalink>
+				<sink type="processor">
+					<processor>commandline_tool_invocation</processor>
+					<port>input_inner</port>
+				</sink>
+				<source type="dataflow">
+					<port>input</port>
+				</source>
+			</datalink>
+			<datalink>
+				<sink type="processor">
+					<processor>commandline_tool_invocation</processor>
+					<port>params_inner</port>
+				</sink>
+				<source type="dataflow">
+					<port>params</port>
+				</source>
+			</datalink>
+			<datalink>
+				<sink type="processor">
+					<port>output_inner</port>
+					<processor>commandline_tool_invocation</processor>
+				</sink>
+				<source type="processor">
+					<processor>create_output</processor>
+					<port>output</port>
+				</source>
+			</datalink>
+			<datalink>
+				<sink type="dataflow">
+					<port>output</port>
+				</sink>
+				<source type="processor">
+					<processor>create_output</processor>
+					<port>output</port>
+				</source>
+			</datalink>
+			<datalink>
+				<sink type="merge">
+					<port>status</port>
+				</sink>
+				<source type="processor">
+					<processor>commandline_tool_invocation</processor>
+					<port>STDOUT</port>
+				</source>
+			</datalink>
+			<datalink>
+				<sink type="merge">
+					<port>status</port>
+				</sink>
+				<source type="processor">
+					<processor>commandline_tool_invocation</processor>
+					<port>STDERR</port>
+				</source>
+			</datalink>
+		</datalinks>
+		<annotations>
+			<annotation_chain encoding="xstream">
+				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+					<annotationAssertions>
+						<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+								<text>SCAPE Migration Component</text>
+							</annotationBean>
+							<date>2014-03-26 11:39:31.607 UTC</date>
+							<creators/>
+							<curationEventList/>
+						</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+					</annotationAssertions>
+				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+			</annotation_chain>
+			<annotation_chain encoding="xstream">
+				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+					<annotationAssertions>
+						<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.Author">
+								<text>Hélder Silva</text>
+							</annotationBean>
+							<date>2014-03-26 11:39:31.607 UTC</date>
+							<creators/>
+							<curationEventList/>
+						</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+					</annotationAssertions>
+				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+			</annotation_chain>
+			<annotation_chain_2_2 encoding="xstream">
+				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  					<annotationAssertions>
+    					<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      						<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.SemanticAnnotation">
+								<mimeType>text/rdf+n3</mimeType>
+								<content>&lt;&gt;    &lt;http://purl.org/DP/components#fits&gt;
+              &lt;http://purl.org/DP/components#MigrationAction&gt; .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/bmp" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/gif" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/vnd.microsoft.icon" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/jpeg" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/png" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/tiff" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+&lt;&gt;    &lt;http://purl.org/DP/components#migrates&gt;
+              [ a       &lt;http://purl.org/DP/components#MigrationPath&gt; ;
+                &lt;http://purl.org/DP/components#sourceMimetype&gt;
+                        "image/jp2" ;
+                &lt;http://purl.org/DP/components#targetMimetype&gt;
+                        "text/plain"
+              ] .
+								</content>
+							</annotationBean>
+							<date>2014-03-26 11:39:31.607 UTC</date>
+      						<creators />
+      						<curationEventList />
+    					</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  					</annotationAssertions>
+				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+			</annotation_chain_2_2>
+			<annotation_chain encoding="xstream">
+				<net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+					<annotationAssertions>
+						<net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+							<annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.DescriptiveTitle">
+								<text>Converts any ImageMagick supported image format to Text</text>
+							</annotationBean>
+							<date>2014-03-26 11:39:31.607 UTC</date>
+							<creators/>
+							<curationEventList/>
+						</net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+					</annotationAssertions>
+				</net.sf.taverna.t2.annotation.AnnotationChainImpl>
+			</annotation_chain>
+
+		</annotations>
+	</dataflow>
+</workflow>

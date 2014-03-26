@@ -819,11 +819,11 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 							&& cmd.hasOption(CMD_OPTIONS_DESCRIPTION_SHORT)) {
 
 						// only one Debian package will be generated
-						createOneDebianPackage(dbwg, cmd, tool, outputdirFile);
+						exitCode = createOneDebianPackage(dbwg, cmd, tool, outputdirFile);
 					} else {
 
 						// generate a Debian package for each operation
-						createSeveralDebianPackages(dbwg, tool, outputdirFile);
+						exitCode = createSeveralDebianPackages(dbwg, tool, outputdirFile);
 					}
 				}
 			}
