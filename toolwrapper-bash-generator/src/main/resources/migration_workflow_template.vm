@@ -266,7 +266,7 @@
 #if($dependency.getLicense().getUri())
             	&lt;http://creativecommons.org/ns#license&gt; &lt;$dependency.getLicense().getUri()&gt;
 #end
-        	]
+        	]#if( $foreach.hasNext ),#end
 #end
         ] .
 #end
