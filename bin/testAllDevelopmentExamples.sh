@@ -86,10 +86,11 @@ do
 done
 
 if [ $COUNT -eq $OK ]; then
-    echo -e "\e[32mALL SUCCESSFUL [$OK/$COUNT]\e[0m"
+    echo -e "\e[32mSUCCESS [$OK/$COUNT]\e[0m"
     exit 0
 else
-    echo -e "\e[31mSOME FAILURES [$OK/$COUNT]\e[0m"
+    FAILURES=$((COUNT-OK))
+    echo -e "\e[31mFAILED [$FAILURES/$COUNT]\e[0m"
     exit 1
 fi
 
