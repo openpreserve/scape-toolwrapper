@@ -393,7 +393,7 @@ Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes 
 
 ```bash
 $> cd $TOOLWRAPPER_GITHUB_FOLDER
-$> ./toolwrapper-bash-generator/bin/generate.sh -e hsilva@keep.pt -o output_dir -t \
+$> ./toolwrapper-bash-generator/bin/generate.sh -o output_dir -t \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -c \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component 
 ```
