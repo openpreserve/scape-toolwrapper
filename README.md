@@ -21,7 +21,6 @@
   * [How to generate a bash wrapper](#how-to-generate-a-bash-wrapper)
   * [How to generate a Debian package](#how-to-generate-a-debian-package)
   * [How to upload a Component to the myExperiment website](#how-to-upload-a-component-to-the-myexperiment-website)
-  * [How to develop a specific functionality for the ToolWrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
 * [Acknowledgements](#acknowledgements)
 
 ## Tool Specification (toolspec)
