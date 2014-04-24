@@ -35,9 +35,15 @@
 
   <!-- Initializer -->
   <script>
-    Flatdoc.run({
-      fetcher: Flatdoc.github('openplanets/scape-toolwrapper')
-    });
+    var pageUpdate = {
+      loadContent : function(file) {
+        Flatdoc.run({
+          fetcher: Flatdoc.github('carlwilson/scout-microsite', file)
+        })
+      }
+    };
+    
+    pageUpdate.loadContent('ABOUT.md')
   </script>
 </head>
 <body role='flatdoc'>
@@ -46,6 +52,9 @@
     <div class='left'>
       <h1>ToolWrapper</h1>
       <ul>
+        <li><a href="#" onClick="pageUpdate.loadContent('ABOUT.md'); return false;">About</a></li>
+        <li><a href="#" onClick="pageUpdate.loadContent('README.md'); return false;">Usage</a></li>
+        <li><a href="#" onClick="pageUpdate.loadContent('CONTRIBUTE.md'); return false;">Contribute</a></li>
         <li><a href='https://github.com/openplanets/scape-toolwrapper'>View on GitHub</a></li>
         <li><a href='https://github.com/openplanets/scape-toolwrapper/issues'>Issues</a></li>
       </ul>
