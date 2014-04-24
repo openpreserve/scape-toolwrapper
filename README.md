@@ -4,8 +4,8 @@
 
 **What you'll find in this README:**
 
-* [ToolWrapper and the Tool Spec (toolspec)](#toolwrapper-and-the-tool-spec-toolspec)
-* [ToolWrapper and the Component Spec (componentspec)](#toolwrapper-and-the-component-spec-componentspec)
+* [Tool Specification (toolspec)](#tool-specification-toolspec)
+* [Component Specification (componentspec)](#component-specification-componentspec)
   * [Migration Component](#migration-component)
   * [Characterisation Component](#characterisation-component)
   * [Quality Assurance Component](#quality-assurance-component)
@@ -18,13 +18,13 @@
 * [How to's...](#how-tos)
   * [How to validate a toolspec against the schema](#how-to-validate-a-toolspec-against-the-schema)
   * [How to validate a componentspec against the schema](#how-to-validate-a-componentspec-against-the-schema)
-  * [How to generate a bash wrapper (and optionally a Component, i.e. Taverna workflow with semantic annotations)](#how-to-generate-a-bash-wrapper-and-optionally-a-component-ie-taverna-workflow-with-semantic-annotations)
-  * [How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)](#how-to-generate-a-debian-package-from-previously-generated-bash-wrapper-and-taverna-workflow)
-  * [How to upload a Component to the myExperiment website (using previously generated Taverna workflow)](#how-to-upload-a-component-to-the-myexperiment-website-using-previously-generated-taverna-workflow)
+  * [How to generate a bash wrapper](#how-to-generate-a-bash-wrapper)
+  * [How to generate a Debian package](#how-to-generate-a-debian-package)
+  * [How to upload a Component to the myExperiment website](#how-to-upload-a-component-to-the-myexperiment-website)
   * [How to develop a specific functionality for the ToolWrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
 * [Acknowledgements](#acknowledgements)
 
-## ToolWrapper and the Tool Spec
+## Tool Specification (toolspec)
 
 Tools, and tools invocations, are described using a machine-readable language (XML, respecting a XML schema) called toolspec. On this file, one can specify:
 
@@ -87,7 +87,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ```
 
-## ToolWrapper and the Component Spec
+## Component Specification (componentspec)
 
 In the SCAPE context, a Component is a Taverna workflow adhering to a Component Profile and used as a building block in a Preservation Action Plan.
 These Taverna workflows will "live" in the myExperiment website and allow anyone to search/use them. In order to allow a more meanful search/increase their discoverability, these workflows will be semanticlly annotated with special tool information such as, and for file format migration tools, the supported input formats and output formats, or for the characterisation tools what type of file characteristics the tool can produce, etc.
@@ -367,7 +367,8 @@ $> cd $TOOLWRAPPER_SOURCE_DIR
 $> xmllint --noout --schema toolwrapper-data/src/main/resources/component-1.1_draft.xsd componentspec.xml
 ```
 
-### How to generate a bash wrapper (and optionally a Component, i.e. Taverna workflow with semantic annotations)
+### How to generate a bash wrapper
+And optionally a Component, i.e. Taverna workflow with semantic annotations
 
 Files required:
 
@@ -392,7 +393,8 @@ $> ./toolwrapper-bash-generator/bin/generate.sh -o output_dir -t \
 
 One may find the produced artifacts under the directory **output_dir**. The bash will be located under **output_dir/bash** and the Taverna workflow under **output_dir/workflow**.
 
-### How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)
+### How to generate a Debian package
+How to generate a Debian package from previously generated bash wrapper and Taverna workflow.
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape ToolWrapper repository was cloned into):
 
@@ -408,7 +410,8 @@ $> ./toolwrapper-bash-debian-generator/bin/generate.sh -e EMAIL -t \
 
 The produced Debian package may be found under the directory **output_dir/debian**.
 
-### How to upload a Component to the myExperiment website (using previously generated Taverna workflow)
+### How to upload a Component to the myExperiment website
+How to upload a Component to the myExperiment website using previously generated Taverna workflow.
 
 **Tip:** If run without any argument, the **upload.sh** script will output an usage message explaining what arguments one can pass (and their meaning) and which of them are mandatory.
 
