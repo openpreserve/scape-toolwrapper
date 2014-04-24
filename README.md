@@ -1,14 +1,6 @@
 # ToolWrapper
 
-The ToolWrapper (previously known as SCAPE ToolWrapper) is a Java tool developed in the SCAPE Project to simplify the execution of the following tasks:
-
-1. **Tool description** (through the toolspec & optionally with the componentspec);
-2. **Tool invocation** (simplified) through command-line wrapping;
-3. **Artifacts generation** (associated to a tool invocation, e.g., Taverna workflow);
-4. **Packaging** of all the generated artifacts for easier distribution and installation;
-5. **Component upload** bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment website. 
-
-
+*Wrap preservation tools once, deploy them everywhere.*
 
 **What you'll find in this README:**
 
@@ -30,7 +22,7 @@ The ToolWrapper (previously known as SCAPE ToolWrapper) is a Java tool developed
   * [How to generate a Debian package (from previously generated bash wrapper and Taverna workflow)](#how-to-generate-a-debian-package-from-previously-generated-bash-wrapper-and-taverna-workflow)
   * [How to upload a Component to the myExperiment website (using previously generated Taverna workflow)](#how-to-upload-a-component-to-the-myexperiment-website-using-previously-generated-taverna-workflow)
   * [How to develop a specific functionality for the ToolWrapper](#how-to-develop-a-specific-functionality-for-the-toolwrapper)
-* [Acknowledgements](#acknowledgements) 
+* [Acknowledgements](#acknowledgements)
 
 ## ToolWrapper and the Tool Spec
 
@@ -53,9 +45,9 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
-<tool name="ImageMagick" version="2.0.0" 
+<tool name="ImageMagick" version="2.0.0"
       homepage="http://www.imagemagick.org/script/convert.php">
-   <license name="Apache-2.0" type="FLOSS" 
+   <license name="Apache-2.0" type="FLOSS"
             uri="http://opensource.org/licenses/Apache-2.0"/>
    <installation>
       <operatingSystem operatingSystemName="Debian">
@@ -64,7 +56,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
             <source>deb http://scape.keep.pt/apt stable main</source>
          </packageManager>
          <dependency name="imagemagick">
-            <license name="Apache-2.0" type="FLOSS" 
+            <license name="Apache-2.0" type="FLOSS"
                      uri="http://opensource.org/licenses/Apache-2.0"/>
          </dependency>
       </operatingSystem>
@@ -86,7 +78,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
          <outputs>
             <output name="output" required="true">
                <description>Reference to output file</description>
-               <extension>txt</extension>               
+               <extension>txt</extension>
             </output>
          </outputs>
       </operation>
@@ -109,7 +101,7 @@ One or more migration paths. E.g.
 ```xml
 <migrationPath>
    <fromMimetype>image/png</fromMimetype>
-   <toMimetype>text/plain</toMimetype>      
+   <toMimetype>text/plain</toMimetype>
 </migrationPath>
 ```
 
@@ -119,27 +111,27 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <components schemaVersion="1.1">
-   <component xsi:type="MigrationAction" profileVersion="1.0" 
-              profile="http://purl.org/DP/components#MigrationAction" 
-              name="digital-preservation-migration-image-imagemagick-image2txt" 
+   <component xsi:type="MigrationAction" profileVersion="1.0"
+              profile="http://purl.org/DP/components#MigrationAction"
+              name="digital-preservation-migration-image-imagemagick-image2txt"
               author="Hélder Silva">
-      <license name="Apache-2.0" type="FLOSS" 
+      <license name="Apache-2.0" type="FLOSS"
                uri="http://opensource.org/licenses/Apache-2.0"/>
       <migrationPath>
          <fromMimetype>image/jpeg</fromMimetype>
-         <toMimetype>text/plain</toMimetype>      
+         <toMimetype>text/plain</toMimetype>
       </migrationPath>
       <migrationPath>
          <fromMimetype>image/png</fromMimetype>
-         <toMimetype>text/plain</toMimetype>      
+         <toMimetype>text/plain</toMimetype>
       </migrationPath>
       <migrationPath>
          <fromMimetype>image/tiff</fromMimetype>
-         <toMimetype>text/plain</toMimetype>      
+         <toMimetype>text/plain</toMimetype>
       </migrationPath>
       <migrationPath>
          <fromMimetype>image/jp2</fromMimetype>
-         <toMimetype>text/plain</toMimetype>      
+         <toMimetype>text/plain</toMimetype>
       </migrationPath>
    </component>
 </components>
@@ -153,7 +145,7 @@ One or more accepted mimetypes (the same # as the inputs of the operation). E.g.
 ```
 One or more output measures, measures produced by a certain tool operation, which may contain processing instructions that will be added to the Taverna workflow. E.g. (using Bash instruction)
 ```xml
-<outputMeasure name="image_width_of_video" 
+<outputMeasure name="image_width_of_video"
                uri="http://purl.org/DP/quality/measures#390"
                typeOfProcessingInstruction="BASH">
     egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
@@ -161,7 +153,7 @@ One or more output measures, measures produced by a certain tool operation, whic
 ```
 or (using JAVA instruction)
 ```xml
-<outputMeasure name="the_height_of_the_video_track" 
+<outputMeasure name="the_height_of_the_video_track"
                uri="http://purl.org/DP/quality/measures#391"
                typeOfProcessingInstruction="JAVA">
     // dummy result (always set the result to 500)
@@ -174,8 +166,8 @@ or (using JAVA instruction)
 This example, even if simplified for presentation purpose, demonstrates how one could describe a video characterisation using FFProbe (in what concerns SCAPE Component info).
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<components schemaVersion="1.1">                 
-   <component xsi:type="Characterisation"   
+<components schemaVersion="1.1">
+   <component xsi:type="Characterisation"
       profile="http://purl.org/DP/components#Characterisation"
       name="digital-preservation-characterisation-video-ffprobe-video2xml"
       author="Hélder Silva">
@@ -183,13 +175,13 @@ This example, even if simplified for presentation purpose, demonstrates how one 
          uri="http://opensource.org/licenses/Apache-2.0" />
       <acceptedMimetype>video/msvideo</acceptedMimetype>
       <acceptedMimetype>video/quicktime</acceptedMimetype>
-      <outputMeasure name="image_width_of_video" 
-                     uri="http://purl.org/DP/quality/measures#390" 
+      <outputMeasure name="image_width_of_video"
+                     uri="http://purl.org/DP/quality/measures#390"
                      typeOfProcessingInstruction="BASH">
          egrep "codec_type=\"video\"" %%output%% | sed 's#^.*width="##;s#".*##'
       </outputMeasure>
-      <outputMeasure name="the_height_of_the_video_track" 
-                     uri="http://purl.org/DP/quality/measures#391" 
+      <outputMeasure name="the_height_of_the_video_track"
+                     uri="http://purl.org/DP/quality/measures#391"
                      typeOfProcessingInstruction="BASH">
          egrep "codec_type=\"video\"" %%output%% | sed 's#^.*height="##;s#".*##'
       </outputMeasure>
@@ -206,8 +198,8 @@ Two accepted mimetypes (as this compares 2 representations). E.g.
 ```
 One or more output measures, measure that can be "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
 ```xml
-<outputMeasure name="image_distance_mean_error_squared_MSE" 
-               uri="http://purl.org/DP/quality/measures#6" 
+<outputMeasure name="image_distance_mean_error_squared_MSE"
+               uri="http://purl.org/DP/quality/measures#6"
                typeOfProcessingInstruction="JAVA">
     import java.util.regex.*;
     Pattern thePat = Pattern.compile(".+\\((\\d+\\.?\\d*)\\)");
@@ -225,8 +217,8 @@ One or more output measures, measure that can be "are the two representations eq
 This example, even if simplified for presentation purpose, demonstrates how one could describe an image comparison using ImageMagick (in what concerns SCAPE Component info).
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
-<components schemaVersion="1.1">                 
-   <component xsi:type="QAObjectComparison" 
+<components schemaVersion="1.1">
+   <component xsi:type="QAObjectComparison"
       profile="http://purl.org/DP/components#QAObjectComparison"
       name="digital-preservation-qaobject-imagemagick-compare-with-mse"
       author="Hélder Silva">
@@ -234,8 +226,8 @@ This example, even if simplified for presentation purpose, demonstrates how one 
          uri="http://opensource.org/licenses/Apache-2.0" />
       <acceptedMimetype>image/*</acceptedMimetype>
       <acceptedMimetype>image/*</acceptedMimetype>
-		<outputMeasure name="image_distance_mean_error_squared_MSE" 
-                     uri="http://purl.org/DP/quality/measures#6" 
+		<outputMeasure name="image_distance_mean_error_squared_MSE"
+                     uri="http://purl.org/DP/quality/measures#6"
                      typeOfProcessingInstruction="JAVA">
          import java.util.regex.*;
          Pattern thePat = Pattern.compile(".+\\((\\d+\\.?\\d*)\\)");
@@ -315,9 +307,9 @@ If one executes the **bash-generator** first, for a given toolspec (and optional
                                              |    ./componentspec  |
                                              +---------------------+
 </pre>
-  
+
 **Note:** when executing the bash wrapped version of the tool, please make sure that parameters made of multiple terms (white-space delimited) are provided within double quotes (e.g. -compress None should be "-compress None").
-   
+
 Then, if one wants to generate a Debian package, for a given toolspec (and optionally for the respectively componentspec) and for the previously generated artifacts, one executes the **bash-debian-generator**, as the following diagram explains.
 
 <pre> +---------------------+
@@ -340,11 +332,11 @@ Then, if one wants to generate a Debian package, for a given toolspec (and optio
      |componentspec|+------|                                 +---------------------+
      +- - - - - - -+
 </pre>
-  
+
 **Sum up:**  
 1. ToolWrapper components can be combined, in the correct order, passing generated artifacts through a folder (i.e., the output folder of the **bash-generator** will be the input folder of the **bash-debian-generator**).  
 2. An install folder is generated by the **bash-generator**, which can be used to place scripts/files/programs that should be installed alongside with the bash wrapper and workflow. These scripts/files/programs are going to be placed under **/usr/share/OPERATION-NAME/**.
-  
+
 ### Different Debian package generation scenarios
 
 1. **1 toolspec with 1 operation**  
@@ -385,7 +377,7 @@ Files required:
 Optional file:
 
 * componentspec (e.g. digital-preservation-migration-image-imagemagick-image2txt.component)
-**Note:** If no componentspec is provided, the ToolWrapper still's going to produce a Taverna workflow but without any semantic annotations regarding a Component. 
+**Note:** If no componentspec is provided, the ToolWrapper still's going to produce a Taverna workflow but without any semantic annotations regarding a Component.
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape ToolWrapper repository was cloned into):
 
@@ -395,7 +387,7 @@ Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes 
 $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./toolwrapper-bash-generator/bin/generate.sh -o output_dir -t \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -c \
-  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component 
+  README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component
 ```
 
 One may find the produced artifacts under the directory **output_dir**. The bash will be located under **output_dir/bash** and the Taverna workflow under **output_dir/workflow**.
@@ -411,7 +403,7 @@ $> cd $TOOLWRAPPER_GITHUB_FOLDER
 $> ./toolwrapper-bash-debian-generator/bin/generate.sh -e EMAIL -t \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.xml -ch \
   README_FILES/digital-preservation-migration-image-imagemagick-image2txt.changelog \
-  -i output_dir -o output_dir 
+  -i output_dir -o output_dir
 ```
 
 The produced Debian package may be found under the directory **output_dir/debian**.
@@ -428,9 +420,6 @@ $> ./toolwrapper-component-uploader/bin/upload.sh -u USERNAME -p PASSWORD \
 -i 579 -s README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component
 ```
 
-### How to develop a specific functionality for the ToolWrapper
-
-TBA (e.g., generate RPM for Red Hat and others)
 
 ##Acknowledgements
 
