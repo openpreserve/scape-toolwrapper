@@ -76,7 +76,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	private static Logger log = Logger
 			.getLogger(DebianBashWrapperGenerator.class);
 	private static final List<String> DEBIAN_FILES = Arrays.asList(
-			"source/format", "compat", "control", "copyright", "dirs",
+			"source/format", "compat", "control", "copyright", "dirs", "raw2nexus.lintian-overrides", 
 			"install", "MAN.manpages", "MAN.pod", "README", "rules");
 	private static final String RFC_822_DATE_PATTERN = "EEE, dd MMM yyyy HH:mm:ss Z";
 	private static final String DEBIAN_TEMPLATE_DIRECTORY_NAME = "/debian_package_template/";
@@ -425,14 +425,26 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 	}
 
 	private boolean generateDebianPackage(VelocityContext context) {
-		return setupEnvironment(context) && copyExternalFiles()
-				&& buildPackage() && copyPackage();
-	}
+boolean result = setupEnvironment(context); 
+
+
+boolean copye = copyExternalFiles();
+boolean build = buildPackage();
+boolean copy = copyPackage();
+System.out.println("generateDebianPackage: env = " + result + " copyext: " + copye + " build: " + build + " copypackage: " + copy);
+return result && build && copy && copye;	
+}
+
 
 	private boolean setupEnvironment(VelocityContext context) {
-		return createDebianPackageDirectorySkeleton()
-				&& installExtraFilesIfAny(context) && loadDebianTemplates()
-				&& addInformationToDebianTemplates(context);
+boolean create =createDebianPackageDirectorySkeleton();
+boolean install =installExtraFilesIfAny(context);
+boolean load =loadDebianTemplates();
+boolean add =  addInformationToDebianTemplates(context);
+System.out.println ("setupEnvironment: create: " + create + " install: " + install + " load: " + load + " add: " + add );
+
+				return create && install && load
+				&& add;
 	}
 
 	private boolean createDebianPackageDirectorySkeleton() {
@@ -672,21 +684,38 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 		log.info("generatePackage starting now...");
 		Runtime rt = Runtime.getRuntime();
 		BufferedReader br = null;
+	BufferedReader br2 = null;
 		try {
 			// / usr/bin/dpkg-buildpackage
 			Process exec = rt.exec("/usr/bin/debuild -us -uc -b", null,
 					tempDebianDir);
-			br = new BufferedReader(new InputStreamReader(
-					exec.getInputStream(), Charset.defaultCharset()));
-			String line;
-			while ((line = br.readLine()) != null) {
-				log.info(line);
-			}
-			success = (exec.waitFor() == 0);
+System.out.println("buildPackage: tempDebianDir " + tempDebianDir);
+			br = new BufferedReader(new InputStreamReader(	exec.getInputStream(), Charset.defaultCharset()));
+ br2 = new BufferedReader(new InputStreamReader(  exec.getErrorStream(), Charset.defaultCharset()));			
+success = (exec.waitFor() == 0);
+ 			String line = br.readLine();
+                        while (line != null) {
+                                log.info(line);
+				System.out.println("buildPackage: " + line);
+				line = br.readLine();
+                        }
+
+
+                        line = br2.readLine();
+                        while (line != null) {
+                                log.info(line);
+                                System.out.println("buildPackage: " + line);
+                                line = br2.readLine();
+                        }
+
+
+
 		} catch (InterruptedException e) {
 			success = false;
+e.printStackTrace();
 		} catch (IOException e) {
 			success = false;
+e.printStackTrace();
 		} finally {
 			if (br != null) {
 				try {
@@ -719,11 +748,11 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline
 
 	private void cleanEnvironment() {
 		// delete the temporary directory as it isn't needed anymore
-		boolean deleteRes = FileUtils.deleteQuietly(tempDebianBaseDir);
-		if (!deleteRes) {
-			log.error("Error while deleting temporary directory \""
-					+ tempDebianBaseDir + "\"");
-		}
+		//boolean deleteRes = FileUtils.deleteQuietly(tempDebianBaseDir);
+		//if (!deleteRes) {
+		//	log.error("Error while deleting temporary directory \""
+		//			+ tempDebianBaseDir + "\"");
+		//}
 	}
 
 	private static boolean areNonRequiredArgumentsThatCanBeCombinedInvalid(
