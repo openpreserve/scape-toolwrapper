@@ -1,6 +1,6 @@
 # ToolWrapper
 
-*Wrap preservation tools once, deploy them everywhere.*
+*Wrap preservation tools once, deploy them everywhere*
 
 What Is ToolWrapper?
 --------------------
@@ -15,7 +15,7 @@ The ToolWrapper simplifies the execution of the following tasks:
 2. **Tool invocation** - through command-line wrapping;
 3. **Artifacts generation** - associated to a tool invocation, e.g., Taverna workflow;
 4. **Packaging** of all the generated artifacts for easier distribution and installation;
-5. **Component upload** - a bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment website.
+5. **Component upload** - a bash utility to upload Components (Taverna workflows with semantic annotations) to myExperiment website
 
 ToolWrapper Can Be Used By
 --------------------------
