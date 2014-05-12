@@ -1,6 +1,6 @@
 # ToolWrapper
 
-*Wrap preservation tools once, deploy them everywhere.*
+*Wrap preservation tools once, deploy them everywhere*
 
 **What you'll find in this README:**
 
@@ -29,18 +29,18 @@ Tools, and tools invocations, are described using a machine-readable language (X
 
 1. Tool information, i.e., name, version, homepage, etc;
 2. Tool installation information, i.e., software dependencies, license, etc;
-3. One or more concrete operations, pre-described, that can be executed for a particular input to generate a particular output.
+3. One or more concrete operations, pre-described, that can be executed for a particular input to generate a particular output
 
 **Changes from toolspec version 1.0 to 1.1:**
 
-1. The element ```<otherProperties>``` no longer exists.
-2. The element ```<installation>``` now allows to specify much more information.
-3. An element ```<license>``` was added under ```<tool>``` to express the license of a tool description.
+1. The element ```<otherProperties>``` no longer exists
+2. The element ```<installation>``` now allows to specify much more information
+3. An element ```<license>``` was added under ```<tool>``` to express the license of a tool description
 
 
-**Example:**
+**Example**
 
-This example, even if simplified for presentation purpose, demonstrates how one could describe a image file format conversion using ImageMagick.
+This example, even if simplified for presentation purpose, demonstrates how one could describe an image file format conversion using ImageMagick.
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -89,7 +89,7 @@ This example, even if simplified for presentation purpose, demonstrates how one 
 ## Component Specification (componentspec)
 
 In the SCAPE context, a Component is a Taverna workflow adhering to a Component Profile and used as a building block in a Preservation Action Plan.
-These Taverna workflows will "live" in the myExperiment website and allow anyone to search/use them. In order to allow a more meanful search/increase their discoverability, these workflows will be semanticlly annotated with special tool information such as, and for file format migration tools, the supported input formats and output formats, or for the characterisation tools what type of file characteristics the tool can produce, etc.
+These Taverna workflows will "live" in the myExperiment website and allow anyone to search/use them. In order to allow a more meaningful search/increase their discoverability, these workflows will be semantically annotated with special tool information such as the supported input formats and output formats of file format migration tools or, for the characterisation tools, what file characteristics the tool can extract, etc.
 
 In what concerns the ToolWrapper, as it produces Taverna workflows from the toolspec and as the toolspec only allows to specify a limited set of information (described in the previous section), another spec file was created and named Component Spec (componentspec).
 It is also described using a machine-readable language (XML, respecting a XML schema) and allows one to specify (as specified in the different [SCAPE Component Profiles](https://github.com/openplanets/scape-component-profiles)):
@@ -104,9 +104,9 @@ One or more migration paths. E.g.
 </migrationPath>
 ```
 
-**Example:**
+**Example**
 
-This example, even if simplified for presentation purpose, demonstrates how one could describe a image file format conversion using ImageMagick (in what concerns SCAPE Component info).
+This example, even if simplified for presentation purpose, demonstrates how one could describe an image file format conversion using ImageMagick (in what concerns SCAPE Component info).
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <components schemaVersion="1.1">
@@ -160,7 +160,7 @@ or (using JAVA instruction)
 </outputMeasure>
 ```
 
-**Example:**
+**Example**
 
 This example, even if simplified for presentation purpose, demonstrates how one could describe a video characterisation using FFProbe (in what concerns SCAPE Component info).
 ```xml
@@ -195,7 +195,7 @@ Two accepted mimetypes (as this compares 2 representations). E.g.
 <acceptedMimetype>image/*</acceptedMimetype>
 <acceptedMimetype>image/*</acceptedMimetype>
 ```
-One or more output measures, measure that can be "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
+One or more output measures which can be compared by: "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
 ```xml
 <outputMeasure name="image_distance_mean_error_squared_MSE"
                uri="http://purl.org/DP/quality/measures#6"
@@ -290,7 +290,7 @@ $> mvn package
 ### How ToolWrapper works
 
 In the project directory, there are 2 ToolWrapper components (for now) whose name ends up with "generator". These, when executed in a certain sequence, generate different outputs.  
-If one executes the **bash-generator** first, for a given toolspec (and optionally for the respectively componentspec), one will end up with a bash wrapper and a Taverna workflow, as the following diagram explains.
+If one executes the **bash-generator** first, for a given toolspec (and optionally for the respective componentspec), one will end up with a bash wrapper and a Taverna workflow, as the following diagram explains.
 
 <pre>                                             +---------------------+
                                              |  output_directory   |
@@ -309,7 +309,7 @@ If one executes the **bash-generator** first, for a given toolspec (and optional
 
 **Note:** when executing the bash wrapped version of the tool, please make sure that parameters made of multiple terms (white-space delimited) are provided within double quotes (e.g. -compress None should be "-compress None").
 
-Then, if one wants to generate a Debian package, for a given toolspec (and optionally for the respectively componentspec) and for the previously generated artifacts, one executes the **bash-debian-generator**, as the following diagram explains.
+Then, if one wants to generate a Debian package, for a given toolspec (and optionally for the respective componentspec) and for the previously generated artifacts, one executes the **bash-debian-generator**, as the following diagram explains.
 
 <pre> +---------------------+
  |  output_directory   |
@@ -377,7 +377,7 @@ Files required:
 Optional file:
 
 * componentspec (e.g. digital-preservation-migration-image-imagemagick-image2txt.component)
-**Note:** If no componentspec is provided, the ToolWrapper still's going to produce a Taverna workflow but without any semantic annotations regarding a Component.
+**Note:** If no componentspec is provided, the ToolWrapper will still produce a Taverna workflow but without any semantic annotations regarding a Component.
 
 Execute the following on the command-line ($TOOLWRAPPER\_GITHUB\_FOLDER denotes the path to the folder where the Scape ToolWrapper repository was cloned into):
 
@@ -425,4 +425,4 @@ $> ./toolwrapper-component-uploader/bin/upload.sh -u USERNAME -p PASSWORD \
 
 ##Acknowledgements
 
-Part of this work was supported by the European Union in the 7th Framework Program, IST, through the SCAPE project, Contract 270137.
+This work was partially supported by the [SCAPE project](http://scape-project.eu). The SCAPE project is co-funded by the European Union under FP7 ICT-2009.4.1 (Grant Agreement number 270137)
