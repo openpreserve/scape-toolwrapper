@@ -195,7 +195,7 @@ Two accepted mimetypes (as this compares 2 representations). E.g.
 <acceptedMimetype>image/*</acceptedMimetype>
 <acceptedMimetype>image/*</acceptedMimetype>
 ```
-One or more output measures which can be compared by: "are the two representations equals, using a certain comparison algorithm?". E.g. (using JAVA instruction)
+One or more output measures which can be compared by: "are the two representations equals, using a certain comparison algorithm?", e.g. using JAVA instruction.
 ```xml
 <outputMeasure name="image_distance_mean_error_squared_MSE"
                uri="http://purl.org/DP/quality/measures#6"
@@ -211,7 +211,7 @@ One or more output measures which can be compared by: "are the two representatio
 </outputMeasure>
 ```
 
-**Example:**
+**Example**
 
 This example, even if simplified for presentation purpose, demonstrates how one could describe an image comparison using ImageMagick (in what concerns SCAPE Component info).
 ```xml
