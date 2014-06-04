@@ -7,7 +7,7 @@ Standards-Version: 3.9.2
 Homepage: http://scape-project.eu/
 
 Package: $wrapperName
-Architecture: all
+Architecture: $architecture
 Depends: #[[${misc:Depends}]]#$toolDependencies
 Description: $toolDescription
  This package was developed in the context of SCAPE project.

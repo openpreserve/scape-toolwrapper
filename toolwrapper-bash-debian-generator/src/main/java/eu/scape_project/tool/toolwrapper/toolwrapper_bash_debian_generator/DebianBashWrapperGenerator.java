@@ -69,7 +69,12 @@ import eu.scape_project.tool.toolwrapper.data.tool_spec.ParameterPossibleValue;
 import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 import eu.scape_project.tool.toolwrapper.toolwrapper_bash_debian_generator.utils.DebianFileFilter;
 
-/** Class that generates, from a toolspec, a Debian package */
+/**
+ * Class that generates, from a toolspec, a Debian package
+ * 
+ * Known lintian bugs:
+ * https://bugs.launchpad.net/ubuntu/+source/lintian/+bug/1303603
+ * */
 public class DebianBashWrapperGenerator extends ToolWrapperCommandline implements ToolWrapperGenerator {
 
   private static Logger log = Logger.getLogger(DebianBashWrapperGenerator.class);
@@ -85,7 +90,9 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
   private String maintainerEmail;
   private String inputDir;
   private String changelog;
+  private String lintianOverride;
   private String description;
+  private String architecture;
   private File outputDirectory;
   private boolean aggregate;
   // /tmp/TEMP_DIR
@@ -95,6 +102,64 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
   // /tmp/TEMP_DIR/DEB_NAME/debian
   private File tempDebianInnerDir;
   private Map<String, Template> debianTemplates;
+
+  // obtained with $> dpkg-architecture -L
+  private static List<String> KNOWN_ARCHITECTURES = Arrays.asList("uclibc-linux-armel", "uclibc-linux-i386",
+    "uclibc-linux-ia64", "uclibc-linux-alpha", "uclibc-linux-amd64", "uclibc-linux-armeb", "uclibc-linux-arm",
+    "uclibc-linux-arm64", "uclibc-linux-avr32", "uclibc-linux-hppa", "uclibc-linux-m32r", "uclibc-linux-m68k",
+    "uclibc-linux-mips", "uclibc-linux-mipsel", "uclibc-linux-mips64", "uclibc-linux-mips64el", "uclibc-linux-powerpc",
+    "uclibc-linux-ppc64", "uclibc-linux-ppc64el", "uclibc-linux-s390", "uclibc-linux-s390x", "uclibc-linux-sh3",
+    "uclibc-linux-sh3eb", "uclibc-linux-sh4", "uclibc-linux-sh4eb", "uclibc-linux-sparc", "uclibc-linux-sparc64",
+    "musl-linux-armhf", "musl-linux-i386", "musl-linux-ia64", "musl-linux-alpha", "musl-linux-amd64",
+    "musl-linux-armeb", "musl-linux-arm", "musl-linux-arm64", "musl-linux-avr32", "musl-linux-hppa", "musl-linux-m32r",
+    "musl-linux-m68k", "musl-linux-mips", "musl-linux-mipsel", "musl-linux-mips64", "musl-linux-mips64el",
+    "musl-linux-powerpc", "musl-linux-ppc64", "musl-linux-ppc64el", "musl-linux-s390", "musl-linux-s390x",
+    "musl-linux-sh3", "musl-linux-sh3eb", "musl-linux-sh4", "musl-linux-sh4eb", "musl-linux-sparc",
+    "musl-linux-sparc64", "armhf", "armel", "mipsn32", "mipsn32el", "mips64", "mips64el", "powerpcspe", "x32", "lpia",
+    "i386", "ia64", "alpha", "amd64", "armeb", "arm", "arm64", "avr32", "hppa", "m32r", "m68k", "mips", "mipsel",
+    "powerpc", "ppc64", "ppc64el", "s390", "s390x", "sh3", "sh3eb", "sh4", "sh4eb", "sparc", "sparc64",
+    "kfreebsd-i386", "kfreebsd-ia64", "kfreebsd-alpha", "kfreebsd-amd64", "kfreebsd-armeb", "kfreebsd-arm",
+    "kfreebsd-arm64", "kfreebsd-avr32", "kfreebsd-hppa", "kfreebsd-m32r", "kfreebsd-m68k", "kfreebsd-mips",
+    "kfreebsd-mipsel", "kfreebsd-mips64", "kfreebsd-mips64el", "kfreebsd-powerpc", "kfreebsd-ppc64",
+    "kfreebsd-ppc64el", "kfreebsd-s390", "kfreebsd-s390x", "kfreebsd-sh3", "kfreebsd-sh3eb", "kfreebsd-sh4",
+    "kfreebsd-sh4eb", "kfreebsd-sparc", "kfreebsd-sparc64", "knetbsd-i386", "knetbsd-ia64", "knetbsd-alpha",
+    "knetbsd-amd64", "knetbsd-armeb", "knetbsd-arm", "knetbsd-arm64", "knetbsd-avr32", "knetbsd-hppa", "knetbsd-m32r",
+    "knetbsd-m68k", "knetbsd-mips", "knetbsd-mipsel", "knetbsd-mips64", "knetbsd-mips64el", "knetbsd-powerpc",
+    "knetbsd-ppc64", "knetbsd-ppc64el", "knetbsd-s390", "knetbsd-s390x", "knetbsd-sh3", "knetbsd-sh3eb", "knetbsd-sh4",
+    "knetbsd-sh4eb", "knetbsd-sparc", "knetbsd-sparc64", "kopensolaris-i386", "kopensolaris-ia64",
+    "kopensolaris-alpha", "kopensolaris-amd64", "kopensolaris-armeb", "kopensolaris-arm", "kopensolaris-arm64",
+    "kopensolaris-avr32", "kopensolaris-hppa", "kopensolaris-m32r", "kopensolaris-m68k", "kopensolaris-mips",
+    "kopensolaris-mipsel", "kopensolaris-mips64", "kopensolaris-mips64el", "kopensolaris-powerpc",
+    "kopensolaris-ppc64", "kopensolaris-ppc64el", "kopensolaris-s390", "kopensolaris-s390x", "kopensolaris-sh3",
+    "kopensolaris-sh3eb", "kopensolaris-sh4", "kopensolaris-sh4eb", "kopensolaris-sparc", "kopensolaris-sparc64",
+    "hurd-i386", "hurd-ia64", "hurd-alpha", "hurd-amd64", "hurd-armeb", "hurd-arm", "hurd-arm64", "hurd-avr32",
+    "hurd-hppa", "hurd-m32r", "hurd-m68k", "hurd-mips", "hurd-mipsel", "hurd-mips64", "hurd-mips64el", "hurd-powerpc",
+    "hurd-ppc64", "hurd-ppc64el", "hurd-s390", "hurd-s390x", "hurd-sh3", "hurd-sh3eb", "hurd-sh4", "hurd-sh4eb",
+    "hurd-sparc", "hurd-sparc64", "darwin-i386", "darwin-ia64", "darwin-alpha", "darwin-amd64", "darwin-armeb",
+    "darwin-arm", "darwin-arm64", "darwin-avr32", "darwin-hppa", "darwin-m32r", "darwin-m68k", "darwin-mips",
+    "darwin-mipsel", "darwin-mips64", "darwin-mips64el", "darwin-powerpc", "darwin-ppc64", "darwin-ppc64el",
+    "darwin-s390", "darwin-s390x", "darwin-sh3", "darwin-sh3eb", "darwin-sh4", "darwin-sh4eb", "darwin-sparc",
+    "darwin-sparc64", "freebsd-i386", "freebsd-ia64", "freebsd-alpha", "freebsd-amd64", "freebsd-armeb", "freebsd-arm",
+    "freebsd-arm64", "freebsd-avr32", "freebsd-hppa", "freebsd-m32r", "freebsd-m68k", "freebsd-mips", "freebsd-mipsel",
+    "freebsd-mips64", "freebsd-mips64el", "freebsd-powerpc", "freebsd-ppc64", "freebsd-ppc64el", "freebsd-s390",
+    "freebsd-s390x", "freebsd-sh3", "freebsd-sh3eb", "freebsd-sh4", "freebsd-sh4eb", "freebsd-sparc",
+    "freebsd-sparc64", "netbsd-i386", "netbsd-ia64", "netbsd-alpha", "netbsd-amd64", "netbsd-armeb", "netbsd-arm",
+    "netbsd-arm64", "netbsd-avr32", "netbsd-hppa", "netbsd-m32r", "netbsd-m68k", "netbsd-mips", "netbsd-mipsel",
+    "netbsd-mips64", "netbsd-mips64el", "netbsd-powerpc", "netbsd-ppc64", "netbsd-ppc64el", "netbsd-s390",
+    "netbsd-s390x", "netbsd-sh3", "netbsd-sh3eb", "netbsd-sh4", "netbsd-sh4eb", "netbsd-sparc", "netbsd-sparc64",
+    "openbsd-i386", "openbsd-ia64", "openbsd-alpha", "openbsd-amd64", "openbsd-armeb", "openbsd-arm", "openbsd-arm64",
+    "openbsd-avr32", "openbsd-hppa", "openbsd-m32r", "openbsd-m68k", "openbsd-mips", "openbsd-mipsel",
+    "openbsd-mips64", "openbsd-mips64el", "openbsd-powerpc", "openbsd-ppc64", "openbsd-ppc64el", "openbsd-s390",
+    "openbsd-s390x", "openbsd-sh3", "openbsd-sh3eb", "openbsd-sh4", "openbsd-sh4eb", "openbsd-sparc",
+    "openbsd-sparc64", "solaris-i386", "solaris-ia64", "solaris-alpha", "solaris-amd64", "solaris-armeb",
+    "solaris-arm", "solaris-arm64", "solaris-avr32", "solaris-hppa", "solaris-m32r", "solaris-m68k", "solaris-mips",
+    "solaris-mipsel", "solaris-mips64", "solaris-mips64el", "solaris-powerpc", "solaris-ppc64", "solaris-ppc64el",
+    "solaris-s390", "solaris-s390x", "solaris-sh3", "solaris-sh3eb", "solaris-sh4", "solaris-sh4eb", "solaris-sparc",
+    "solaris-sparc64", "uclinux-armel", "uclinux-i386", "uclinux-ia64", "uclinux-alpha", "uclinux-amd64",
+    "uclinux-armeb", "uclinux-arm", "uclinux-arm64", "uclinux-avr32", "uclinux-hppa", "uclinux-m32r", "uclinux-m68k",
+    "uclinux-mips", "uclinux-mipsel", "uclinux-mips64", "uclinux-mips64el", "uclinux-powerpc", "uclinux-ppc64",
+    "uclinux-ppc64el", "uclinux-s390", "uclinux-s390x", "uclinux-sh3", "uclinux-sh3eb", "uclinux-sh4", "uclinux-sh4eb",
+    "uclinux-sparc", "uclinux-sparc64", "mint-m68k");
 
   /**
    * Public empty constructor (adds a bunch of command-line options and sets
@@ -116,6 +181,15 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     opt.setRequired(true);
     options.addOption(opt);
 
+    opt = new Option("ar", "architecture", true,
+      "define Debian package architecture (default: all; other usual values: i386, amd64)");
+    opt.setRequired(false);
+    options.addOption(opt);
+
+    opt = new Option("li", "lintianOverride", true, "define file with lintian override instructions");
+    opt.setRequired(false);
+    options.addOption(opt);
+
     opt = new Option("ch", "changelog", true, "location of the changelog to be included");
     opt.setRequired(true);
     options.addOption(opt);
@@ -131,6 +205,8 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     inputDir = null;
     debianTemplates = null;
     changelog = null;
+    lintianOverride = null;
+    architecture = "all";
     description = "";
     outputDirectory = null;
     aggregate = true;
@@ -166,6 +242,14 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public void setArchitecture(String architecture) {
+    this.architecture = architecture;
+  }
+
+  public void setLintianOverride(String lintianOverride) {
+    this.lintianOverride = lintianOverride;
   }
 
   /**
@@ -278,6 +362,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     context.put("toolHomepage", tool.getHomepage());
     context.put("toolVersion", tool.getVersion());
     context.put("wrapperName", wrapperName);
+    context.put("architecture", architecture);
     context.put("aggregate", aggregate);
     context.put("operations", tool.getOperations().getOperation());
   }
@@ -559,6 +644,14 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     // copy command-line provided changelog to the temporary directory
     success = success && Utils.copyFile(new File(changelog), new File(tempDebianInnerDir, "changelog"), false);
 
+    // copy command-line provided lintian overrides (if any) to the temporary
+    // directory
+    if (lintianOverride != null) {
+      File lintianOverrideFile = new File(lintianOverride);
+      success = success
+        && Utils.copyFile(lintianOverrideFile, new File(tempDebianInnerDir, lintianOverrideFile.getName()), false);
+    }
+
     if (aggregate) {
       for (Operation op : tool.getOperations().getOperation()) {
         String filename = op.getName();
@@ -719,12 +812,29 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
         dbwg.setMaintainerEmail(cmd.getOptionValue("e"));
         dbwg.setChangelog(cmd.getOptionValue("ch"));
 
+        if (cmd.hasOption("ar")) {
+          if (KNOWN_ARCHITECTURES.contains(cmd.getOptionValue("ar"))) {
+            dbwg.setArchitecture(cmd.getOptionValue("ar"));
+          } else {
+            log
+              .error("The architecture parameter was specified but an invalid value was provided. Do \"$> dpkg-architecture -L\" to see all valid values.");
+            exitCode = 6;
+          }
+        }
+
+        if (cmd.hasOption("li")) {
+          dbwg.setLintianOverride(cmd.getOptionValue("li"));
+        }
+
         if (areNonRequiredArgumentsThatCanBeCombinedInvalid(cmd)) {
           log.error("Missing required option: "
             + (cmd.hasOption("a") ? (cmd.hasOption("d") ? CMD_OPTIONS_DESCRIPTION_SHORT : "d") : "a") + "\n");
           dbwg.printUsage();
-          exitCode = 3;
-        } else {
+          exitCode = 5;
+        }
+
+        // if all required are present and all optional are valid
+        if (exitCode == 0) {
           if (cmd.hasOption("a") && cmd.hasOption("d") && cmd.hasOption(CMD_OPTIONS_DESCRIPTION_SHORT)) {
 
             // only one Debian package will be generated
