@@ -23,11 +23,14 @@ package eu.scape_project.tool.toolwrapper.data.tool_spec.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -38,35 +41,59 @@ import eu.scape_project.tool.toolwrapper.data.tool_spec.Tool;
 
 /**
  * Utility class with static methods useful to interact with toolspec info
- * */
-
+ */
 public final class Utils {
 	private static final String TOOLSPEC_FILENAME_IN_RESOURCES = "/tool-1.1_draft.xsd";
 
+    private static JAXBContext jc;
+    
+    static {
+        try {
+            jc  = createContext();
+        } catch (JAXBException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    private static JAXBContext createContext() throws JAXBException {
+        return JAXBContext.newInstance(Tool.class);
+    }
+    
 	private Utils() {
 	}
-
+	
 	/**
 	 * Method that creates a {@link Tool} instance from the provided toolspec
 	 * file, validating it against toolspec XML Schema
 	 * 
 	 * @param toolspecFilePath
 	 *            path to the toolspec file
-	 * @throws JAXBException
-	 * @throws IOException
-	 * @throws SAXException
 	 */
 	public static Tool createTool(String toolspecFilePath)
 			throws JAXBException, IOException, SAXException {
-		File schemaFile = null;
+		Unmarshaller unmarshaller = createUnmarshaller();
+		return (Tool) unmarshaller.unmarshal(new File(toolspecFilePath));
+	}
 
-		JAXBContext context = JAXBContext.newInstance(Tool.class);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
+    /**
+     * Unmarshals an input stream of xml data to a Tool.
+     */
+	public static Tool fromInputStream(InputStream input) throws JAXBException, IOException, SAXException {
+        Unmarshaller unmarshaller = Utils.createUnmarshaller();
+        JAXBElement<Tool> unmarshalled = unmarshaller.unmarshal(new StreamSource(input), Tool.class);
+        return unmarshalled.getValue();
+    }
+	
+	private static Unmarshaller createUnmarshaller() throws JAXBException, IOException, SAXException {
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
+		setSchemaTo(unmarshaller);
+        return unmarshaller;
+    }
 
-		// copy XML Schema from resources to a temporary location
-		schemaFile = File.createTempFile("schema", null);
-		FileUtils
-				.copyInputStreamToFile(Utils.class
+    private static void setSchemaTo(Unmarshaller unmarshaller) throws IOException, SAXException {
+        // copy XML Schema from resources to a temporary location
+		File schemaFile = File.createTempFile("schema", null);
+		FileUtils.copyInputStreamToFile(Utils.class
 						.getResourceAsStream(TOOLSPEC_FILENAME_IN_RESOURCES),
 						schemaFile);
 		Schema schema = SchemaFactory.newInstance(
@@ -74,9 +101,5 @@ public final class Utils {
 
 		// validate provided toolspec against XML Schema
 		unmarshaller.setSchema(schema);
-
-		// unmarshal it
-		return (Tool) unmarshaller.unmarshal(new File(toolspecFilePath));
-
-	}
+    }
 }
