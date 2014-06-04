@@ -21,21 +21,23 @@
  */
 package eu.scape_project.tool.toolwrapper.data.components_spec.utils;
 
+import eu.scape_project.tool.toolwrapper.data.components_spec.Components;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
-
-import eu.scape_project.tool.toolwrapper.data.components_spec.Components;
 
 /**
  * Utility class with static methods useful to interact with component spec info
@@ -76,8 +78,8 @@ public final class Utils {
 			unmarshaller.setSchema(schema);
 
 			// unmarshal it
-			component = (Components) unmarshaller.unmarshal(new File(
-					componentSpecFilePath));
+			component = unmarshaller.unmarshal(new StreamSource(new FileInputStream(new File(
+					componentSpecFilePath))), Components.class).getValue();
 		} catch (JAXBException e) {
 			log.error(
 					"The component spec provided doesn't validate against its schema!",

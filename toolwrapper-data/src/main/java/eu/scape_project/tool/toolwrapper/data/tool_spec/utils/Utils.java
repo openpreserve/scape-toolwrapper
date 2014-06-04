@@ -22,6 +22,7 @@
 package eu.scape_project.tool.toolwrapper.data.tool_spec.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -71,8 +72,7 @@ public final class Utils {
 	 */
 	public static Tool createTool(String toolspecFilePath)
 			throws JAXBException, IOException, SAXException {
-		Unmarshaller unmarshaller = createUnmarshaller();
-		return (Tool) unmarshaller.unmarshal(new File(toolspecFilePath));
+	    return fromInputStream(new FileInputStream(new File(toolspecFilePath)));
 	}
 
     /**
