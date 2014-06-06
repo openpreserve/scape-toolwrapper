@@ -103,6 +103,7 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
+                <scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>commons-cli</groupId>
@@ -112,7 +113,7 @@
 			<dependency>
 				<groupId>eu.scape-project.tool</groupId>
 				<artifactId>toolwrapper-data</artifactId>
-				<version>2.0.0</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -122,7 +123,7 @@
 			<dependency>
 				<groupId>eu.scape-project.tool</groupId>
 				<artifactId>toolwrapper-core</artifactId>
-				<version>2.0.0</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.velocity</groupId>
