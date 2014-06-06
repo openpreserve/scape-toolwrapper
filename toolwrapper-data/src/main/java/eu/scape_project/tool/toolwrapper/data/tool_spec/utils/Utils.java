@@ -72,7 +72,12 @@ public final class Utils {
 	 */
 	public static Tool createTool(String toolspecFilePath)
 			throws JAXBException, IOException, SAXException {
-	    return fromInputStream(new FileInputStream(new File(toolspecFilePath)));
+	    final FileInputStream stream = new FileInputStream(new File(toolspecFilePath));
+	    try {
+	        return fromInputStream(stream);
+	    } finally {
+	        stream.close();
+	    }
 	}
 
     /**

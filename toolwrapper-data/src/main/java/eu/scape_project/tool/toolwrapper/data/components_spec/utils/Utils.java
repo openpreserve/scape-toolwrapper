@@ -78,8 +78,12 @@ public final class Utils {
 			unmarshaller.setSchema(schema);
 
 			// unmarshal it
-			component = unmarshaller.unmarshal(new StreamSource(new FileInputStream(new File(
-					componentSpecFilePath))), Components.class).getValue();
+			final FileInputStream stream = new FileInputStream(new File(componentSpecFilePath));
+			try {
+			    component = unmarshaller.unmarshal(new StreamSource(stream), Components.class).getValue();
+			} finally {
+			    stream.close();
+			}
 		} catch (JAXBException e) {
 			log.error(
 					"The component spec provided doesn't validate against its schema!",
