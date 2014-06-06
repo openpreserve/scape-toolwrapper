@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestUtils {
+public class UtilsTest {
 	private File temporaryDirectory = null, temporaryDirectory2 = null,
 			temporaryDirectory3 = null;
 
