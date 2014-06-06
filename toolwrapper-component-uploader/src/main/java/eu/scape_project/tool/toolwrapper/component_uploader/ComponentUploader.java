@@ -149,14 +149,12 @@ public class ComponentUploader {
 	 *            myExperiment license (myExperiment accepted license set
 	 *            doesn't match with Component license set). if no license is
 	 *            provided, by default this will be set to
-	 *            {@link ComponentUploader.DEFAULT_LICENSE}
+	 *            {@link ComponentUploader#DEFAULT_LICENSE}
 	 * @param description
 	 *            if no description is provided, by default this will be set to
-	 *            {@link ComponentUploader.DEFAULT_DESCRIPTION}
+	 *            {@link ComponentUploader#DEFAULT_DESCRIPTION}
 	 * 
 	 * @return true if the upload was successful, false otherwise
-	 * @throws SAXException
-	 * @throws JAXBException
 	 * 
 	 * */
 	public boolean uploadComponentToMyExperiment(String username,
@@ -205,10 +203,15 @@ public class ComponentUploader {
 					String licenseValue = license == null ? DEFAULT_LICENSE
 							: license;
 
-					byte[] encodedBytes = Base64
+					final FileInputStream input = new FileInputStream(componentFilePath);
+					byte[] encodedBytes = null;
+					try {
+					    encodedBytes = Base64
 							.encodeBase64(IOUtils
-									.toByteArray(new FileInputStream(
-											componentFilePath)));
+									.toByteArray(input));
+					} finally {
+					    input.close();
+					}
 					String base64 = new String(encodedBytes,
 							Charset.defaultCharset());
 
@@ -279,7 +282,7 @@ public class ComponentUploader {
 	}
 
 	public static void main(String[] args) throws IOException,
-			ErrorParsingCmdArgsException, JAXBException, SAXException {
+			JAXBException, SAXException {
 
 		int exitCode = 0;
 

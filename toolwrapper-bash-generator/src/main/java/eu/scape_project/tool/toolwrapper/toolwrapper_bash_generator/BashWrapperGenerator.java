@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -235,16 +234,16 @@ public class BashWrapperGenerator extends ToolWrapperCommandline implements
 		Template workflowTemplate = null;
 		if (component instanceof MigrationAction) {
 			workflowTemplate = loadVelocityTemplateFromResources("migration_workflow_template.vm");
-			context.put("migrationAction", (MigrationAction) component);
+			context.put("migrationAction", component);
 		} else if (component instanceof Characterisation) {
 			workflowTemplate = loadVelocityTemplateFromResources("characterisation_workflow_template.vm");
-			context.put("characterisation", (Characterisation) component);
+			context.put("characterisation", component);
 		} else if (component instanceof QAObjectComparison) {
 			if (!canQAObjectComparisonWorkflowWithComponentsBeGenerated()) {
 				return null;
 			}
 			workflowTemplate = loadVelocityTemplateFromResources("qaObjectComparison_workflow_template.vm");
-			context.put("qaObjectComparison", (QAObjectComparison) component);
+			context.put("qaObjectComparison", component);
 		} else if (component instanceof QAPropertyComparison) {
 			// as generating QAPropertyComparison component doesn't make sense
 			// for the Toolwrapper,

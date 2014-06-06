@@ -70,7 +70,8 @@ public final class Utils {
 	 * @param toolspecFilePath
 	 *            path to the toolspec file
 	 */
-	public static Tool createTool(String toolspecFilePath)
+	@SuppressWarnings("resource")
+    public static Tool createTool(String toolspecFilePath)
 			throws JAXBException, IOException, SAXException {
 	    final FileInputStream stream = new FileInputStream(new File(toolspecFilePath));
 	    try {

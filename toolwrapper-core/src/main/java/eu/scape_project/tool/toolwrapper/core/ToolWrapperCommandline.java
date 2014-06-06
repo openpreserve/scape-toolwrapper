@@ -90,7 +90,6 @@ public abstract class ToolWrapperCommandline {
 	 * @param args
 	 *            command line arguments array
 	 * @return a {@link CommandLine} object that reflects those same parameters
-	 * @throws ErrorParsingCmdArgsException
 	 */
 	private CommandLine parseArguments(String[] args)
 			throws ErrorParsingCmdArgsException {

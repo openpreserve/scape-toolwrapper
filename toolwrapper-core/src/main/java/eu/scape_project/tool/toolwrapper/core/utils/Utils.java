@@ -142,25 +142,23 @@ public final class Utils {
 		}
 		File file = new File(directory, filename);
 		FileOutputStream fos = null;
-		if (file != null) {
-			try {
-				fos = new FileOutputStream(file);
-				fos.write(w.toString().getBytes(Charset.defaultCharset()));
-			} catch (FileNotFoundException e) {
-				log.error(e);
-				res = false;
-			} catch (IOException e) {
-				log.error(e);
-				res = false;
-			} finally {
-				if (fos != null) {
-					try {
-						fos.close();
-						file.setExecutable(makeItExecutable);
-					} catch (IOException e) {
-						log.error(e);
-						res = false;
-					}
+		try {
+			fos = new FileOutputStream(file);
+			fos.write(w.toString().getBytes(Charset.defaultCharset()));
+		} catch (FileNotFoundException e) {
+			log.error(e);
+			res = false;
+		} catch (IOException e) {
+			log.error(e);
+			res = false;
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+					file.setExecutable(makeItExecutable);
+				} catch (IOException e) {
+					log.error(e);
+					res = false;
 				}
 			}
 		}
