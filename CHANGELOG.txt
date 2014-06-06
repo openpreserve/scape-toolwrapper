@@ -1,4 +1,6 @@
 toolwrapper (2.0.0) unstable; urgency=low
+  * remove JAXB generated classes (Tool, Component) and regenerate them
+    using Maven JAXB plugin on every build -> always current classes
   * Ability to generate SCAPE Components (Taverna workflow with
     semantic annotations)
   * The toolspec and componentspec (if provided) are now availble
