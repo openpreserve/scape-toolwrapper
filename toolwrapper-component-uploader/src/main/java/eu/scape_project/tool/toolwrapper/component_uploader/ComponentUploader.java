@@ -82,7 +82,7 @@ public class ComponentUploader {
 		restClient = ClientBuilder.newClient();
 
 		Option opt;
-		setOptions(new Options());
+		this.options = new Options();
 
 		opt = new Option("u", "username", true, "myExperiment username");
 		opt.setRequired(true);
@@ -238,13 +238,11 @@ public class ComponentUploader {
 					if (uploadResponse.getStatus() == Status.OK.getStatusCode()) {
 						logger.info("Component \"" + component.getName()
 								+ "\" uploaded with success!");
-						res = res && true;
 
 					} else {
 						logger.error("Error uploading component \""
 								+ component.getName() + "\"!\n"
 								+ uploadResponse.readEntity(String.class));
-						res = res && false;
 					}
 				}
 			}

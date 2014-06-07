@@ -42,6 +42,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -104,7 +105,7 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
   private Map<String, Template> debianTemplates;
 
   // obtained with $> dpkg-architecture -L
-  private static List<String> KNOWN_ARCHITECTURES = Arrays.asList("uclibc-linux-armel", "uclibc-linux-i386",
+  private static final List<String> KNOWN_ARCHITECTURES = Arrays.asList("uclibc-linux-armel", "uclibc-linux-i386",
     "uclibc-linux-ia64", "uclibc-linux-alpha", "uclibc-linux-amd64", "uclibc-linux-armeb", "uclibc-linux-arm",
     "uclibc-linux-arm64", "uclibc-linux-avr32", "uclibc-linux-hppa", "uclibc-linux-m32r", "uclibc-linux-m68k",
     "uclibc-linux-mips", "uclibc-linux-mipsel", "uclibc-linux-mips64", "uclibc-linux-mips64el", "uclibc-linux-powerpc",
@@ -708,13 +709,8 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     } catch (IOException e) {
       success = false;
     } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          log.error(e);
-        }
-      }
+      IOUtils.closeQuietly(br);
+      IOUtils.closeQuietly(br2);
     }
     return success;
   }
