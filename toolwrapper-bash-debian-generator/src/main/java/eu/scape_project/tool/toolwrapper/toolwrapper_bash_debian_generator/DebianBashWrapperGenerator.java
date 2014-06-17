@@ -94,6 +94,10 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
   private String lintianOverride;
   private String description;
   private String architecture;
+  private String pi;
+  private String prm;
+  private String poi;
+  private String porm;
   private File outputDirectory;
   private boolean aggregate;
   // /tmp/TEMP_DIR
@@ -191,6 +195,20 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     opt.setRequired(false);
     options.addOption(opt);
 
+    // maintainer scripts options
+    opt = new Option("pi", "preinst", true, "define preinst maintainer script file location");
+    opt.setRequired(false);
+    options.addOption(opt);
+    opt = new Option("prm", "prerm", true, "define prerm maintainer script file location");
+    opt.setRequired(false);
+    options.addOption(opt);
+    opt = new Option("poi", "postinst", true, "define postinst maintainer script file location");
+    opt.setRequired(false);
+    options.addOption(opt);
+    opt = new Option("porm", "postrm", true, "define postrm maintainer script file location");
+    opt.setRequired(false);
+    options.addOption(opt);
+
     opt = new Option("ch", "changelog", true, "location of the changelog to be included");
     opt.setRequired(true);
     options.addOption(opt);
@@ -215,6 +233,10 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
     tempDebianDir = null;
     tempDebianInnerDir = null;
     debianTemplates = null;
+    pi=null;
+    prm=null;
+    poi=null;
+    porm=null;
   }
 
   public String getWrapperName() {
@@ -251,6 +273,22 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
 
   public void setLintianOverride(String lintianOverride) {
     this.lintianOverride = lintianOverride;
+  }
+
+  public void setPi(String pi) {
+    this.pi = pi;
+  }
+
+  public void setPrm(String prm) {
+    this.prm = prm;
+  }
+
+  public void setPoi(String poi) {
+    this.poi = poi;
+  }
+
+  public void setPorm(String porm) {
+    this.porm = porm;
   }
 
   /**
@@ -477,8 +515,26 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
   }
 
   private boolean setupEnvironment(VelocityContext context) {
-    return createDebianPackageDirectorySkeleton() && installExtraFilesIfAny(context) && loadDebianTemplates()
+    return createDebianPackageDirectorySkeleton() && installMaintainerScriptsIfAny() && installExtraFilesIfAny(context) && loadDebianTemplates()
       && addInformationToDebianTemplates(context);
+  }
+
+  private boolean installMaintainerScriptsIfAny() {
+    boolean success = true;
+    if (pi != null) {
+      success = success && Utils.copyFile(new File(pi), new File(tempDebianInnerDir, "preinst"), true);
+    }
+    if (prm != null) {
+      success = success && Utils.copyFile(new File(prm), new File(tempDebianInnerDir, "prerm"), true);
+    }
+    if (poi != null) {
+      success = success && Utils.copyFile(new File(poi), new File(tempDebianInnerDir, "postinst"), true);
+    }
+    if (porm != null) {
+      success = success && Utils.copyFile(new File(porm), new File(tempDebianInnerDir, "postrm"), true);
+    }
+
+    return success;
   }
 
   private boolean createDebianPackageDirectorySkeleton() {
@@ -820,6 +876,19 @@ public class DebianBashWrapperGenerator extends ToolWrapperCommandline implement
 
         if (cmd.hasOption("li")) {
           dbwg.setLintianOverride(cmd.getOptionValue("li"));
+        }
+
+        if (cmd.hasOption("pi")) {
+          dbwg.setPi(cmd.getOptionValue("pi"));
+        }
+        if (cmd.hasOption("prm")) {
+          dbwg.setPrm(cmd.getOptionValue("prm"));
+        }
+        if (cmd.hasOption("poi")) {
+          dbwg.setPoi(cmd.getOptionValue("poi"));
+        }
+        if (cmd.hasOption("porm")) {
+          dbwg.setPorm(cmd.getOptionValue("porm"));
         }
 
         if (areNonRequiredArgumentsThatCanBeCombinedInvalid(cmd)) {
