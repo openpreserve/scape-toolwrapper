@@ -1210,7 +1210,7 @@ String $output.getName() = target.getAbsolutePath();</script>
 								<content>&lt;&gt;    &lt;http://purl.org/DP/components#fits&gt;
               &lt;http://purl.org/DP/components#Characterisation&gt;
 #foreach($mimetype in $characterisation.getAcceptedMimetype())
-	; &lt;http://purl.org/DP/components#handlesMimetype&gt; "$mimetype.getValue()"^^&lt;http://www.w3.org/2001/XMLSchema#string&gt;
+	; &lt;http://purl.org/DP/components#handlesMimetype&gt; "$mimetype.getValue()"
 #end
                .
 								</content>
