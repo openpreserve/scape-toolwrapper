@@ -45,6 +45,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.filter.HttpBasicAuthFilter;
 import org.xml.sax.SAXException;
@@ -64,13 +65,15 @@ public class ComponentUploader {
 	private static final String MY_EXPERIMENT_COMPONENT_URI = "http://www.myexperiment.org/component.xml";
 	private static final String DEFAULT_DESCRIPTION = "TBA";
 	private static final String DEFAULT_LICENSE = "by-sa";
+	private static final String COMPONENT_PUBLIC_VIEW_DOWNLOAD_PERMISSIONS = "<permissions><permission><category>public</category><privilege type=\"view\"/><privilege type=\"download\"/></permission></permissions>";
+	private static final String COMPONENT_GROUP_VIEW_DOWNLOAD_PERMISSIONS_TEMPLATE = "<permissions><permission><category>group</category><id>%s</id><privilege type=\"view\"/><privilege type=\"download\"/></permission></permissions>";
 	private static final String COMPONENT_UPLOAD_TEMPLATE = "<workflow>"
 			+ "<title>%s</title>"
 			+ "<description>%s</description>"
 			+ "<component-family>http://www.myexperiment.org/packs/%s</component-family>"
 			+ "<license-type>%s</license-type>"
 			+ "<content-type>application/vnd.taverna.t2flow+xml</content-type>"
-			+ "<content>%s</content>" + "</workflow>";
+			+ "<content>%s</content>" + "%s" + "</workflow>";
 
 	private Client restClient;
 	private Options options;
@@ -122,6 +125,14 @@ public class ComponentUploader {
 		opt.setRequired(false);
 		getOptions().addOption(opt);
 
+		opt = new Option(
+				"e",
+				"permissions",
+				true,
+				"component permissions (default to private, '--permissions public' for public view/download and '--permissions GROUP_ID' for group GROUP_ID view/download permissions");
+		opt.setRequired(false);
+		getOptions().addOption(opt);
+
 	}
 
 	public Options getOptions() {
@@ -160,8 +171,8 @@ public class ComponentUploader {
 	public boolean uploadComponentToMyExperiment(String username,
 			String password, String familyId, String toolSpecFilePath,
 			String componentSpecFilePath, String componentFilePath,
-			String license, String description) throws IOException,
-			JAXBException, SAXException {
+			String license, String description, String permissions)
+			throws IOException, JAXBException, SAXException {
 		boolean res = true;
 		String descriptionValue = null;
 
@@ -192,6 +203,17 @@ public class ComponentUploader {
 						}
 					}
 
+					String permissionsInfo = "";
+					if (StringUtils.isNotBlank(permissions)) {
+						if ("public".equalsIgnoreCase(permissions)) {
+							permissionsInfo = COMPONENT_PUBLIC_VIEW_DOWNLOAD_PERMISSIONS;
+						} else {
+							permissionsInfo = String
+									.format(COMPONENT_GROUP_VIEW_DOWNLOAD_PERMISSIONS_TEMPLATE,
+											permissions);
+						}
+					}
+
 					String title = component.getName();
 					if (descriptionValue == null
 							|| descriptionValue.trim().length() == 0) {
@@ -203,21 +225,21 @@ public class ComponentUploader {
 					String licenseValue = license == null ? DEFAULT_LICENSE
 							: license;
 
-					final FileInputStream input = new FileInputStream(componentFilePath);
+					final FileInputStream input = new FileInputStream(
+							componentFilePath);
 					byte[] encodedBytes = null;
 					try {
-					    encodedBytes = Base64
-							.encodeBase64(IOUtils
-									.toByteArray(input));
+						encodedBytes = Base64.encodeBase64(IOUtils
+								.toByteArray(input));
 					} finally {
-					    input.close();
+						input.close();
 					}
 					String base64 = new String(encodedBytes,
 							Charset.defaultCharset());
 
 					String postData = String.format(COMPONENT_UPLOAD_TEMPLATE,
 							title, descriptionValue, familyId, licenseValue,
-							base64);
+							base64, permissionsInfo);
 
 					logger.debug(postData);
 
@@ -279,8 +301,8 @@ public class ComponentUploader {
 		return commandLine;
 	}
 
-	public static void main(String[] args) throws IOException,
-			JAXBException, SAXException {
+	public static void main(String[] args) throws IOException, JAXBException,
+			SAXException {
 
 		int exitCode = 0;
 
@@ -307,7 +329,8 @@ public class ComponentUploader {
 					parseArguments.getOptionValue("s"),
 					parseArguments.getOptionValue("c"),
 					parseArguments.getOptionValue("l"),
-					parseArguments.getOptionValue("d"))) {
+					parseArguments.getOptionValue("d"),
+					parseArguments.getOptionValue("e"))) {
 				exitCode = 1;
 			}
 		} catch (ErrorParsingCmdArgsException e) {
