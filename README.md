@@ -162,6 +162,11 @@ or (using JAVA instruction)
     the_height_of_the_video_track="500";
 </outputMeasure>
 ```
+__Note:__ If no extra processing should be made, then just remove the attribute _typeOfProcessingInstruction_ and use an empty element instead. E.g.
+```xml
+<outputMeasure name="image_width_of_video"
+               uri="http://purl.org/DP/quality/measures#390" />
+```
 
 **Example**
 
