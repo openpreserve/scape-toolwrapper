@@ -21,7 +21,10 @@
   * [How to generate a bash wrapper](#how-to-generate-a-bash-wrapper)
   * [How to generate a Debian package](#how-to-generate-a-debian-package)
   * [How to upload a Component to the myExperiment website](#how-to-upload-a-component-to-the-myexperiment-website)
-* [Acknowledgements](#acknowledgements)
+* [More information](#more-information)
+  * [Licence](#licence)
+  * [Acknowledgements](#acknowledgements)
+  * [Contribute](#contribute)
 
 ## Tool Specification (toolspec)
 
@@ -422,7 +425,24 @@ $> ./toolwrapper-component-uploader/bin/upload.sh -u USERNAME -p PASSWORD \
 -i 579 -s README_FILES/digital-preservation-migration-image-imagemagick-image2txt.component
 ```
 
+## More information
 
-##Acknowledgements
+### Licence
+
+SCAPE Toolwrapper is released under [Apache version 2.0 license](LICENSE.txt).
+
+### Acknowledgements
 
 This work was partially supported by the [SCAPE project](http://scape-project.eu). The SCAPE project is co-funded by the European Union under FP7 ICT-2009.4.1 (Grant Agreement number 270137)
+
+### Contribute
+
+1. [Fork the GitHub project](https://help.github.com/articles/fork-a-repo)
+2. Change the code and push into the forked project
+3. [Submit a pull request](https://help.github.com/articles/using-pull-requests)
+
+To increase the changes of you code being accepted and merged into the official source here's a checklist of things to go over before submitting a contribution. For example:
+
+* Has unit tests (that covers at least 80% of the code)
+* Has documentation (at least 80% of public API)
+* Agrees to contributor license agreement, certifying that any contributed code is original work and that the copyright is turned over to the project
