@@ -1,3 +1,26 @@
+toolwrapper (2.1.0) unstable; urgency=low
+  * Added the hability of setting SCAPE Components permissions on
+    the myExperiment site during the upload
+    (private to user, public ou group)
+  * Enhanced toolspec XML schema to ensure the presence of the
+    required attribute in input/output elements
+ -- SCAPE project <hsilva@keep.pt>  Wed, 20 Aug 2014 12:00:00 +0100
+
+toolwrapper (2.0.3) unstable; urgency=low
+  * Fixed typo on characterization template
+  * Fixed typo in development examples
+  * Fixed and improving script that tests all development examples
+
+ -- SCAPE project <lfaria@keep.pt>  Mon, 26 Mar 2014 13:00:00 +0000
+
+toolwrapper (2.0.2) unstable; urgency=low
+  * Fixing typo on the generation of characterization component (#1)
+    (http://git.io/E-OosA)
+  * Workaround Taverna limitation with non-UTC timezones (#2)
+    (http://git.io/6K1fvA)
+
+ -- SCAPE project <lfaria@keep.pt>  Sun, 25 Mar 2014 13:00:00 +0000
+
 toolwrapper (2.0.0) unstable; urgency=low
   * remove JAXB generated classes (Tool, Component) and regenerate them
     using Maven JAXB plugin on every build -> always current classes
