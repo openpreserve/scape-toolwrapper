@@ -630,8 +630,8 @@ String $output.getName() = target.getAbsolutePath();</script>
 #foreach( $output in $listOfOutputs )
 			<datalink>
 				<sink type="processor">
-					<port>$output.getName()_inner</port>
 					<processor>commandline_tool_invocation</processor>
+					<port>$output.getName()_inner</port>
 				</sink>
 				<source type="processor">
 					<processor>create_$output.getName()</processor>
