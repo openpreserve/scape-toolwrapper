@@ -2,6 +2,10 @@
 
 *Wrap preservation tools once, deploy them everywhere*
 
+Vulnerability Warning
+---------------------
+Be aware that this project is affected by the [log4j vulnerability](https://www.ncsc.gov.uk/information/log4j-vulnerability-what-everyone-needs-to-know). Please read and understand the issue before deploying or using this project.
+
 **What you'll find in this README:**
 
 * [Tool Specification (toolspec)](#tool-specification-toolspec)
